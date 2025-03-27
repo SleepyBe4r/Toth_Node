@@ -1,0 +1,78 @@
+<!-- Content Start -->
+<div class="container my-5">
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-md-3 mb-4">
+        <div class="bg-light shadow rounded p-4">
+          <h4 class="text-primary">Menu</h4>
+          <ul class="list-unstyled">
+            <li><a href="/professor" class="text-dark"><i class="fas fa-chalkboard-teacher"></i> Professores</a></li>
+            <li><a href="../CRUD/turma/turma_Index.html" class="text-dark"><i class="fas fa-users"></i> Turmas</a></li>
+            <li><a href="../CRUD/aluno/notas_Faltas_Create.html" class="text-dark"><i class="fas fa-chart-line"></i> Notas</a></li>
+          </ul>
+        </div>
+      </div>
+      <!-- Main Section -->
+      <div class="col-md-9">
+        <section class="mb-5">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="text-primary">Cadastrar Professor</h4>
+            <a href="/professor" class="btn btn-secondary">
+              <i class="fas fa-arrow-left"></i> Voltar
+            </a>
+          </div>
+          
+          <div class="card shadow">
+            <div class="card-body">
+              <form action="/professor/cadastrar" method="POST">
+                <div class="form-group">
+                  <label for="cpf">CPF</label>
+                  <input type="text" class="form-control" id="cpf" name="cpf" required>
+                </div>
+                <div class="form-group">
+                  <label for="nome">Nome Completo</label>
+                  <input type="text" class="form-control" id="nome" name="nome" required>
+                </div>
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" class="form-control" id="email" name="email" required>
+                  <div class="form-group">
+                    <label for="dt_nascimento">Data de Nascimento</label>
+                    <input type="date" class="form-control" id="dt_nascimento" name="dt_nascimento" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="rua">Rua</label>
+                    <input type="text" class="form-control" id="rua" name="rua" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="bairro">Bairro</label>
+                    <input type="text" class="form-control" id="bairro" name="bairro" required>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="senha">Senha</label>
+                  <input type="password" class="form-control" id="senha" name="senha" required>
+                </div>
+                <div class="form-group">
+                  <label for="titulacao">Titulação</label>
+                  <input type="text" class="form-control" id="titulacao" name="titulacao" required>
+                </div>
+                <div class="form-group">
+                  <label for="dt_admissao">Data de Admissão</label>
+                  <input type="date" class="form-control" id="dt_admissao" name="dt_admissao" required>
+                </div>
+                <div class="form-group">
+                  <label for="telefone">Telefone</label>
+                  <input type="text" class="form-control" id="telefone" name="telefone" required>
+                </div>
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-save"></i> Cadastrar
+                </button>
+              </form>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+  <!-- Content End -->

@@ -31,12 +31,14 @@ class Professor_Model {
         this.#dataAdmissao = value;
     }
 
-    // Construtor
+
     constructor(
         cpf = null,
         titulacao = null,
         dataAdmissao = null
-    ) {
+    ) 
+    
+    {
         this.#cpf = cpf;
         this.#titulacao = titulacao;
         this.#dataAdmissao = dataAdmissao;
@@ -60,6 +62,11 @@ class Professor_Model {
     }
 
     async inserir() {
+
+        if(!this.dt_admissao) {
+            this.dt_admissao = new Date().toISOString().split('T')[0];
+        }
+
         let SQL_text = `
             INSERT INTO professores (
                 cpf_professor, 
