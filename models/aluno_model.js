@@ -44,6 +44,14 @@ class AlunoModel{
         let resultado = await db.ExecutaComandoNonQuery(sql, valores);
         return resultado;
     }
+
+    async excluir(){
+        let sql = "DELETE FROM alunos WHERE cpf_aluno = ?";
+        let db = new Database();
+        let valores = [this.#cpf];
+        let resultado = await db.ExecutaComandoNonQuery(sql, valores);
+        return resultado;
+    }
 }
 
 module.exports = AlunoModel;

@@ -79,6 +79,14 @@ class PessoaModel{
         return resultado;
     }
 
+    async excluir(){
+        let sql = "DELETE FROM pessoas WHERE cpf = ?";
+        let db = new Database();
+        let valores = [this.#cpf];
+        let resultado = await db.ExecutaComandoNonQuery(sql, valores);
+        return resultado;
+    }
+
 
 
 }

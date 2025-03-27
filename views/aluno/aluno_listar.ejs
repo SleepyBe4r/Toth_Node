@@ -1,186 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
+<script src="/js/alunos/excluir.js"></script>
 
-<head>
-  <meta charset="utf-8" />
-  <title>Listar Alunos</title>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+<div class="col-md-9">
+  <section class="mb-5">
+      <h4 class="text-primary">Alunos</h4>
 
-  <!-- Google Web Fonts -->
-  <link rel="preconnect" href="https://fonts.gstatic.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito&display=swap" rel="stylesheet" />
-
-  <!-- Font Awesome -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet" />
-
-  <!-- Flaticon Font -->
-  <link href="./../../../../lib/flaticon/font/flaticon.css" rel="stylesheet" />
-  
-  <!-- Libraries Stylesheet -->
-  <link href="./../../../../lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
-  <link href="./../../../../lib/lightbox/css/lightbox.min.css" rel="stylesheet" />
-
-  <!-- Customized Bootstrap Stylesheet -->
-  <link href="./../../../../css/style.css" rel="stylesheet" />
-</head>
-
-<body class="body-grid">
-  <!-- Navbar Start -->
-  <div class="container-fluid bg-light shadow">
-    <nav class="navbar navbar-expand-lg navbar-light py-3 px-5">
-      <a href="#" class="navbar-brand font-weight-bold text-secondary" style="font-size: 40px">
-        <i class="fas fa-users"></i> <span class="text-primary">Listar Alunos</span>
-      </a>
-      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-        <div class="navbar-nav font-weight-bold mx-auto">
-          <a href="./../../admin/area_Admin.html" class="nav-item nav-link">Área do Admin</a>
-        </div>
-        <button class="btn btn-danger px-4" onclick="sair()">Sair</button>
-      </div>
-    </nav>
-  </div>
-  <!-- Navbar End -->
-
-  <!-- Content Start -->
-  <div class="container my-5">
-    <div class="row">
-      <!-- Sidebar -->
-      <div class="col-md-3 mb-4">
-        <div class="bg-light shadow rounded p-4">
-          <h4 class="text-primary">Menu</h4>
-          <ul class="list-unstyled">
-            <li>
-              <a href="./../../admin/area_Admin.html" class="text-dark"><i class="fas fa-arrow-left"></i> Voltar ao Dashboard</a>
-            </li>
-            <li>
-              <a href="./criar_Aluno.html" class="text-dark"><i class="fas fa-plus"></i> Cadastrar Novo Aluno</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <!-- Main Section -->
-      <div class="col-md-9">
-        <section id="listar_alunos" class="mb-5">
-          <h4 class="text-primary">Alunos Cadastrados</h4>
-          <table class="table table-striped table-hover">
-            <thead>
+      
+      <table class="table table-striped table-hover">
+          <thead>
               <tr>
-                <th><input type="checkbox" id="ckTodos"></th></th>
-                <th>Nome do Aluno</th>
-                <th>Série</th>
-                <th>Ações</th>
+                  <th>CPF</th>
+                  <th>Convenio</th>
+                  <th>Ações</th>
               </tr>
-            </thead>
-            <tbody id="lista_alunos">
-              <!-- As linhas da tabela serão preenchidas dinamicamente -->
-            </tbody>
-          </table>
-          <div>		
-            <input type="button" class="btn btn-danger" value="excluir selecionados" id="btnExcluirSelecionados">
-        </div>
-        </section>
+          </thead>
+          <tbody>
+              <%for(let i=0; i < lista_alunos.length; i++){%>
+                  <tr>
+                      <td><%= lista_alunos[i].cpf%></td>
+                      <td><%= lista_alunos[i].convenio%></td>
+                      <td>
+                          <a href="/aluno<%= lista_alunos[i].id%>" class="btn btn-primary">
+                              Editar
+                          </a>
+                          <button class="btn btn-danger excluir" data-cpf="<%= lista_alunos[i].cpf%>" data-convenio="<%= lista_alunos[i].convenio%>">Excluir</button>
+                      </td>
+                  </tr>
+              <%}%>
+          </tbody>
+      </table>
+      <div>
+          <a href="/aluno/cadastrar" class="btn btn-primary">Cadastrar Aluno</a>
+          <input type="button" class="btn btn-danger" value="excluir selecionados" id="btnExcluirSelecionados">
       </div>
-    </div>
-  </div>
-  <!-- Content End -->
-
-  <!-- Footer Start -->
-  <div class="container-fluid bg-secondary text-white  py-1 px-sm-3 px-md-5"
-  style="position: relative; bottom: 0;margin-top: auto;">
-    <div class="row pt-5 justify-content-center" >
-      <div class="col-lg-3 col-md-6 mb-5" >
-        <a href="./../../../../index.html" class="navbar-brand font-weight-bold text-primary m-0 mb-4 p-0"
-          style="font-size: 40px; line-height: 40px">
-          <i class="flaticon-043-teddy-bear"></i>
-          <span class="text-white">Toth Academy</span>
-        </a>
-      </div>
-  </div>
-  <!-- Footer End -->
-
-  <!-- JavaScript Libraries -->
-  <script>
-    // Exemplo de dados simulados
-    let alunos = JSON.parse(localStorage.getItem("alunos")) || [];
-    const tabela = document.getElementById("lista_alunos");
-
-    function carregarAlunos() {
-        let html = "";
-        alunos.forEach(aluno => {
-            html += `
-            <tr>
-                <td class='coluna'><input type='checkbox' name='check_del' data-id='${aluno.id}'></td>
-                <td>${aluno.nome}</td>
-                <td>${aluno.serie} Ano</td>
-                <td>
-                    <button class="btn btn-danger btn-sm" onclick="excluirAlunos(${aluno.id})">Excluir</button>
-                </td>
-            </tr>
-            `;
-
-        });
-        tabela.innerHTML = html;
-    }
-
-    function excluirAlunos(id) {      
-        localStorage.removeItem("alunos");
-        let lista_aux = [];
-        // Lógica para excluir turma
-        alunos.forEach(e => {
-            if (id != e.id) {
-                lista_aux.push(e);
-            }
-        });
-        localStorage.setItem('alunos', JSON.stringify(lista_aux));
-        alunos = JSON.parse(localStorage.getItem('alunos')) || [];
-        carregarAlunos();
-    }
-
-    function selected_all() {
-        let check_box_all = document.querySelector("#ckTodos");
-        let check_list = document.querySelectorAll("[data-id]");
-        if(check_box_all.checked){
-            check_list.forEach(ck_item => {
-                ck_item.checked = check_box_all.checked;
-            });
-        } else{
-            for (let ck_item of check_list) {
-                ck_item.checked = check_box_all.checked;
-            }
-        }
-    }
-
-    function del_selected_item() {        
-        let check_list = document.querySelectorAll("[data-id]");
-        if (check_list.length > 0) {
-            check_list.forEach(ck_item => {
-                if(ck_item.checked){ excluirAlunos(parseInt(ck_item.dataset.id)); }
-            });        
-        } else { alert("Não há item para ser excluídos")}
-        let check_box_all = document.querySelector("#ckTodos");
-        check_box_all.checked = false;
-    }
-    function sair() {
-        localStorage.removeItem("usuarioAtual");
-        window.location="./../../../../index.html";
-      }
-    // Carregar turmas ao carregar a página
-    document.addEventListener("DOMContentLoaded", ()=>{
-        carregarAlunos();
-
-        let ckTodos = document.querySelector("#ckTodos");
-        ckTodos.addEventListener("change",selected_all,false);
-        
-        let btn_select_del = document.querySelector("#btnExcluirSelecionados");
-        btn_select_del.addEventListener("click",del_selected_item,false);
-
-        let check_box_all = document.querySelector("#ckTodos");
-        check_box_all.checked = false;
-    });
-  </script>
-</body>
-
-</html>
+  </section>
+</div>

@@ -1,0 +1,51 @@
+<script src="/js/alunos/cadastro.js"></script>
+<script src="/js/validacao.js"></script>
+<!-- Main Section -->
+<div class="col-md-9">
+    <!-- Formulário de Lançamento -->
+    <section id="form_notas" class="mb-5">
+        <h4 class="text-primary">Cadastrar Alunos</h4>
+        
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <input type="text" class="form-control" id="cpf-aluno" required>
+                <label class="form-label">CPF * </label>
+            </div>
+            <div class="col-md-3 mb-3">
+                <input type="text" class="form-control" id="nome-aluno" required>
+                <label class="form-label">Nome * </label>
+            </div>
+            <div class="col-md-3 mb-3">
+                <input type="date" class="form-control" id="data-aluno" required>
+                <label class="form-label">Data de Nascimento * </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <input type="email" class="form-control" id="email-aluno" required>
+                <label class="form-label">Email * </label>
+            </div>
+            <div class="col-md-3 mb-3">
+                <input type="tel" class="form-control" id="telefone-aluno" required>
+                <label class="form-label">Telefone * </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <input type="text" class="form-control" id="rua-aluno" required>
+                <label class="form-label">Rua * </label>
+            </div>
+            <div class="col-md-3 mb-3">
+                <input type="text" class="form-control" id="bairro-aluno" required>
+                <label class="form-label">Bairro * </label>
+            </div>
+            <div class="col-md-3 mb-3">
+                <input type="text" class="form-control" id="convenio-aluno" required>
+                <label class="form-label">Convenio * </label>
+            </div>
+        </div>
+        <button type="submit" class=" btn btn-primary" id="btn_cadastro">Finalizar cadastro</button>
+        <a href="/aluno" class="btn btn-dark">Retornar</a>
+    
+    </section>
+</div> 
