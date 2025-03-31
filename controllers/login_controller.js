@@ -29,13 +29,13 @@ class Login_Controller{
                 resp.cookie("usuario_Logado", login_encontrados[0].pessoa_cpf);
                 switch (login_encontrados[0].perfil) {
                     case 1: // administrador;
-                        resp.render("admin/admin_home_view.ejs", { layout: "layout_admin_home.ejs"});
+                        resp.redirect("/admin");
                         break;
                     case 2: // professor; 
-                        resp.render("professor/professor_home_view.ejs", { layout: "layout_professor_home.ejs"});
+                        resp.redirect("/professor");
                         break;
                     case 3: // aluno;
-                        resp.render("aluno/aluno_home_view.ejs", { layout: "layout_aluno_home.ejs"});
+                        resp.redirect("/aluno");
                         break;
                 }
             } else{
