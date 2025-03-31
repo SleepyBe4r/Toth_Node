@@ -1,0 +1,50 @@
+<script src="/js/atividade/excluir.js"></script>
+
+<!-- Main Section -->
+<div class="col-md-9">
+    <section class="mb-5">
+        <h4 class="text-primary">Atividades</h4>
+
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="ckTodos"></th>
+                    <th>ID</th>
+                    <th>Titulo</th>
+                    <th>Descricao</th>
+                    <th>Disciplina</th>
+                    <th>Turma</th>
+                    <th>Data Inicio</th>
+                    <th>Data Final</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%for(let i=0; i < lista_atividades.length; i++){%>
+                    <tr>
+                        <td><input type='checkbox' class='check_del' data-id="<%= lista_atividades[i].id%>" data-name="<%= lista_atividades[i].nome%>"></td>
+                        <td><%= lista_atividades[i].id%></td>
+                        <td><%= lista_atividades[i].nome%></td>
+                        <td><%= lista_atividades[i].descricao%></td>
+                        <td><%= lista_atividades[i].disciplina%></td>
+                        <td><%= lista_atividades[i].turma%></td>
+                        <td><%= lista_atividades[i].dt_inicio%></td>
+                        <td><%= lista_atividades[i].dt_final%></td>
+                        <td>
+                            <a href="" class="btn btn-info">Ver mais</a>
+                            <a href="/atividade/editar/<%= lista_atividades[i].id%>" class="btn btn-primary">
+                                Editar
+                            </a>
+                            <button class="btn btn-danger excluir" data-id="<%= lista_atividades[i].id%>" data-name="<%= lista_atividades[i].nome%>">Excluir</button>
+                        </td>
+                    </tr>
+                <%}%>
+            </tbody>
+        </table>
+        <div>
+            <a href="/atividade/cadastrar" class="btn btn-primary">Cadastrar Atividade</a>
+            <input type="button" class="btn btn-danger" value="excluir selecionados" id="btnExcluirSelecionados">
+        </div>
+    </section>
+</div>
+<!-- Content End -->

@@ -72,6 +72,22 @@ class Disciplina_Model{
         return lista;
     }
 
+    async obter_Disc_Prof(cpf_professor){
+        let SQL_text = `SELECT * FROM prof_turma pt
+                        JOIN disciplinas d ON d.id_disciplina = pt.id_disciplina
+                        WHERE cpf_professor = ?`;
+
+        let db = new Database();
+        let valores = [cpf_professor];
+        let lista = [];
+        let rows = await db.ExecutaComando(SQL_text, valores);
+        for(let i = 0; i < rows.length; i++){
+            lista.push(new Disciplina_Model(rows[i]["id_disciplina"],
+                                            rows[i]["nome"]));
+        }
+        return lista;
+    }
+
     async atualizar(){
         let SQL_text = `UPDATE disciplinas 
                         SET nome = ?, carga_horaria = ?

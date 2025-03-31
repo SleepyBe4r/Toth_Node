@@ -39,31 +39,34 @@
                     <a href="./../CRUD/aluno/notas_Faltas_Index.html" class="nav-item nav-link">Notas e Faltas</a>
                     <a href="./../CRUD/aula/aulas_Index.html" class="nav-item nav-link">Aulas</a>
                 </div>
-                <button class="btn btn-danger px-4" onclick="sair()">Sair</button>
+                <button class="btn btn-danger px-4" onclick="window.location.href = '/login';">Sair</button>
             </div>
         </nav>
     </div>
     <!-- Navbar End -->
 
     <!-- Content Start -->
-  <div class="container my-5">
-    <div class="row">
-      <!-- Sidebar -->
-      <div class="col-md-3 mb-4">
-        <div class="bg-light shadow rounded p-4">
-          <h4 class="text-primary">Menu</h4>
-          <ul class="list-unstyled">
-            <li><a href="./../CRUD/aluno/notas_Faltas_Index.html" class="text-dark"><i class="fas fa-chart-line"></i> Notas e Faltas</a></li>
-            <li><a href="./../CRUD/aula/aulas_Index.html" class="text-dark"><i class="fas fa-book"></i> Aulas</a></li>
-          </ul>
+    <div class="container my-5">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 mb-4">
+                <div class="bg-light shadow rounded p-4">
+                    <h4 class="text-primary">Menu</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="./../CRUD/aluno/notas_Faltas_Index.html" class="text-dark"><i
+                                    class="fas fa-chart-line"></i> Notas e Faltas</a></li>
+                        <li><a href="./../CRUD/aula/aulas_Index.html" class="text-dark"><i class="fas fa-book"></i>Aulas</a></li>
+                        <li><a href="/atividade/A_listar" class="text-dark"><i class="fas fa-book"></i>Atividades</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <%- body%>
+            
         </div>
-      </div>
-
-    <%- body%>
-
+    </div>
     <!-- Footer Start -->
-    <div class="container-fluid bg-secondary text-white mt-5 py-1 px-sm-3 px-md-5"
-        style="position:relative; bottom: 0">
+    <div class="container-fluid bg-secondary text-white mt-5 py-1 px-sm-3 px-md-5" style="position:relative; bottom: 0">
         <div class="row pt-5 d-flex justify-content-center">
             <div class="col-lg-3 col-md-6 mb-5">
                 <a href="/" class="navbar-brand font-weight-bold text-primary m-0 mb-4 p-0"
@@ -84,4 +87,5 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
 
 </body>
+
 </html>

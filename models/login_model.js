@@ -7,6 +7,10 @@ class Login_Model{
     #senha
     #perfil
 
+    get pessoa_cpf(){        
+        return this.#pessoa_cpf;
+    }
+
     get perfil(){        
         return this.#perfil;
     }

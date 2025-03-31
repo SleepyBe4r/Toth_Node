@@ -26,15 +26,16 @@ class Login_Controller{
             login_encontrados = await login_M.logar(usuario, senha);
 
             if (login_encontrados.length > 0) {
+                resp.cookie("usuario_Logado", login_encontrados[0].pessoa_cpf);
                 switch (login_encontrados[0].perfil) {
                     case 1: // administrador;
-                        resp.render("admin/admin_home_view.ejs", { layout: false});
+                        resp.render("admin/admin_home_view.ejs", { layout: "layout_admin_home.ejs"});
                         break;
-                    case 2: // aluno;
-                        resp.render("aluno/aluno_home_view.ejs", { layout: false});
+                    case 2: // professor; 
+                        resp.render("professor/professor_home_view.ejs", { layout: "layout_professor_home.ejs"});
                         break;
-                    case 3: // professor;
-                        resp.render("professor/professor_home_view.ejs", { layout: false});
+                    case 3: // aluno;
+                        resp.render("aluno/aluno_home_view.ejs", { layout: "layout_aluno_home.ejs"});
                         break;
                 }
             } else{

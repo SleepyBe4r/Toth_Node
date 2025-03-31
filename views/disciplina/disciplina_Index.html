@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Listar Disciplinas</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+
+  <!-- Google Web Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Handlee&family=Nunito&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet" />
+
+  <!-- Flaticon Font -->
+  <link href="./../../../../lib/flaticon/font/flaticon.css" rel="stylesheet" />
+  
+  <!-- Libraries Stylesheet -->
+  <link href="./../../../../lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet" />
+  <link href="./../../../../lib/lightbox/css/lightbox.min.css" rel="stylesheet" />
+
+  <!-- Customized Bootstrap Stylesheet -->
+  <link href="./../../../../css/style.css" rel="stylesheet" />
+</head>
+
+<body class="body-grid">
+  <!-- Navbar Start -->
+  <div class="container-fluid bg-light shadow">
+    <nav class="navbar navbar-expand-lg navbar-light py-3 px-5">
+      <a href="#" class="navbar-brand font-weight-bold text-secondary" style="font-size: 40px">
+        <i class="fas fa-book"></i> <span class="text-primary">Listar Disciplinas</span>
+      </a>
+      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+        <div class="navbar-nav font-weight-bold mx-auto">
+          <a href="./../../admin/area_Admin.html" class="nav-item nav-link">Área do Admin</a>
+        </div>
+        <button class="btn btn-danger px-4" onclick="sair()">Sair</button>
+      </div>
+    </nav>
+  </div>
+  <!-- Navbar End -->
+
+  <!-- Content Start -->
+  <div class="container my-5">
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-md-3 mb-4">
+        <div class="bg-light shadow rounded p-4">
+          <h4 class="text-primary">Menu</h4>
+          <ul class="list-unstyled">
+            <li>
+              <a href="./../../admin/area_Admin.html" class="text-dark"><i class="fas fa-arrow-left"></i> Voltar ao Dashboard</a>
+            </li>
+            <li>
+              <a href="./disciplina_Create.html" class="text-dark"><i class="fas fa-plus"></i> Cadastrar Nova Disciplina</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- Main Section -->
+      <div class="col-md-9">
+        <section id="listar_disciplinas" class="mb-5">
+          <h4 class="text-primary">Disciplinas Cadastradas</h4>
+          <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="ckTodos"></th>
+                <th>Nome da Disciplina</th>
+                <th>Turma</th>
+                <th>Professor Responsável</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="lista_disciplinas">
+              <!-- As linhas da tabela serão preenchidas dinamicamente -->
+            </tbody>
+          </table>
+          <div>
+            <input type="button" class="btn btn-danger" value="Excluir Selecionados" id="btnExcluirSelecionados">
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+  <!-- Content End -->
+
+  <!-- Footer Start -->
+  <div class="container-fluid bg-secondary text-white mt-5 py-1 px-sm-3 px-md-5"
+  style="position: relative; bottom: 0;">
+    <div class="row pt-5 justify-content-center" >
+      <div class="col-lg-3 col-md-6 mb-5" >
+        <a href="./../../../../index.html" class="navbar-brand font-weight-bold text-primary m-0 mb-4 p-0"
+          style="font-size: 40px; line-height: 40px">
+          <i class="flaticon-043-teddy-bear"></i>
+          <span class="text-white">Toth Academy</span>
+        </a>
+      </div>
+  </div>
+  <!-- Footer End -->
+
+  <!-- JavaScript -->
+  <script>
+    let disciplinas = JSON.parse(localStorage.getItem("disciplinas")) || [];
+    const turmas = JSON.parse(localStorage.getItem("turmas")) || [];
+    const tabela = document.getElementById("lista_disciplinas");
+
+    function carregarDisciplinas() {
+      let html = "";
+      disciplinas.forEach(disciplina => {
+        let turma = turmas.find(t => t.id === parseInt(disciplina.turma));
+        let nomeTurma = turma ? turma.nome : "Turma não encontrada";
+        html += `
+          <tr>
+            <td><input type="checkbox" name="check_del" data-id="${disciplina.id}"></td>
+            <td>${disciplina.nome}</td>
+            <td>${nomeTurma}</td>
+            <td>${disciplina.professor}</td>
+            <td>
+              <button class="btn btn-danger btn-sm" onclick="excluirDisciplina(${disciplina.id})">Excluir</button>
+            </td>
+          </tr>
+        `;
+      });
+      tabela.innerHTML = html;
+    }
+
+    function excluirDisciplina(id) {
+      localStorage.removeItem("disciplinas");
+      let lista_aux = [];
+      
+      disciplinas.forEach(e => {
+          if (id != e.id) {
+              lista_aux.push(e);
+          }
+      });
+
+      localStorage.setItem('disciplinas', JSON.stringify(lista_aux));
+      disciplinas = JSON.parse(localStorage.getItem('disciplinas')) || [];
+      carregarDisciplinas();
+    }
+
+    function excluirSelecionados() {
+      let checkboxes = document.querySelectorAll("input[name='check_del']:checked");
+      checkboxes.forEach(checkbox => excluirDisciplina(Number(checkbox.dataset.id)));
+      document.getElementById("ckTodos").checked = false;
+    }
+
+    function selecionarTodos() {
+      let checkboxes = document.querySelectorAll("input[name='check_del']");
+      let selecionarTodos = document.getElementById("ckTodos").checked;
+      checkboxes.forEach(checkbox => (checkbox.checked = selecionarTodos));
+    }
+    function sair() {
+        localStorage.removeItem("usuarioAtual");
+        window.location="./../../../../index.html";
+      }
+    document.addEventListener("DOMContentLoaded", () => {
+      carregarDisciplinas();
+      document.getElementById("ckTodos").addEventListener("change", selecionarTodos);
+      document.getElementById("btnExcluirSelecionados").addEventListener("click", excluirSelecionados);
+    });
+  </script>
+</body>
+
+</html>
