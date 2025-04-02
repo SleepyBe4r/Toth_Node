@@ -1,0 +1,46 @@
+<script src="/js/turma/excluir.js"></script>
+
+<!-- Main Section -->
+<div class="col-md-9">
+    <section class="mb-5">
+        <h4 class="text-primary">Turmas</h4>
+
+        
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="ckTodos"></th>
+                    <th>ID</th>
+                    <th>Turma</th>
+                    <th>Sala</th>
+                    <th>Serie</th>
+                    <th>Ano Letivo</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%for(let i=0; i < lista_turmas.length; i++){%>
+                    <tr>
+                        <td><input type='checkbox' class='check_del' data-id="<%= lista_turmas[i].id%>" data-name="<%= lista_turmas[i].serie%>"></td>
+                        <td><%= lista_turmas[i].id%></td>
+                        <td><%= lista_turmas[i].turma%></td>
+                        <td><%= lista_turmas[i].sala%></td>
+                        <td><%= lista_turmas[i].serie%></td>
+                        <td><%= lista_turmas[i].ano_letivo%></td>
+                        <td>
+                            <a href="/turma/editar/<%= lista_turmas[i].id%>" class="btn btn-primary">
+                                Editar
+                            </a>
+                            <button class="btn btn-danger excluir" data-id="<%= lista_turmas[i].id%>" data-name="<%= lista_turmas[i].turma%>">Excluir</button>
+                        </td>
+                    </tr>
+                <%}%>
+            </tbody>
+        </table>
+        <div>
+            <a href="/turma/cadastrar" class="btn btn-primary">Cadastrar Turma</a>
+            <input type="button" class="btn btn-danger" value="excluir selecionados" id="btnExcluirSelecionados">
+        </div>
+    </section>
+</div>
+<!-- Content End -->

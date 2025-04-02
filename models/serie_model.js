@@ -47,7 +47,7 @@ class Serie_Model{
     }
 
     async listar(){
-        let SQL_text = `SELECT s.id_series, s.serie, s.id_ano_letivo, a.ano_letivo FROM PFS1_10442416670.series s
+        let SQL_text = `SELECT s.id_series, s.serie, s.id_ano_letivo, a.ano_letivo FROM series s
                         JOIN anos_letivos a ON a.id_ano_letivo = s.id_ano_letivo`;
         let db = new Database();
         let lista = [];

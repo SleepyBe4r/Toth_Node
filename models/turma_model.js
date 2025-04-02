@@ -6,7 +6,8 @@ class Turma_Model{
     #turma;  
     #id_serie;  
     #serie;  
-    #id_salas; 
+    #id_sala; 
+    #sala; 
     #ano_letivo; 
 
     get id() {
@@ -37,11 +38,11 @@ class Turma_Model{
         this.#serie = value;
     }
 
-    get id_salas() {
-        return this.#id_salas;
+    get id_sala() {
+        return this.#id_sala;
     }
-    set id_salas(value) {
-        this.#id_salas = value;
+    set id_sala(value) {
+        this.#id_sala = value;
     }
 
     get ano_letivo() {
@@ -51,13 +52,42 @@ class Turma_Model{
         this.#ano_letivo = value;
     }
 
-    constructor(id, turma, id_serie, serie, id_salas, ano_letivo) {
+    get sala() {
+        return this.#sala;
+    }
+    set sala(value) {
+        this.#sala = value;
+    }
+
+    constructor(id, turma, id_serie, serie, id_sala, sala = "não alocada", ano_letivo) {
         this.#id = id;
         this.#turma = turma;
         this.#id_serie = id_serie;
         this.#serie = serie;
-        this.#id_salas = id_salas;
+        this.#id_sala = id_sala;
+        if (sala == null) this.#sala  = "não alocada";
+        else this.#sala = sala;
         this.#ano_letivo = ano_letivo;
+    }
+
+    async listar(){
+        let SQL_text = `SELECT t.id_turma, t.turma, s.serie, a.ano_letivo, sl.nome as sala FROM turmas t
+                        LEFT JOIN salas sl ON sl.id_salas = t.id_salas
+                        JOIN series s ON s.id_series = t.id_serie
+                        JOIN anos_letivos a ON a.id_ano_letivo = s.id_ano_letivo`;
+        let db = new Database();
+        let lista = [];
+        let rows = await db.ExecutaComando(SQL_text);
+        for(let i = 0; i < rows.length; i++){
+            lista.push(new Turma_Model(rows[i]["id_turma"],
+                                       rows[i]["turma"], 
+                                       0, // id_serie
+                                       rows[i]["serie"],
+                                       0, // id_sala
+                                       rows[i]["sala"],         
+                                       rows[i]["ano_letivo"]));
+        }
+        return lista;
     }
 
     async obterPorProf(id, cpf){
@@ -79,6 +109,55 @@ class Turma_Model{
                                             rows[i]["ano_letivo"]));
         }
         return lista;
+    }
+
+    async inserir(){
+        let SQL_text = `INSERT INTO turmas (turma, id_serie)
+                        VALUES (?, ?);`;
+        let db = new Database();
+        let valores = [this.#turma, this.#id_serie];        
+        let resultado = await db.ExecutaComandoNonQuery(SQL_text, valores);        
+        return resultado;
+    }
+
+    async obter(id){
+        let SQL_text = `SELECT t.id_turma, t.turma, t.id_serie, s.serie, a.ano_letivo, sl.nome as sala FROM turmas t
+                        LEFT JOIN salas sl ON sl.id_salas = t.id_salas
+                        JOIN series s ON s.id_series = t.id_serie
+                        JOIN anos_letivos a ON a.id_ano_letivo = s.id_ano_letivo
+                        WHERE t.id_turma = ?`;
+        let db = new Database();
+        let valores = [id];
+        let lista = [];
+        let rows = await db.ExecutaComando(SQL_text, valores);
+        for(let i = 0; i < rows.length; i++){
+            lista.push(new Turma_Model(rows[i]["id_turma"],
+                                        rows[i]["turma"], 
+                                        rows[i]["id_serie"],
+                                        rows[i]["serie"],
+                                        0, // id_sala
+                                        rows[i]["sala"],         
+                                        rows[i]["ano_letivo"]));
+        }
+        return lista;
+    }
+
+    async atualizar(){
+        let SQL_text = `UPDATE turmas 
+                        SET turma = ?, id_serie = ?
+                        WHERE id_turma = ?;`;
+        let db = new Database();
+        let valores = [this.#turma, this.#id_serie, this.#id];        
+        let resultado = await db.ExecutaComandoNonQuery(SQL_text, valores);        
+        return resultado;
+    }
+
+    async excluir(){
+        let SQL_text = "DELETE FROM turmas WHERE id_turma = ?";
+        let db = new Database();
+        let valores = [this.#id];
+        let resultado = await db.ExecutaComandoNonQuery(SQL_text, valores);
+        return resultado;
     }
 
 }
