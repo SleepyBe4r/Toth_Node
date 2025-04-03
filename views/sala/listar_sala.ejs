@@ -1,0 +1,41 @@
+<script src="/js/sala/excluir.js"></script>
+
+<!-- Main Section -->
+<div class="col-md-9">
+    <section class="mb-5">
+        <h4 class="text-primary">Salas</h4>
+
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="ckTodos"></th>
+                    <th>ID</th>
+                    <th>Sala</th>
+                    <th>Capacidade de alunos</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%for(let i=0; i < lista_salas.length; i++){%>
+                    <tr>
+                        <td><input type='checkbox' class='check_del' data-id="<%= lista_salas[i].id%>" data-name="<%= lista_salas[i].sala%>"></td>
+                        <td><%= lista_salas[i].id%></td>
+                        <td><%= lista_salas[i].sala%></td>
+                        <td><%= lista_salas[i].capacidade_alunos%></td>
+                        <td>
+                            <a href="/sala/editar/<%= lista_salas[i].id%>" class="btn btn-primary">
+                                Editar
+                            </a>
+                            <button class="btn btn-danger excluir" data-id="<%= lista_salas[i].id%>" data-name="<%= lista_salas[i].sala%>">Excluir</button>
+                        </td>
+                    </tr>
+                <%}%>
+            </tbody>
+        </table>
+        <div>
+            <a href="/sala/cadastrar" class="btn btn-primary">Cadastrar Sala</a>
+            <input type="button" class="btn btn-danger" value="excluir selecionados" id="btnExcluirSelecionados">
+        </div>
+    </section>
+</div>
+<!-- Content End -->

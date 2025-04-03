@@ -1,45 +1,69 @@
-
-
-    
-  <!-- Main Section -->
-  <div class="col-md-9">
-    <!-- Perfil Section -->
-    <section id="perfil" class="mb-5">
-      <h4 class="text-primary">Perfil</h4>
-      <p id="txtNome"></p>
-      <p id="txtEmail"></p>
-      <p id="txtTelefone"></p>
-    </section>
-
-    <!-- Usuários Section -->
-    <section id="usuarios" class="mb-5">
-      <h4 class="text-primary">Gerenciar Usuarios</h4>
-      <h3 class="text-primary">Alunos:</h3>
-      <p><a href="./../CRUD/aluno/criar_Aluno.html" class="btn btn-primary">Cadastrar Aluno</a></p>
-      <p><a href="./../CRUD/aluno/aluno_index.html" class="btn btn-primary">Listar Aluno</a></p>
-      <h3 class="text-primary">Professores:</h3>
-      <p><a href="./../CRUD/professor/criar_Professor.html" class="btn btn-primary">Cadastrar Professores</a></p>
-      <p><a href="../CRUD/professor/Professor_Index.html" class="btn btn-primary">Listar Professores</a></p>
-      <h3 class="text-primary">Admin:</h3>
-      <p><a href="./../CRUD/admin/criar_Admin.html" class="btn btn-primary">Cadastrar Admin</a></p>
-      <p><a href="./../CRUD/admin/admin_index.html" class="btn btn-primary">Listar Admin</a></p>
-    </section>
-
-    <!-- Turmas Section -->
-    <section id="turmas" class="mb-5">
-      <h4 class="text-primary">Gerenciar Turmas</h4>
-      <p><a href="./../CRUD/turma/turma_Create.html" class="btn btn-primary">Cadastrar Turma</a></p>
-      <p><a href="./../CRUD/turma/turma_Index.html" class="btn btn-primary">Listar Turmas</a></p>
-    </section>
-
-    <!-- Disciplinas Section -->
-    <section id="disciplinas" class="mb-5">
-      <h4 class="text-primary">Gerenciar Disciplinas</h4>
-      <p><a href="./../CRUD/disciplina/disciplina_Create.html" class="btn btn-primary">Cadastrar Disciplina</a></p>
-      <p><a href="./../CRUD/disciplina/disciplina_Index.html" class="btn btn-primary">Listar Disciplinas</a></p>
-    </section>
-
+<!-- Main Section -->
+<div class="col-md-9">
+  <div class="row">
+    <div class="col-md-3">
+      <div class="card text-white bg-primary mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Alunos Matriculados</h5>
+          <p class="card-text" id="alunos">850</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-success mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Professores Ativos</h5>
+          <p class="card-text">45</p>
+        </div>
+      </div>
+    </div>
   </div>
-  <!-- Content End -->
-
     
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Evolução de Matrículas</h5>
+          <canvas id="graficoMatriculas"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Frequência Média das Turmas</h5>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Aluno</th>
+                <th>Presenças</th>
+                <th>Faltas</th>
+                <th>% de Presença</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>João Silva</td>
+                <td>18</td>
+                <td>2</td>
+                <td>90%</td>
+              </tr>
+              <tr>
+                <td>Maria Souza</td>
+                <td>17</td>
+                <td>3</td>
+                <td>85%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Content End -->

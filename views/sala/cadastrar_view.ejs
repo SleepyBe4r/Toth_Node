@@ -1,0 +1,56 @@
+
+<script src="/js/validacao.js"></script>
+<script src="/js/sala/cadastro.js"></script>
+
+    <input type="hidden" value="<%= sala_para_alterar%>" id="hidden_sala"> 
+    <%if (typeof sala_para_alterar == "undefined") {%>
+        <!-- Main Section -->
+        <div class="col-md-9">
+            <!-- Formulário de Lançamento -->
+            <section class="mb-5">
+                <h4 class="text-primary">Cadastrar Sala</h4>
+                
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <input type="text" class="form-control" id="txtSala" placeholder="H-01" required>
+                        <label for="txtSala" class="form-label">Sala * </label>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <input type="number" class="form-control" id="txtQtdeAlunos" placeholder="20" required>
+                        <label for="txtQtdeAlunos" class="form-label">Quantidade de alunos * </label>
+                    </div>
+                </div>
+                <button type="submit" class=" btn btn-primary" id="btn_cadastro">Finalizar cadastro</button>
+                <a href="/sala" class="btn btn-dark">Retornar</a>
+            
+            </section>
+        </div> 
+
+    <%} else{%>
+
+        <!-- Main Section -->
+        <div class="col-md-9">
+            <!-- Formulário de Lançamento -->
+            <section class="mb-5">
+                <h4 class="text-primary">Editar Sala</h4>
+                
+                    <input type="hidden" value="<%= sala_para_alterar.id%>" id="hidden_id">
+
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <input type="text" class="form-control" id="txtSala" placeholder="H-01" value="<%= sala_para_alterar.sala%>" required>
+                        <label for="txtSala" class="form-label">Sala * </label>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <input type="number" class="form-control" id="txtQtdeAlunos" placeholder="20" value="<%= sala_para_alterar.capacidade_alunos%>" required>
+                        <label for="txtQtdeAlunos" class="form-label">Quantidade de alunos * </label>
+                    </div>
+                </div>
+                <button type="submit" class=" btn btn-primary" id="btn_atualizar">Finalizar Edição</button>
+                <a href="/ano_letivo" class="btn btn-dark">Retornar</a>
+            
+            </section>
+        </div> 
+    <%}%>
