@@ -86,6 +86,34 @@ class Grade_Curricular_Controller{
             })
         }
     }
+
+    // async cadastrar_ano_letivo(req, resp) {
+    //     if(req.body.ano_letivo == ""){
+    //         resp.send({
+    //             ok : false,
+    //             msg: "Campo incompleto"
+    //         })
+    //         return;
+    //     }
+
+    //     let ano_letivo_M = new Ano_Letivo_Model();
+    //     ano_letivo_M.ano_letivo = req.body.ano_letivo;
+
+    //     let lista_ano_letivo = [];
+
+    //     lista_ano_letivo = await ano_letivo_M.inserir();
+    //     if(lista_ano_letivo){
+    //         resp.send({
+    //             ok : true,
+    //             msg: "Ano Letivo cadastrado com sucesso"
+    //         })
+    //     } else{            
+    //         resp.send({
+    //             ok : false,
+    //             msg: "Erro ao inserir o Ano Letivo"
+    //         })
+    //     }
+    // }
     
     // async excluir_ano_letivo(req, resp){
     //     let ano_letivo_M = new Ano_Letivo_Model();
