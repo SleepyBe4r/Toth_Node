@@ -69,6 +69,26 @@ class PessoaModel{
         this.#bairro =bairro;
     }
 
+    async listar() {
+        let SQL_text = "SELECT * FROM pessoas";
+        let db = new Database();
+        let lista = [];
+        let rows = await db.ExecutaComando(SQL_text);
+        
+        for (let i = 0; i < rows.length; i++) {
+            lista.push(new PessoaModel(
+                rows[i]["cpf"],
+                rows[i]["nome"],
+                rows[i]["dt_nascimento"],
+                rows[i]["email"],
+                rows[i]["telefone"],
+                rows[i]["rua"],
+                rows[i]["bairro"],
+            ));
+        }
+        return lista;
+    }
+
     async inserir(){
         let sql = `INSERT INTO pessoas (cpf, nome, dt_nascimento, rua, bairro, email, telefone)
                    values (?, ?, ?, ?, ?, ?, ?)`;

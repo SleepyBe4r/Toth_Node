@@ -1,5 +1,7 @@
 const express = require("express");
 const Professor_Controller = require("../controllers/professor_controller");
+const Autenticacao = require("../middlewares/autenticacao");
+let autentic = new Autenticacao();
 
 const router = express.Router();
 

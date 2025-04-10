@@ -90,6 +90,28 @@ class Turma_Model{
         return lista;
     }
 
+    async listarSemGradeCurricular(){
+        let SQL_text = `SELECT t.id_turma, t.turma, s.serie, a.ano_letivo FROM turmas t
+                        JOIN series s ON s.id_series = t.id_serie
+                        JOIN anos_letivos a ON a.id_ano_letivo = s.id_ano_letivo
+                        WHERE NOT EXISTS
+                            ( SELECT * FROM grade_curricular gc
+                                WHERE gc.id_turma = t.id_turma )`;
+        let db = new Database();
+        let lista = [];
+        let rows = await db.ExecutaComando(SQL_text);
+        for(let i = 0; i < rows.length; i++){
+            lista.push(new Turma_Model(rows[i]["id_turma"],
+                                       rows[i]["turma"], 
+                                       0, // id_serie
+                                       rows[i]["serie"],
+                                       0, // id_sala
+                                       "", // sala         
+                                       rows[i]["ano_letivo"]));
+        }
+        return lista;
+    }
+
     async obterPorProf(id, cpf){
         let SQL_text = `SELECT pt.id_turma, t.turma, s.serie, a.ano_letivo FROM prof_turma pt
                         JOIN turmas t ON t.id_turma = pt.id_turma

@@ -2,6 +2,8 @@
 
 const express = require("express");
 const Aluno_Controller = require("../controllers/aluno_controller");
+const Autenticacao = require("../middlewares/autenticacao");
+let autentic = new Autenticacao();
 
 const router = express.Router();
 
