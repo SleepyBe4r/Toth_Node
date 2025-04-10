@@ -1,0 +1,68 @@
+
+<script src="/js/validacao.js"></script>
+<script src="/js/turma/alocar.js"></script>
+
+    <input type="hidden" value="<%= turma_para_alterar%>" id="hidden_turma"> 
+    <%if (typeof turma_para_alterar == "undefined") {%>
+        <!-- Main Section -->
+        <div class="col-md-9">
+            <!-- Formulário de Lançamento -->
+            <section id="form_notas" class="mb-5">
+                <h4 class="text-primary">Cadastrar Turma</h4>
+                
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <input type="text" class="form-control" id="txtTurma" placeholder="A" required>
+                        <label for="txtTurma" class="form-label">Turma * </label>
+                    </div>
+                    <div class="col-md-6 mb-6">
+                        <select class="custom-select" name="serie" id="slctSerie" >
+                            <option value="0">Selecione uma opção</option>
+                            <%for(let i = 0; i < lista_series.length; i++){%>
+                                <option value="<%= lista_series[i].id%>"  ><%= lista_series[i].serie%></option>
+                            <%}%>
+                        </select>
+                        <label for="slctSerie" class="form-label">Série * </label>
+                    </div>
+                </div>
+                <button type="submit" class=" btn btn-primary" id="btn_cadastro">Finalizar cadastro</button>
+                <a href="/turma" class="btn btn-dark">Retornar</a>
+            
+            </section>
+        </div> 
+
+    <%} else{%>
+
+        <!-- Main Section -->
+        <div class="col-md-9">
+            <!-- Formulário de Lançamento -->
+            <section id="form_notas" class="mb-5">
+                <h4 class="text-primary">Editar Turma</h4>
+                
+                <input type="hidden" value="<%= turma_para_alterar.id%>" id="hidden_id">
+
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <input type="text" class="form-control" id="txtTurma" placeholder="1º ano" value="<%= turma_para_alterar.turma%>" required>
+                        <label for="txtTurma" class="form-label">Turma * </label>
+                    </div>
+                    <div class="col-md-6 mb-6">
+                        <select class="custom-select" name="serie" id="slctSerie" >
+                            <option value="0">Selecione uma opção</option>
+                            <%for(let i = 0; i < lista_series.length; i++){%>
+                                <% if(turma_para_alterar.id_serie == lista_series[i].id){%>
+                                    <option value="<%= lista_series[i].id%>" selected><%= lista_series[i].serie%></option>
+                                <%} else{%>
+                                    <option value="<%= lista_series[i].id%>" ><%= lista_series[i].serie%></option>
+                                <%}%>
+                            <%}%>
+                        </select>
+                        <label for="slctSerie" class="form-label">Série * </label>
+                    </div>
+                </div>
+                <button type="submit" class=" btn btn-primary" id="btn_atualizar">Finalizar Edição</button>
+                <a href="/turma" class="btn btn-dark">Retornar</a>
+            
+            </section>
+        </div> 
+    <%}%>

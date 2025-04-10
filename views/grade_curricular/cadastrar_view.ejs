@@ -1,0 +1,120 @@
+<script src="/js/validacao.js"></script>
+<script src="/js/grade_curricular/cadastro.js"></script>
+
+<input type="hidden" value="<%= grade_curricular_para_alterar%>" id="hidden_grade_curricular">
+<%if (typeof grade_curricular_para_alterar=="undefined" ) {%>
+    <!-- Main Section -->
+    <div class="col-md-9">
+        <!-- Formulário de Lançamento -->
+        <section id="form_notas" class="mb-5">
+            <h4 class="form-group text-primary">Cadastrar grade Curricular</h4>
+
+            <div class="form-group form-row">
+                <div class="col-md-6">
+                    <select class="form-control" id="slctTurma">
+                        <option selected disabled>Selecione a turma</option>
+                        <%for(let i=0; i < lista_Turma.length; i++){%>
+                            <option value="<%= lista_Turma[i].id%>">
+                                <%= lista_Turma[i].turma%>
+                            </option>
+                        <%}%>
+                    </select>
+                    <label for="slctTurma">Turma</label>
+                </div>
+                <div class="col-md-6">
+                    <select class="form-control" id="slctPeriodo" disabled>
+                        <option selected disabled>Selecione o periodo</option>
+                        <option value="manhã">manhã</option>
+                        <option value="tarde">tarde</option>
+                        <option value="noite">noite</option>
+                    </select>
+                    <label for="slctPeriodo">Periodo</label>
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <div class="col-md-12 form-group">
+                    <label class="mr-3">Dias da Semana</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="cbSegunda" value="segunda" disabled>
+                        <label class="form-check-label" for="cbSegunda">Segunda</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="cbTerca" value="terca" disabled>
+                        <label class="form-check-label" for="cbTerca">Terça</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="cbQuarta" value="quarta" disabled>
+                        <label class="form-check-label" for="cbQuarta">Quarta</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="cbQuinta" value="quinta" disabled>
+                        <label class="form-check-label" for="cbQuinta">Quinta</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="cbSexta" value="sexta" disabled>
+                        <label class="form-check-label" for="cbSexta">Sexta</label>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <input type="time" class="form-control" id="tmHorarioInicio" disabled>
+                    <label for="tmHorarioInicio">Horário inicio</label>
+                </div>
+                <div class="col-md-3">
+                    <input type="time" class="form-control" id="tmHorarioFinal" disabled>
+                    <label for="tmHorarioFinal">Horário final </label>
+                </div>
+
+                <div class="col-md-3">
+                    <select class="form-control" id="slctDisciplina" disabled>
+                        <option selected disabled>Selecione a Disciplina</option>
+                        <%for(let i=0; i < lista_Disciplina.length; i++){%>
+                            <option value="<%= lista_Disciplina[i].id%>">
+                                <%= lista_Disciplina[i].nome%>
+                            </option>
+                        <%}%>
+                    </select>
+                    <label for="slctDisciplina">Disciplina </label>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-control" id="slctProfessor" disabled>
+                        <option selected disabled>Selecione o Professor</option>
+                    </select>
+                    <label for="slctProfessor">Professor </label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-success" id="gradeForm">Adicionar à Grade</button>
+            <button type="submit" class=" btn btn-primary" id="btn_cadastro">Finalizar cadastro</button>
+            <a href="/grade_curricular" class="btn btn-dark">Retornar</a>
+        </section>
+
+        <hr>
+
+        <h4 class="mt-4">Disciplinas na Grade</h4>
+        <div id="gradeTables"></div>
+    </div>
+
+    <%} else{%>
+
+        <!-- Main Section -->
+        <div class="col-md-9">
+            <!-- Formulário de Lançamento -->
+            <section id="form_notas" class="mb-5">
+                <h4 class="text-primary">Editar Ano Letivo</h4>
+
+                <input type="hidden" value="<%= grade_curricular_para_alterar.id%>" id="hidden_id">
+
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <input type="number" class="form-control" id="txtAno" placeholder="2024"
+                            value="<%= grade_curricular_para_alterar.ano_letivo%>" required>
+                        <label for="txtAno" class="form-label">Ano * </label>
+                    </div>
+                </div>
+                <button type="submit" class=" btn btn-primary" id="btn_atualizar">Finalizar Edição</button>
+                <a href="/ano_letivo" class="btn btn-dark">Retornar</a>
+
+            </section>
+        </div>
+    <%}%>

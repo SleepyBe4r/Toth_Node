@@ -13,6 +13,7 @@ const router_Serie = require("./routes/serie_router");
 const router_Atividade = require("./routes/atividade_router");
 const router_Turma = require("./routes/turma_router");
 const router_Sala = require("./routes/sala_router");
+const router_Grade_Curricular = require("./routes/grade_curricular_router");
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use("/serie",router_Serie);
 app.use("/atividade",router_Atividade);
 app.use("/turma",router_Turma);
 app.use("/sala",router_Sala);
+app.use("/grade_curricular",router_Grade_Curricular);
 
 app.listen(5000, ()=>{
     console.log("sistema em execução no localhost:5000");
