@@ -10,10 +10,7 @@
             <thead>
                 <tr>
                     <th><input type="checkbox" id="ckTodos"></th>
-                    <th>ID</th>
                     <th>Turma</th>
-                    <th>Disciplina</th>
-                    <th>Professor</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -21,15 +18,12 @@
                 <%for(let i=0; i < lista_grades.length; i++){%>
                     <tr>
                         <td><input type='checkbox' class='check_del' data-id="<%= lista_grades[i].id%>" data-name="<%= lista_grades[i].id_turma%>"></td>
-                        <td><%= lista_grades[i].id%></td>
-                        <td><%= lista_grades[i].id_turma%></td>
-                        <td><%= lista_grades[i].id_disciplina%></td>
-                        <td><%= lista_grades[i].cpf_professor%></td>
+                        <td><%= lista_grades[i].turma%></td>
                         <td>
-                            <a href="/grade_curricular/editar/<%= lista_grades[i].id%>" class="btn btn-primary">
-                                Editar
+                            <a href="/grade_curricular/editar/<%= lista_grades[i].id_grade%>" class="btn btn-primary">
+                                Ver/Editar
                             </a>
-                            <button class="btn btn-danger excluir" data-id="<%= lista_grades[i].id%>" data-name="<%= lista_grades[i].ano_letivo%>">Excluir</button>
+                            <button class="btn btn-danger excluir" data-id="<%= lista_grades[i].id_grade%>" data-name="<%= lista_grades[i].turma%>">Excluir</button>
                         </td>
                     </tr>
                 <%}%>

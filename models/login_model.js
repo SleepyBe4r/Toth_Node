@@ -40,6 +40,24 @@ class Login_Model{
         return lista;
     }
 
+    async obter(id){
+        let SQL_text = "SELECT * from logins WHERE pessoa_cpf = ?";
+        let db = new Database();
+        let valores = [id];
+        let lista = [];
+        
+        let rows = await db.ExecutaComando(SQL_text, valores);
+
+        for (let i = 0; i < rows.length; i++) {
+            lista.push(new Login_Model( rows[i]["pessoa_cpf"],
+                                        rows[i]["usuario"],
+                                        rows[i]["senha"],
+                                        rows[i]["perfil"]
+            ));
+        }
+        return lista;
+    }
+
     
 }
 

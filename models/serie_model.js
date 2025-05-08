@@ -47,16 +47,16 @@ class Serie_Model{
     }
 
     async listar(){
-        let SQL_text = `SELECT s.id_series, s.serie, s.id_ano_letivo, a.ano_letivo FROM series s
+        let SQL_text = `SELECT s.id_serie, s.serie, s.id_ano_letivo, a.ano_letivo FROM series s
                         JOIN anos_letivos a ON a.id_ano_letivo = s.id_ano_letivo`;
         let db = new Database();
         let lista = [];
         let rows = await db.ExecutaComando(SQL_text);
         for(let i = 0; i < rows.length; i++){
-            lista.push(new Serie_Model(rows[i]["id_series"], 
-                                            rows[i]["serie"],
-                                            rows[i]["id_ano_letivo"],
-                                            rows[i]["ano_letivo"]));
+            lista.push(new Serie_Model(rows[i]["id_serie"], 
+                                        rows[i]["serie"],
+                                        rows[i]["id_ano_letivo"],
+                                        rows[i]["ano_letivo"]));
         }
         return lista;
     }

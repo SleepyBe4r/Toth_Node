@@ -2,6 +2,10 @@ const AlunoModel = require("../models/aluno_model");
 const PessoaModel = require("../models/pessoa_model");
 class Aluno_Controller {
     
+    async home_view(req, resp){
+        resp.render("aluno/aluno_home_view.ejs", { layout: "layout_aluno_home.ejs"});
+    }
+
     async listar(req, res){
         let aluno_M = new AlunoModel();
         let lista_alunos = await aluno_M.listar();

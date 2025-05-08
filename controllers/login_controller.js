@@ -26,16 +26,16 @@ class Login_Controller{
             login_encontrados = await login_M.logar(usuario, senha);
 
             if (login_encontrados.length > 0) {
-                resp.cookie("usuario_Logado", login_encontrados[0].pessoa_cpf);
+                resp.cookie("usuario_logado", login_encontrados[0].pessoa_cpf);
                 switch (login_encontrados[0].perfil) {
                     case 1: // administrador;
-                        resp.redirect("/admin");
+                        resp.redirect("/admin/home");
                         break;
                     case 2: // professor; 
-                        resp.redirect("/professor");
+                        resp.redirect("/professor/home");
                         break;
                     case 3: // aluno;
-                        resp.redirect("/aluno");
+                        resp.redirect("/aluno/home");
                         break;
                 }
             } else{

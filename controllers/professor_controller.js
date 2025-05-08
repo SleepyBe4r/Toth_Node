@@ -3,7 +3,11 @@ const Pessoa_Model = require("../models/pessoa_model");
 
 class Professor_Controller {
 
-    async listar_view(req, resp) {
+    async home_view(req, resp){
+        resp.render("professor/professor_home_view.ejs", { layout: "layout_professor_home.ejs"});
+    }
+
+    async listar_view(req, resp) { // ta completamente errado;
         let professor = new Professor_Model();
         let listaProfessores = await professor.listar(); 
         

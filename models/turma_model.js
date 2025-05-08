@@ -72,8 +72,8 @@ class Turma_Model{
 
     async listar(){
         let SQL_text = `SELECT t.id_turma, t.turma, s.serie, a.ano_letivo, sl.nome as sala FROM turmas t
-                        LEFT JOIN salas sl ON sl.id_salas = t.id_salas
-                        JOIN series s ON s.id_series = t.id_serie
+                        LEFT JOIN salas sl ON sl.id_sala = t.id_sala
+                        JOIN series s ON s.id_serie = t.id_serie
                         JOIN anos_letivos a ON a.id_ano_letivo = s.id_ano_letivo`;
         let db = new Database();
         let lista = [];
@@ -90,9 +90,9 @@ class Turma_Model{
         return lista;
     }
 
-    async listarSemGradeCurricular(){
+    async listar_sem_grade_curricular(){
         let SQL_text = `SELECT t.id_turma, t.turma, s.serie, a.ano_letivo FROM turmas t
-                        JOIN series s ON s.id_series = t.id_serie
+                        JOIN series s ON s.id_serie = t.id_serie
                         JOIN anos_letivos a ON a.id_ano_letivo = s.id_ano_letivo
                         WHERE NOT EXISTS
                             ( SELECT * FROM grade_curricular gc
@@ -115,7 +115,7 @@ class Turma_Model{
     async obterPorProf(id, cpf){
         let SQL_text = `SELECT pt.id_turma, t.turma, s.serie, a.ano_letivo FROM prof_turma pt
                         JOIN turmas t ON t.id_turma = pt.id_turma
-                        JOIN series s ON s.id_series = t.id_serie
+                        JOIN series s ON s.id_serie = t.id_serie
                         JOIN anos_letivos a ON a.id_ano_letivo = s.id_ano_letivo
                         WHERE pt.cpf_professor = ? AND pt.id_disciplina = ?`;
         let db = new Database();
@@ -144,8 +144,8 @@ class Turma_Model{
 
     async obter(id){
         let SQL_text = `SELECT t.id_turma, t.turma, t.id_serie, s.serie, a.ano_letivo, sl.nome as sala FROM turmas t
-                        LEFT JOIN salas sl ON sl.id_salas = t.id_salas
-                        JOIN series s ON s.id_series = t.id_serie
+                        LEFT JOIN salas sl ON sl.id_sala = t.id_sala
+                        JOIN series s ON s.id_serie = t.id_serie
                         JOIN anos_letivos a ON a.id_ano_letivo = s.id_ano_letivo
                         WHERE t.id_turma = ?`;
         let db = new Database();
