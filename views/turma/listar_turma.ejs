@@ -12,9 +12,6 @@
                     <th><input type="checkbox" id="ckTodos"></th>
                     <th>ID</th>
                     <th>Turma</th>
-                    <th>Sala</th>
-                    <th>Serie</th>
-                    <th>Ano Letivo</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -24,9 +21,6 @@
                         <td><input type='checkbox' class='check_del' data-id="<%= lista_turmas[i].id%>" data-name="<%= lista_turmas[i].serie%>"></td>
                         <td><%= lista_turmas[i].id%></td>
                         <td><%= lista_turmas[i].turma%></td>
-                        <td><%= lista_turmas[i].sala%></td>
-                        <td><%= lista_turmas[i].serie%></td>
-                        <td><%= lista_turmas[i].ano_letivo%></td>
                         <td>
                             <a href="/turma/editar/<%= lista_turmas[i].id%>" class="btn btn-primary">
                                 Editar

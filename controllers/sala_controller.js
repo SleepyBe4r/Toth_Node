@@ -7,12 +7,12 @@ class Sala_Controller{
     async listar_view(req, resp){
         let sala_Model = new Sala_Model();
         let lista_salas = await sala_Model.listar();
-        resp.render("sala/listar_sala.ejs", { layout: "layout_admin_home.ejs", lista_salas});
+        resp.render("salas/listar_sala.ejs", { layout: "layout_admin_home.ejs", lista_salas});
     }
 
     listar_cadastro(req, resp){
         let sala_para_alterar  = undefined;
-        resp.render("sala/cadastrar_view.ejs", { layout: "layout_admin_home.ejs", sala_para_alterar });
+        resp.render("salas/cadastrar_view.ejs", { layout: "layout_admin_home.ejs", sala_para_alterar });
     }
 
     async cadastrar_sala(req, resp) {
@@ -66,7 +66,7 @@ class Sala_Controller{
         let sala_para_alterar = await sala_M.obter(id);
         sala_para_alterar = sala_para_alterar[0];
 
-        resp.render("sala/cadastrar_view.ejs", { layout: "layout_admin_home.ejs", sala_para_alterar});
+        resp.render("salas/cadastrar_view.ejs", { layout: "layout_admin_home.ejs", sala_para_alterar});
     }
 
     async editar_sala(req, resp) {

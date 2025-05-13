@@ -1,7 +1,7 @@
 
 class Admin_Controller {
 
-    listar_home(req, resp){
+    home_view(req, resp){
         resp.render("admin/admin_home_view.ejs", { layout: "layout_admin_home.ejs"});
     }
 }

@@ -1,4 +1,3 @@
-const Ano_Letivo_Model = require("../models/ano_letivo_model");
 const Serie_Model = require("../models/serie_model");
 
 class Serie_Controller{
@@ -11,13 +10,11 @@ class Serie_Controller{
 
     async listar_cadastro(req, resp){
         let serie_para_alterar  = undefined;
-        let ano_letivo_M = new Ano_Letivo_Model();
-        let lista_anos = await ano_letivo_M.listar();
-        resp.render("serie/cadastrar_view.ejs", { layout: "layout_admin_home.ejs", serie_para_alterar, lista_anos });
+        resp.render("serie/cadastrar_view.ejs", { layout: "layout_admin_home.ejs", serie_para_alterar});
     }
 
     async cadastrar_serie(req, resp) {
-        if(req.body.serie == "", req.body.id_ano_letivo == "0"){
+        if(req.body.serie == ""){
             resp.send({
                 ok : false,
                 msg: "Campo incompleto"
@@ -27,7 +24,6 @@ class Serie_Controller{
 
         let serie_M = new Serie_Model();
         serie_M.serie = req.body.serie;
-        serie_M.id_ano_letivo = req.body.id_ano_letivo;
 
         let lista_serie = [];
 
@@ -67,14 +63,11 @@ class Serie_Controller{
         let serie_para_alterar = await serie_M.obter(id);
         serie_para_alterar = serie_para_alterar[0];
 
-        let ano_letivo_M = new Ano_Letivo_Model();
-        let lista_anos = await ano_letivo_M.listar();
-
-        resp.render("serie/cadastrar_view.ejs", { layout: "layout_admin_home.ejs", serie_para_alterar, lista_anos});
+        resp.render("serie/cadastrar_view.ejs", { layout: "layout_admin_home.ejs", serie_para_alterar});
     }
 
     async editar_serie(req, resp) {
-        if(req.body.serie == "", req.body.id_ano_letivo == "0"){
+        if(req.body.serie == ""){
             resp.send({
                 ok : false,
                 msg: "Campo incompleto"
@@ -85,7 +78,6 @@ class Serie_Controller{
         let serie_M = new Serie_Model();
         serie_M.id =  req.body.id;
         serie_M.serie = req.body.serie;
-        serie_M.id_ano_letivo = req.body.id_ano_letivo;
 
         let lista_serie = [];
 

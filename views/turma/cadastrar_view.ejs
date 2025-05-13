@@ -15,15 +15,6 @@
                         <input type="text" class="form-control" id="txtTurma" placeholder="A" required>
                         <label for="txtTurma" class="form-label">Turma * </label>
                     </div>
-                    <div class="col-md-6 mb-6">
-                        <select class="custom-select" name="serie" id="slctSerie" >
-                            <option value="0">Selecione uma opção</option>
-                            <%for(let i = 0; i < lista_series.length; i++){%>
-                                <option value="<%= lista_series[i].id%>"  ><%= lista_series[i].serie%></option>
-                            <%}%>
-                        </select>
-                        <label for="slctSerie" class="form-label">Série * </label>
-                    </div>
                 </div>
                 <button type="submit" class=" btn btn-primary" id="btn_cadastro">Finalizar cadastro</button>
                 <a href="/turma" class="btn btn-dark">Retornar</a>
@@ -45,19 +36,6 @@
                     <div class="col-md-3 mb-3">
                         <input type="text" class="form-control" id="txtTurma" placeholder="1º ano" value="<%= turma_para_alterar.turma%>" required>
                         <label for="txtTurma" class="form-label">Turma * </label>
-                    </div>
-                    <div class="col-md-6 mb-6">
-                        <select class="custom-select" name="serie" id="slctSerie" >
-                            <option value="0">Selecione uma opção</option>
-                            <%for(let i = 0; i < lista_series.length; i++){%>
-                                <% if(turma_para_alterar.id_serie == lista_series[i].id){%>
-                                    <option value="<%= lista_series[i].id%>" selected><%= lista_series[i].serie%></option>
-                                <%} else{%>
-                                    <option value="<%= lista_series[i].id%>" ><%= lista_series[i].serie%></option>
-                                <%}%>
-                            <%}%>
-                        </select>
-                        <label for="slctSerie" class="form-label">Série * </label>
                     </div>
                 </div>
                 <button type="submit" class=" btn btn-primary" id="btn_atualizar">Finalizar Edição</button>

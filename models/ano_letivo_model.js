@@ -37,16 +37,7 @@ class Ano_Letivo_Model{
         }
         return lista;
     }
-
-    async inserir(){
-        let SQL_text = `INSERT INTO anos_letivos (ano_letivo) 
-                        VALUES (?);`;
-        let db = new Database();
-        let valores = [this.#ano_letivo];        
-        let resultado = await db.ExecutaComandoNonQuery(SQL_text, valores);        
-        return resultado;
-    }
-
+    
     async obter(id){
         let SQL_text = "SELECT * FROM anos_letivos WHERE id_ano_letivo = ?";
         let db = new Database();
@@ -58,6 +49,15 @@ class Ano_Letivo_Model{
                                             rows[i]["ano_letivo"]));
         }
         return lista;
+    }
+
+    async inserir(){
+        let SQL_text = `INSERT INTO anos_letivos (ano_letivo) 
+                        VALUES (?);`;
+        let db = new Database();
+        let valores = [this.#ano_letivo];        
+        let resultado = await db.ExecutaComandoNonQuery(SQL_text, valores);        
+        return resultado;
     }
 
     async atualizar(){

@@ -11,20 +11,11 @@ class Turma_Controller{
 
     async listar_cadastro(req, resp){
         let turma_para_alterar  = undefined;
-        let serie_M = new Serie_Model();
-        let lista = await serie_M.listar();
-        let lista_series = [];
-        lista.forEach(e=>{
-            lista_series.push({
-                id: e.id,
-                serie: `${e.serie} - ${e.ano_letivo}`
-            })
-        })
-        resp.render("turma/cadastrar_view.ejs", { layout: "layout_admin_home.ejs", turma_para_alterar, lista_series });
+        resp.render("turma/cadastrar_view.ejs", { layout: "layout_admin_home.ejs", turma_para_alterar});
     }
          
     async cadastrar_turma(req, resp) {
-        if(req.body.turma == "", req.body.id_serie == "0"){
+        if(req.body.turma == ""){
             resp.send({
                 ok : false,
                 msg: "Campo incompleto"
@@ -34,7 +25,6 @@ class Turma_Controller{
 
         let turma_M = new Turma_Model();
         turma_M.turma = req.body.turma;
-        turma_M.id_serie = req.body.id_serie;
 
         let lista_turma = [];
 
@@ -71,24 +61,14 @@ class Turma_Controller{
     async listar_editar(req, resp){
         const id = req.params.id;
         let turma_M = new Turma_Model();
-        let serie_M = new Serie_Model();
         let turma_para_alterar = await turma_M.obter(id);
         turma_para_alterar = turma_para_alterar[0];
 
-        let lista = await serie_M.listar();
-        let lista_series = [];
-        lista.forEach(e=>{
-            lista_series.push({
-                id: e.id,
-                serie: `${e.serie} - ${e.ano_letivo}`
-            })
-        })
-
-        resp.render("turma/cadastrar_view.ejs", { layout: "layout_admin_home.ejs", turma_para_alterar, lista_series});
+        resp.render("turma/cadastrar_view.ejs", { layout: "layout_admin_home.ejs", turma_para_alterar});
     }
 
     async editar_turma(req, resp) {
-        if(req.body.turma == "", req.body.id_serie == "0"){
+        if(req.body.turma == ""){
             resp.send({
                 ok : false,
                 msg: "Campo incompleto"
@@ -99,7 +79,6 @@ class Turma_Controller{
         let turma_M = new Turma_Model();
         turma_M.id =  req.body.id;
         turma_M.turma = req.body.turma;
-        turma_M.id_serie = req.body.id_serie;
 
         let lista_turma = [];
 
@@ -117,7 +96,7 @@ class Turma_Controller{
         }
     }
 
-    async ObterPorDisc(req, resp){
+    async ObterPorDisc(req, resp){ //arrumar
         let cpf = req.cookies.usuario_Logado;
         let id = req.body.id_disciplina;
         let turma_M = new Turma_Model();

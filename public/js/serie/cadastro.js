@@ -3,15 +3,12 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
     function cadastrar() {
         let input_serie = document.querySelector("#txtSerie");
-        let input_id_ano_letivo = document.querySelector("#slctAnoLetivo");
         let lista_validacao = [];
 
         if (input_serie.value === "") lista_validacao.push(input_serie.id);
-        if (input_id_ano_letivo.value === "0") lista_validacao.push(input_id_ano_letivo.id);
         if(lista_validacao.length == 0){
             let obj = {
-                serie : input_serie.value,
-                id_ano_letivo : input_id_ano_letivo.value
+                serie : input_serie.value
             }
 
             fetch("/serie/cadastrar", {
@@ -36,16 +33,13 @@ document.addEventListener("DOMContentLoaded", ()=>{
     function atualizar() {
         let input_id = document.querySelector("#hidden_id");
         let input_serie = document.querySelector("#txtSerie");
-        let input_id_ano_letivo = document.querySelector("#slctAnoLetivo");
         let lista_validacao = [];
 
         if (input_serie.value === "") lista_validacao.push(input_serie.id);
-        if (input_id_ano_letivo.value === "0") lista_validacao.push(input_id_ano_letivo.id);
         if(lista_validacao.length == 0){
             let obj = {
                 id: input_id.value,
-                serie : input_serie.value,
-                id_ano_letivo : input_id_ano_letivo.value,
+                serie : input_serie.value
             }
 
             fetch("/serie/editar", {

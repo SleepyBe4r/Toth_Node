@@ -15,15 +15,6 @@
                         <input type="text" class="form-control" id="txtSerie" placeholder="1º ano" required>
                         <label for="txtSerie" class="form-label">Serie * </label>
                     </div>
-                    <div class="col-md-3 mb-3">
-                        <select class="custom-select" name="ano_letivo" id="slctAnoLetivo" >
-                            <option value="0">Selecione uma opção</option>
-                            <%for(let i = 0; i < lista_anos.length; i++){%>
-                                <option value="<%= lista_anos[i].id%>"  ><%= lista_anos[i].ano_letivo%></option>
-                            <%}%>
-                        </select>
-                        <label for="slctAnoLetivo" class="form-label">Ano * </label>
-                    </div>
                 </div>
                 <button type="submit" class=" btn btn-primary" id="btn_cadastro">Finalizar cadastro</button>
                 <a href="/serie" class="btn btn-dark">Retornar</a>
@@ -46,23 +37,9 @@
                         <input type="text" class="form-control" id="txtSerie" placeholder="1º ano" value="<%= serie_para_alterar.serie%>" required>
                         <label for="txtSerie" class="form-label">Serie * </label>
                     </div>
-                    <div class="col-md-3 mb-3">
-                        <select class="custom-select" name="ano_letivo" id="slctAnoLetivo" >
-                            <option value="0">Selecione uma opção</option>
-                            <%for(let i = 0; i < lista_anos.length; i++){%>
-                                <% if(serie_para_alterar.id_ano_letivo == lista_anos[i].id){%>
-                                    <option value="<%= lista_anos[i].id%>" selected><%= lista_anos[i].ano_letivo%></option>
-                                <%} else{%>
-                                    <option value="<%= lista_anos[i].id%>" ><%= lista_anos[i].ano_letivo%></option>
-                                <%}%>
-                            <%}%>
-                        </select>
-                        <label for="slctAnoLetivo" class="form-label">Ano * </label>
-                    </div>
                 </div>
                 <button type="submit" class=" btn btn-primary" id="btn_atualizar">Finalizar Edição</button>
-                <a href="/serie" class="btn btn-dark">Retornar</a>
-            
+                <a href="/serie" class="btn btn-dark">Retornar</a>            
             </section>
         </div> 
     <%}%>

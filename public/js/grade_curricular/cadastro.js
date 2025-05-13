@@ -1,18 +1,10 @@
 
 document.addEventListener("DOMContentLoaded", () => {
-    const diasDaSemana = ["segunda", "terca", "quarta", "quinta", "sexta"];
-    const gradePorDia = {
-        segunda: [],
-        terca: [],
-        quarta: [],
-        quinta: [],
-        sexta: []
-    };
     let lista_Grade = [];
-    lista_Grade.push(0);
+    let ultimo_id = 0;
 
-    const disciplinas = document.querySelector(`#slctDisciplina_${lista_Grade[0]}`).options;
-    const professores = document.querySelector(`#slctProfessor_${lista_Grade[0]}`).options;
+    const disciplinas = document.querySelector(`#slctDisciplina_hidden`).options;
+    const professores = document.querySelector(`#slctProfessor_hidden`).options;
 
     function cadastrar() {
         let input_turma = document.querySelector("#slctTurma");
@@ -73,17 +65,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function atualizar() {
         let input_id = document.querySelector("#hidden_id");
-        let input_ano_letivo = document.querySelector("#txtAno");
+        let input_turma = document.querySelector("#slctTurma");
+        let input_grade = [];
+        for (let i = 0; i < lista_Grade.length; i++) {
+            input_grade.push({
+                id_item: lista_Grade[i],
+                disciplina: document.querySelector(`#slctDisciplina_${lista_Grade[i]}`),
+                professor: document.querySelector(`#slctProfessor_${lista_Grade[i]}`)
+            });
+        }
         let lista_validacao = [];
 
-        if (input_ano_letivo.value === "") lista_validacao.push(input_ano_letivo.id);
+        if (input_turma.value === "") lista_validacao.push(input_turma.id);
+        for (let i = 0; i < input_grade.length; i++) {
+            for (let j = 0; j < input_grade.length; j++) {   
+                if (i != j) {
+                    if(input_grade[i].disciplina.value == input_grade[j].disciplina.value){
+                        lista_validacao.push(input_grade[i].disciplina.id);
+                        lista_validacao.push(input_grade[j].disciplina.id);
+                    }
+                }     
+            }
+        }
+
         if (lista_validacao.length == 0) {
-            let obj = {
-                id: input_id.value,
-                ano_letivo: input_ano_letivo.value,
+
+            let grade = [];
+            for (let i = 0; i < input_grade.length; i++) {
+                grade.push({
+                    id_item: input_grade[i].id_item,
+                    disciplina: input_grade[i].disciplina.value,
+                    professor: input_grade[i].professor.value
+                });
             }
 
-            fetch("/ano_letivo/editar", {
+            let obj = {
+                id_grade: input_id.value,
+                turma: input_turma.value,
+                grade_curricular: grade
+            }
+
+            fetch("/grade_curricular/editar", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -93,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 .then((resposta) => resposta.json())
                 .then((dados) => {
                     if (dados.ok) alert(dados.msg);
-                    window.location.href = '/ano_letivo';
+                    window.location.href = '/grade_curricular';
                 })
                 .catch((erro) => console.error("erro:", erro));
 
@@ -151,9 +173,11 @@ document.addEventListener("DOMContentLoaded", () => {
         disciplinaItem.classList.add('row');
         disciplinaItem.classList.add('item_disciplina');
         disciplinaItem.classList.add('justify-content-between');
-        
-        lista_Grade.push(lista_Grade[lista_Grade.length - 1] + 1);
-        let ultimo_id = lista_Grade[lista_Grade.length - 1];
+
+        if (lista_Grade.length > 0) {
+            ultimo_id++;    
+        }
+        lista_Grade.push(ultimo_id);
 
         disciplinaItem.id = `item_disciplina_${ultimo_id}`;
         disciplinaItem.innerHTML = `
@@ -181,16 +205,22 @@ document.addEventListener("DOMContentLoaded", () => {
         inserir_Professor(ultimo_id);
         document.querySelector(`#btn_excluir_${ultimo_id}`).addEventListener("click", remover_disciplina);
     }
-
     
-
-    document.querySelector("#btn_excluir_0").addEventListener("click", remover_disciplina);
     
     document.querySelector("#btn_add_disc").addEventListener("click", add_disciplina);
-
+    
     let input_usuario = document.querySelector("#hidden_grade_curricular").value;
-    if (input_usuario == "")
+    if (input_usuario == ""){
         document.querySelector("#btn_cadastro").addEventListener("click", cadastrar);
-    else
+        add_disciplina();
+        document.querySelector("#btn_excluir_0").addEventListener("click", remover_disciplina);
+    } else{
         document.querySelector("#btn_atualizar").addEventListener("click", atualizar);
+        let div_disciplina = document.querySelector(".form-group.disciplina");
+        for (let i = 0; i < div_disciplina.children.length; i++) {
+            lista_Grade.push(div_disciplina.children[i].id.split("item_disciplina_").pop());
+            ultimo_id = parseInt(lista_Grade[i]);
+            document.querySelector("#btn_excluir_"+ultimo_id).addEventListener("click", remover_disciplina);
+        }
+    }
 });

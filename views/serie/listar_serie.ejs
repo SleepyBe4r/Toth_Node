@@ -5,14 +5,12 @@
     <section class="mb-5">
         <h4 class="text-primary">Séries</h4>
 
-        
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
                     <th><input type="checkbox" id="ckTodos"></th>
                     <th>ID</th>
                     <th>Serie</th>
-                    <th>Ano Letivo</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -22,7 +20,6 @@
                         <td><input type='checkbox' class='check_del' data-id="<%= lista_series[i].id%>" data-name="<%= lista_series[i].serie%>"></td>
                         <td><%= lista_series[i].id%></td>
                         <td><%= lista_series[i].serie%></td>
-                        <td><%= lista_series[i].ano_letivo%></td>
                         <td>
                             <a href="/serie/editar/<%= lista_series[i].id%>" class="btn btn-primary">
                                 Editar

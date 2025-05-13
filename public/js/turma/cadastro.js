@@ -3,15 +3,12 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
     function cadastrar() {
         let input_turma = document.querySelector("#txtTurma");
-        let input_id_serie = document.querySelector("#slctSerie");
         let lista_validacao = [];
 
         if (input_turma.value === "") lista_validacao.push(input_turma.id);
-        if (input_id_serie.value === "0") lista_validacao.push(input_id_serie.id);
         if(lista_validacao.length == 0){
             let obj = {
                 turma : input_turma.value,
-                id_serie : input_id_serie.value
             }
 
             fetch("/turma/cadastrar", {
@@ -36,16 +33,13 @@ document.addEventListener("DOMContentLoaded", ()=>{
     function atualizar() {
         let input_id = document.querySelector("#hidden_id");
         let input_turma = document.querySelector("#txtTurma");
-        let input_id_serie = document.querySelector("#slctSerie");
         let lista_validacao = [];
 
         if (input_turma.value === "") lista_validacao.push(input_turma.id);
-        if (input_id_serie.value === "0") lista_validacao.push(input_id_serie.id);
         if(lista_validacao.length == 0){
             let obj = {
                 id: input_id.value,
                 turma : input_turma.value,
-                id_serie : input_id_serie.value,
             }
 
             fetch("/turma/editar", {
