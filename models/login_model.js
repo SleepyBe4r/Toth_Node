@@ -14,7 +14,14 @@ class Login_Model{
     get perfil(){        
         return this.#perfil;
     }
+    
+    get usuario(){
+        return this.#usuario;
+    }
 
+    get senha(){
+        return this.#senha;
+    }
     constructor(cpf, usuario, senha, perfil){
         this.#pessoa_cpf = cpf;
         this.#usuario = usuario;
@@ -34,7 +41,7 @@ class Login_Model{
             lista.push(new Login_Model( rows[i]["pessoa_cpf"],
                                         rows[i]["usuario"],
                                         rows[i]["senha"],
-                                        rows[i]["perfil"]
+                                        rows[i]["id_perfil"]
             ));
         }
         return lista;
@@ -52,7 +59,7 @@ class Login_Model{
             lista.push(new Login_Model( rows[i]["pessoa_cpf"],
                                         rows[i]["usuario"],
                                         rows[i]["senha"],
-                                        rows[i]["perfil"]
+                                        rows[i]["id_perfil"]
             ));
         }
         return lista;
