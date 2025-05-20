@@ -18,6 +18,10 @@ class Login_Model{
     get perfil(){        
         return this.#perfil;
     }
+    
+    get usuario(){
+        return this.#usuario;
+    }
 
     set perfil(value){
         this.#perfil = value;

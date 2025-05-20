@@ -44,6 +44,8 @@ class Autenticacao {
             if(usuario_lista.length > 0){
                 if (usuario_lista[0].perfil == 3) {                    
                     next();
+                } else {
+                    resp.redirect("/login");
                 }
             }
         } else {
