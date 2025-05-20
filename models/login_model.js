@@ -11,8 +11,32 @@ class Login_Model{
         return this.#pessoa_cpf;
     }
 
+    set pessoa_cpf(value){
+        this.#pessoa_cpf = value;
+    }
+
     get perfil(){        
         return this.#perfil;
+    }
+
+    set perfil(value){
+        this.#perfil = value;
+    }
+    
+    get usuario(){
+        return this.#usuario;
+    }
+
+    set usuario(value){
+        this.#usuario = value;
+    }
+
+    get senha(){
+        return this.#senha;
+    }
+
+    set senha(value){
+        this.#senha = value;
     }
 
     constructor(cpf, usuario, senha, perfil){
@@ -34,7 +58,7 @@ class Login_Model{
             lista.push(new Login_Model( rows[i]["pessoa_cpf"],
                                         rows[i]["usuario"],
                                         rows[i]["senha"],
-                                        rows[i]["perfil"]
+                                        rows[i]["id_perfil"]
             ));
         }
         return lista;
@@ -52,7 +76,7 @@ class Login_Model{
             lista.push(new Login_Model( rows[i]["pessoa_cpf"],
                                         rows[i]["usuario"],
                                         rows[i]["senha"],
-                                        rows[i]["perfil"]
+                                        rows[i]["id_perfil"]
             ));
         }
         return lista;

@@ -10,7 +10,7 @@ class Autenticacao {
             let usuario_lista = await login_M.obter(usu_Id);
 
             if(usuario_lista.length > 0){
-                if (usuario_lista[0].perfil == 3) {
+                if (usuario_lista[0].perfil == 1) {
                     next();
                 }
             }
@@ -26,7 +26,7 @@ class Autenticacao {
             let usuario_lista = await login_M.obter(usu_Id);
 
             if(usuario_lista.length > 0){
-                if (usuario_lista[0].perfil == 1 || usuario_lista[0].perfil == 2) {
+                if (usuario_lista[0].perfil == 3 || usuario_lista[0].perfil == 2) {
                     next();
                 }
             }
@@ -42,7 +42,7 @@ class Autenticacao {
             let usuario_lista = await login_M.obter(usu_Id);
 
             if(usuario_lista.length > 0){
-                if (usuario_lista[0].perfil == 1) {                    
+                if (usuario_lista[0].perfil == 3) {                    
                     next();
                 }
             }
