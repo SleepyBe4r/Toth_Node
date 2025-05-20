@@ -3,7 +3,7 @@
 <!-- Main Section -->
 <div class="col-md-9">
     <section class="mb-5">
-        <h4 class="text-primary">Grades Curriculares</h4>
+        <h4 class="text-primary">Grades</h4>
 
         
         <table class="table table-striped table-hover">
@@ -20,7 +20,7 @@
                         <td><input type='checkbox' class='check_del' data-id="<%= lista_grades[i].id%>" data-name="<%= lista_grades[i].id_turma%>"></td>
                         <td><%= lista_grades[i].turma%></td>
                         <td>
-                            <a href="/grade_curricular/editar/<%= lista_grades[i].id_grade%>" class="btn btn-primary">
+                            <a href="/grade/editar/<%= lista_grades[i].id_grade%>" class="btn btn-primary">
                                 Ver/Editar
                             </a>
                             <button class="btn btn-danger excluir" data-id="<%= lista_grades[i].id_grade%>" data-name="<%= lista_grades[i].turma%>">Excluir</button>
@@ -30,7 +30,7 @@
             </tbody>
         </table>
         <div>
-            <a href="/grade_curricular/cadastrar" class="btn btn-primary">Cadastrar Grade Curricular</a>
+            <a href="/grade/cadastrar" class="btn btn-primary">Cadastrar Grade Curricular</a>
             <input type="button" class="btn btn-danger" value="excluir selecionados" id="btnExcluirSelecionados">
         </div>
     </section>

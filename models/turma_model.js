@@ -77,24 +77,18 @@ class Turma_Model{
         return resultado;
     }
 
-    async listar_sem_grade_curricular(){ // arrumar
-        let SQL_text = `SELECT t.id_turma, t.turma, s.serie, a.ano_letivo FROM turmas t
-                        JOIN series s ON s.id_serie = t.id_serie
-                        JOIN anos_letivos a ON a.id_ano_letivo = s.id_ano_letivo
+    async listar_sem_grade(){
+        let SQL_text = `SELECT t.id_turma, t.turma FROM turmas t
                         WHERE NOT EXISTS
-                            ( SELECT * FROM grade_curricular gc
-                                WHERE gc.id_turma = t.id_turma )`;
+                            ( SELECT * FROM grade g
+                                WHERE g.id_turma = t.id_turma )`;
+
         let db = new Database();
         let lista = [];
         let rows = await db.ExecutaComando(SQL_text);
         for(let i = 0; i < rows.length; i++){
             lista.push(new Turma_Model(rows[i]["id_turma"],
-                                       rows[i]["turma"], 
-                                       0, // id_serie
-                                       rows[i]["serie"],
-                                       0, // id_sala
-                                       "", // sala         
-                                       rows[i]["ano_letivo"]));
+                                       rows[i]["turma"]));
         }
         return lista;
     }

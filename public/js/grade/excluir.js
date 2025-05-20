@@ -1,7 +1,7 @@
 
 document.addEventListener("DOMContentLoaded", ()=>{
 
-    function excluir(e, ano_id, ano, linha){
+    function excluir(e, ano_id, ano, linha){ //Modificar as foreing keys do item_grade, horarios, disiplina_grade e professor_grade para on delete cascade
 
         if(typeof ano_id == "undefined" && typeof ano == "undefined" ){
             ano_id = this.btn_excluir_.id;

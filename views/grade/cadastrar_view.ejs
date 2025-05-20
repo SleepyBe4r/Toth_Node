@@ -1,0 +1,287 @@
+<script src="/js/validacao.js"></script>
+<script src="/js/grade/cadastro.js"></script>
+
+<input type="hidden" value="<%= grade_para_alterar%>" id="hidden_grade">
+<%if (typeof grade_para_alterar == "undefined" ) {%>
+    <!-- Main Section -->
+    <div class="col-md-9">
+        <!-- Formulário de Lançamento -->
+        <section id="form_notas" class="mb-5">
+            <h4 class="form-group text-primary">Cadastrar grade</h4>
+
+            <div class="form-group form-row">
+                <div class="col-md-3">
+                    <select class="form-control" id="slctAno">
+                        <option value="" selected disabled>Selecione o ano letivo</option>
+                        <%for(let i=0; i < lista_anos.length; i++){%>
+                            <option value="<%= lista_anos[i].id%>">
+                                <%= lista_anos[i].ano_letivo%>
+                            </option>
+                        <%}%>
+                    </select>
+                    <label for="slctAno">Ano Letivo *</label>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-control" id="slctSerie">
+                        <option value="" selected disabled>Selecione a serie</option>
+                        <%for(let i=0; i < lista_series.length; i++){%>
+                            <option value="<%= lista_series[i].id%>">
+                                <%= lista_series[i].serie%>
+                            </option>
+                        <%}%>
+                    </select>
+                    <label for="slctSerie">Serie *</label>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-control" id="slctTurma">
+                        <option value="" selected disabled>Selecione a turma</option>
+                        <%for(let i=0; i < lista_turmas.length; i++){%>
+                            <option value="<%= lista_turmas[i].id%>">
+                                <%= lista_turmas[i].turma%>
+                            </option>
+                        <%}%>
+                    </select>
+                    <label for="slctTurma">Turma *</label>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-control" id="slctPeriodo">
+                        <option value="" selected disabled>Selecione um periodo</option>
+                        <option value="1">manhã</option>
+                        <option value="2">Tarde</option>                        
+                    </select>
+                    <label for="slctPeriodo">Periodo *</label>
+                </div>
+            </div>
+
+            <h4 class="text-primary">Horarios</h4>
+            <div class="form-group">
+                <button type="button" class="btn btn-success" id="btn_modal_horario" data-toggle="modal" data-target="#modalHorario" disabled>Adicionar Novo Horario</button>
+            </div>
+            
+            <div class="form-group horario">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <td class="p-2">horarios</td>
+                            <td class="p-2">Domingo</td>
+                            <td class="p-2">Segunda</td>
+                            <td class="p-2">Terça</td>
+                            <td class="p-2">Quarta</td>
+                            <td class="p-2">Quinta</td>
+                            <td class="p-2">Sexta</td>
+                            <td class="p-2">Sabado</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="horario_1"></tr>
+                        <tr id="horario_2"></tr>
+                        <tr id="horario_3"></tr>
+                        <tr id="horario_4"></tr>
+                        <tr id="horario_5"></tr>
+                        <tr id="horario_6"></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal fade" id="modalHorario" tabindex="-1" aria-labelledby="modalHorarioLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="modalHorarioLabel"><i class="bi-cart-fill me-1"></i> horario</h5>
+                    </div>
+                    <div id="corpoHorario" class="modal-body">
+                        <div class="col">
+                            <select class="form-control" id="slctHorario">
+                                <option value="" selected disabled>Selecione um Horario</option>
+                            </select>
+                            <label for="slctHorario">Horario *</label>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                            <label>Dias da Semana *</label><br>
+                    
+                            <div class="form-check form-check-inline">                                        
+                                <input class="form-check-input dia_semana" type="checkbox" id="cb_domingo" value="dom">
+                                <label class="form-check-label" for="domingo">Dom</label>
+                            </div>
+
+                            <div class="form-check form-check-inline">                                        
+                              <input class="form-check-input dia_semana" type="checkbox" id="cb_segunda" value="seg">
+                              <label class="form-check-label" for="segunda">Seg</label>
+                            </div>
+                                        
+                            <div class="form-check form-check-inline">                                        
+                              <input class="form-check-input dia_semana" type="checkbox" id="cb_terca" value="ter">
+                              <label class="form-check-label" for="terca">Ter</label>
+                            </div>
+                                        
+                            <div class="form-check form-check-inline">                                        
+                              <input class="form-check-input dia_semana" type="checkbox" id="cb_quarta" value="qua">
+                              <label class="form-check-label" for="quarta">Qua</label>
+                            </div>                    
+                    
+                            <div class="form-check form-check-inline">                                        
+                              <input class="form-check-input dia_semana" type="checkbox" id="cb_quinta" value="qui">
+                              <label class="form-check-label" for="quinta">Qui</label>
+                            </div>
+                                        
+                            <div class="form-check form-check-inline">                                        
+                              <input class="form-check-input dia_semana" type="checkbox" id="cb_sexta" value="sex">                                        
+                              <label class="form-check-label" for="sexta">Sex</label>                            
+                            </div>       
+                            
+                            <div class="form-check form-check-inline">                                        
+                                <input class="form-check-input dia_semana" type="checkbox" id="cb_sabado" value="sab">                                        
+                                <label class="form-check-label" for="sabado">Sab</label>                            
+                              </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <select class="form-control" id="slctDisciplina">
+                                <option value="">Nenhuma</option>
+                                <%for(let i=0; i < lista_disciplinas.length; i++){%>
+                                    <option value="<%= lista_disciplinas[i].id%>">
+                                        <%= lista_disciplinas[i].nome%>
+                                    </option>
+                                <%}%>
+                            </select>
+                            <label for="slctDisciplina">Disciplina *</label>
+                        </div>
+                        <div class="col">
+                            <select class="form-control" id="slctProfessor">
+                                <option value="">Nenhum</option>
+                                <%for(let i=0; i < lista_professores.length; i++){%>
+                                    <option value="<%= lista_professores[i].cpf%>">
+                                        <%= lista_professores[i].nome%>
+                                    </option>
+                                <%}%>
+                            </select>
+                            <label for="slctProfessor">Professor *</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="display:flex;justify-content: space-between;">
+                        <div id="valorTotalPedido">
+
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-danger fechar_modal" data-dismiss="modal">Fechar</button>
+                            <button type="button" id="btn_add_horario" class="btn btn-success">Confirmar pedido</button>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+            <button type="submit" class=" btn btn-primary" id="btn_cadastro">Finalizar cadastro</button>
+            <a href="/grade" class="btn btn-dark">Retornar</a>
+        </section>
+    </div>
+
+<%} else{%>
+
+    <!-- Main Section -->
+    <div class="col-md-9">
+        <!-- Formulário de Lançamento -->
+        <section id="form_notas" class="mb-5">
+            <h4 class="form-group text-primary">Editar grade</h4>
+
+            <input type="hidden" value="<%= grade_para_alterar[0].id%>" id="hidden_id">
+
+
+            <div class="form-group form-row">
+                <div class="col-md-12">
+                    <select class="form-control" id="slctTurma">
+                        <option value="" selected disabled>Selecione a turma</option>
+                        <%for(let i=0; i < lista_turmas.length; i++){%>
+                            <% if (lista_turmas[i].id == grade_para_alterar[0].id_turma) { %>
+                                <option value="<%= lista_turmas[i].id%>" selected>
+                                    <%= lista_turmas[i].turma%>
+                                </option>    
+                            <% } else { %>
+                                <option value="<%= lista_turmas[i].id%>">
+                                    <%= lista_turmas[i].turma%>
+                                </option>                            
+                            <% } %>
+                        <%}%>
+                    </select>
+                    <label for="slctTurma">Turma</label>
+                </div>
+            </div>
+
+            <h4 class="text-primary">Disciplinas</h4>
+            <div class="form-group">
+                <button type="button" class="btn btn-success" id="btn_add_disc">Adicionar Nova Disciplina</button>
+            </div>
+            <select class="form-control" id="slctDisciplina_hidden" hidden>
+                <option selected disabled>Selecione a Disciplina</option>
+                <%for(let i=0; i < lista_disciplinas.length; i++){%>
+                    <option value="<%= lista_disciplinas[i].id%>">
+                        <%= lista_disciplinas[i].nome%>
+                    </option>
+                <%}%>
+            </select>
+
+            <select class="form-control" id="slctProfessor_hidden" hidden>
+                <option selected disabled>Selecione o Professor</option>
+                <%for(let i=0; i < lista_professores.length; i++){%>
+                    <option value="<%= lista_professores[i].cpf%>">
+                        <%= lista_professores[i].nome%>
+                    </option>
+                <%}%>
+            </select>
+            <div class="form-group disciplina">
+                <% for( let i = 0; i < grade_para_alterar.length; i++ ) { %>
+                    <div class="row item_disciplina justify-content-between" id="item_disciplina_<%= grade_para_alterar[i].id_item %>">
+                        <div class="col-md-5">
+                            <select class="form-control" id="slctDisciplina_<%= grade_para_alterar[i].id_item %>">
+                                <option selected disabled>Selecione a Disciplina</option>                                
+                                <%for(let j=0; j < lista_disciplinas.length; j++){%>
+                                    <% if (lista_disciplinas[j].id == grade_para_alterar[i].id_disciplina) { %>
+                                        <option value="<%= lista_disciplinas[j].id%>" selected>
+                                            <%= lista_disciplinas[j].nome%>
+                                        </option>  
+                                    <% } else { %>
+                                        <option value="<%= lista_disciplinas[j].id%>">
+                                            <%= lista_disciplinas[j].nome%>
+                                        </option>                          
+                                    <% } %>
+                                    
+                                <%}%>
+                            </select>
+                            <label for="slctDisciplina_<%= grade_para_alterar[i].id_item %>">Disciplina </label>
+                        </div>
+                        <div class="col-md-5">
+                            
+    
+                            <select class="form-control" id="slctProfessor_<%= grade_para_alterar[i].id_item %>">
+                                <option selected disabled>Selecione o Professor</option>                                
+                                <%for(let j=0; j < lista_professores.length; j++){%>
+                                    <% if (lista_professores[j].cpf == grade_para_alterar[i].cpf_professor) { %>
+                                        <option value="<%= lista_professores[j].cpf%>" selected>
+                                            <%= lista_professores[j].nome%>
+                                        </option>  
+                                    <% } else { %>
+                                        <option value="<%= lista_professores[j].cpf%>">
+                                            <%= lista_professores[j].nome%>
+                                        </option>                         
+                                    <% } %>
+                                <%}%>
+                            </select>
+                            <label for="slctProfessor_<%= grade_para_alterar[i].id_item %>">Professor </label>
+                        </div>
+                        <div class="col-md-1">
+                            <button type="button" class="btn btn-danger" data-id="<%= grade_para_alterar[i].id_item %>" id="btn_excluir_<%= grade_para_alterar[i].id_item %>">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                <% } %>
+
+                
+            </div>
+
+            <button type="submit" class=" btn btn-primary" id="btn_atualizar">Finalizar edição</button>
+            <a href="/grade" class="btn btn-dark">Retornar</a>
+        </section>
+    </div>
+<%}%>
