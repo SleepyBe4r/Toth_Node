@@ -1,20 +1,20 @@
 
 document.addEventListener("DOMContentLoaded", ()=>{
 
-    function excluir(e, ano_id, ano, linha){ //Modificar as foreing keys do item_grade, horarios, disiplina_grade e professor_grade para on delete cascade
+    function excluir(e, grade_id, turma, linha){ 
 
-        if(typeof ano_id == "undefined" && typeof ano == "undefined" ){
-            ano_id = this.btn_excluir_.id;
-            ano = this.dataset.name;
+        if(typeof grade_id == "undefined" && typeof turma == "undefined" ){
+            grade_id = this.dataset.id;
+            turma = this.dataset.name;
             linha = this.parentElement.parentElement;
         } 
         
         let obj = {
-            id: ano_id
+            id: grade_id
         };
 
-        if (confirm(`Deseja realmente EXCLUIR o Ano Letivo ${ano}`)) {
-            fetch("/ano_letivo/excluir",{
+        if (confirm(`Deseja realmente EXCLUIR a grade da turma ${turma}`)) {
+            fetch("/grade/excluir",{
                method:"POST",
                headers:{
                     "Content-Type":"application/json"
@@ -24,12 +24,12 @@ document.addEventListener("DOMContentLoaded", ()=>{
             .then((resposta) => resposta.json())
             .then((dados)=>{
                 if(dados.ok) {
-                    alert(`O Ano Letivo ${ano} foi excluido!`);
+                    alert(`A grade da turma ${turma} foi excluida!`);
                     linha.style.transition = '.5s';
                     linha.style.opacity = '0';
                     setTimeout(()=> linha.remove(), 500);
                 }
-                else alert("Erro ao excluir o Ano Letivo");
+                else alert("Erro ao excluir a grade");
             })
             .catch((erro) => console.error("erro:" ,erro));    
         }
@@ -50,16 +50,16 @@ document.addEventListener("DOMContentLoaded", ()=>{
     }
 
     function excluir_selecionados() {
-        let ano_id;
-        let ano;
+        let grade_id;
+        let turma;
         let check_list = document.querySelectorAll(".check_del");
 
         if (check_list.length > 0) {
             check_list.forEach(ck_item => {
-                ano_id = ck_item.dataset.id;
-                ano = ck_item.dataset.name;
+                grade_id = ck_item.dataset.id;
+                turma = ck_item.dataset.name;
                 let linha = ck_item.parentElement.parentElement;
-                if(ck_item.checked){ excluir(0, ano_id, ano, linha); }
+                if(ck_item.checked){ excluir(0, grade_id, turma, linha); }
             });        
         } else { alert("Não há item para ser excluído")}
 
