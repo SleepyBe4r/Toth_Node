@@ -89,12 +89,43 @@ class PessoaModel{
         return lista;
     }
 
+    async obter(cpf) {
+        let SQL_text = "SELECT * FROM pessoas WHERE cpf = ?";
+        let db = new Database();
+        let valores = [cpf];
+        let rows = await db.ExecutaComando(SQL_text, valores);
+        
+        if (rows.length > 0) {
+            return {
+                cpf: rows[0]["cpf"],
+                nome: rows[0]["nome"],
+                data: rows[0]["dt_nascimento"],
+                email: rows[0]["email"],
+                fone: rows[0]["telefone"],
+                rua: rows[0]["rua"],
+                bairro: rows[0]["bairro"]
+            };
+        }
+        return null;
+    }
+
     async inserir(){
         let sql = `INSERT INTO pessoas (cpf, nome, dt_nascimento, rua, bairro, email, telefone)
                    values (?, ?, ?, ?, ?, ?, ?)`;
         
         let db = new Database();
         let valores = [this.#cpf, this.#nome, this.#data, this.#rua, this.#bairro, this.#email, this.#fone];
+        let resultado = await db.ExecutaComandoNonQuery(sql, valores);
+        return resultado;
+    }
+
+    async atualizar(){
+        let sql = `UPDATE pessoas 
+                   SET nome = ?, dt_nascimento = ?, rua = ?, bairro = ?, email = ?, telefone = ?
+                   WHERE cpf = ?`;
+        
+        let db = new Database();
+        let valores = [this.#nome, this.#data, this.#rua, this.#bairro, this.#email, this.#fone, this.#cpf];
         let resultado = await db.ExecutaComandoNonQuery(sql, valores);
         return resultado;
     }
@@ -106,9 +137,6 @@ class PessoaModel{
         let resultado = await db.ExecutaComandoNonQuery(sql, valores);
         return resultado;
     }
-
-
-
 }
 
 module.exports = PessoaModel;

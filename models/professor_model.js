@@ -121,13 +121,17 @@ class Professor_Model {
         return resultado;
     }
 
-    async excluir() {
-        let SQL_text = "DELETE FROM professores WHERE cpf_professor = ?";
+async excluir() {
+    try {
+        let sql = "DELETE FROM professores WHERE cpf_professor = ?";
         let db = new Database();
-        let valores = [this.#cpf];
-        let resultado = await db.ExecutaComandoNonQuery(SQL_text, valores);
+        let resultado = await db.ExecutaComandoNonQuery(sql, [this.#cpf]); 
         return resultado;
+    } catch (error) {
+        console.error("Erro ao excluir professor:", error);
+        return false;
     }
+}
 }
 
 module.exports = Professor_Model;

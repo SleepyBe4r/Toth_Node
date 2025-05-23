@@ -45,9 +45,15 @@
                     <a href="/professor/editar/<%= professor.cpf %>" class="btn btn-sm btn-warning">
                       <i class="fas fa-edit"></i> Editar
                     </a>
-                    <form action="/professor/excluir" method="POST" style="display: inline;">
-                      <input type="hidden" name="cpf" value="<%= professor.cpf %>">
-                      <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir?')">
+                    <form id="deleteForm_<%= professor.cpf %>" 
+                          action="/professor/excluir" 
+                          method="POST" 
+                          enctype="application/x-www-form-urlencoded"
+                          style="display: inline;">
+                      <input type="hidden" name="cpf" value="<%= professor.cpf %>" required>
+                      <button type="submit" 
+                              class="btn btn-sm btn-danger" 
+                              onclick="return confirm('Tem certeza que deseja excluir o professor? <%= professor.cpf %>?')">
                         <i class="fas fa-trash-alt"></i> Excluir
                       </button>
                     </form>
