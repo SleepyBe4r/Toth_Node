@@ -73,7 +73,7 @@ class grade_Model{
 
     async inserir(){
         let SQL_text = `INSERT INTO grade (id_series, id_salas, id_ano_letivo, id_turma) 
-                        VALUES (?, ?, ?, ?, ?);`;
+                        VALUES (?, ?, ?, ?);`;
         let db = new Database();
         let valores = [this.#id_series, this.#id_salas, this.#id_ano_letivo, this.#id_turma];        
         let resultado = await db.ExecutaComandoNonQuery(SQL_text, valores);        
@@ -84,17 +84,17 @@ class grade_Model{
         let SQL_text = "SELECT * FROM grade WHERE id_grade = ?";
         let db = new Database();
         let valores = [id];
-        let lista = [];
         let rows = await db.ExecutaComando(SQL_text, valores);
-        for(let i = 0; i < rows.length; i++){
-            lista.push(new grade_Model(rows[i]["id_grade"], 
-                                       rows[i]["id_salas"], 
-                                       rows[i]["id_series"], 
-                                       rows[i]["id_ano_letivo"], 
-                                       rows[i]["id_turma"],));
+        
+        let grade = {
+            id: rows[0]["id_grade"],
+            id_salas: rows[0]["id_salas"],
+            id_series: rows[0]["id_series"],
+            id_ano_letivo: rows[0]["id_ano_letivo"],
+            id_turma: rows[0]["id_turma"]
         }
 
-        return lista;
+        return grade;
     }
 
     
@@ -102,8 +102,9 @@ class grade_Model{
         let SQL_text = "SELECT id_grade FROM grade ORDER BY id_grade DESC LIMIT 1";
         let db = new Database();
         let id;
-        let rows = await db.ExecutaComando(SQL_text, valores);
-        id = rows[0]["ïd_grade"];
+        let rows = await db.ExecutaComando(SQL_text);
+        id = rows[0]["id_grade"];
+
 
         return id;
     }

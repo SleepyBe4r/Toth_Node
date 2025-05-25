@@ -86,7 +86,38 @@ class Login_Model{
         return lista;
     }
 
-    
+    async inserir() {
+        let SQL_text = `INSERT INTO logins (pessoa_cpf, usuario, senha, id_perfil)
+                        VALUES (?, ?, ?, ?)`;
+        
+        let db = new Database();
+        let valores = [this.#pessoa_cpf, this.#usuario, this.#senha, this.#perfil];
+        
+        let resultado = await db.ExecutaComandoNonQuery(SQL_text, valores);
+        return resultado;
+    }
+
+    async excluir() {
+        let SQL_text = "DELETE FROM logins WHERE pessoa_cpf = ?";
+        
+        let db = new Database();
+        let valores = [this.#pessoa_cpf];
+        
+        let resultado = await db.ExecutaComandoNonQuery(SQL_text, valores);
+        return resultado;
+    }
+
+    async atualizar() {
+        let SQL_text = `UPDATE logins 
+                        SET usuario = ?, senha = ?, id_perfil = ?
+                        WHERE pessoa_cpf = ?`;
+        
+        let db = new Database();
+        let valores = [this.#usuario, this.#senha, this.#perfil, this.#pessoa_cpf];
+        
+        let resultado = await db.ExecutaComandoNonQuery(SQL_text, valores);
+        return resultado;
+    }
 }
 
 module.exports = Login_Model;

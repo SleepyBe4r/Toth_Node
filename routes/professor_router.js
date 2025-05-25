@@ -14,5 +14,6 @@ router.get("/home", autentic.validar_Professor, professor_C.home_view);
 router.get("/", autentic.validar_Professor, professor_C.listar_view);
 router.get("/cadastrar", autentic.validar_Professor, professor_C.listar_view);
 router.get("/editar/:cpf", autentic.validar_Professor, professor_C.listar_view);
+router.post("/excluir", autentic.validar_Professor, professor_C.excluir_Prof);
 
 module.exports = router;

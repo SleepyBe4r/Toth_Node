@@ -13,6 +13,6 @@ router.get("/cadastrar", autentic.validar_Admin, grade_C.cadastro_view);
 router.post("/cadastrar", autentic.validar_Admin, grade_C.cadastrar_grade);
 router.get("/editar/:id", grade_C.editar_view);
 router.post("/editar", grade_C.editar_grade);
-// router.post("/excluir", ano_letivo_C.excluir_ano_letivo);
+router.post("/excluir", grade_C.excluir_grade);
 
 module.exports = router;
