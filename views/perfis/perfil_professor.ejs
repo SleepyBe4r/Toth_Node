@@ -1,7 +1,7 @@
 <div class="col-md-9">
     <section class="mb-5">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="text-primary">Perfil Admin</h4>
+            <h4 class="text-primary">Perfil Professor</h4>
         </div>
 
         <div class="row">
@@ -10,31 +10,34 @@
                     <div class="card-body">
                         <div class="pb-2 mb-2 border-bottom">
                             <strong>Nome:</strong>
-                            <%= admin.nome %>
+                            <%= professor.nome %>
                         </div>
                         <div class="pb-2 mb-2 border-bottom">
                             <strong>CPF:</strong>
-                            <%= admin.cpf %>
+                            <%= professor.cpf %>
+                        </div>
+                        <div class="pb-2 mb-2 border-bottom">
+                            <strong>Titulação:</strong>
+                            <%= professor.titulacao %>
                         </div>
                         <div class="pb-2 mb-2 border-bottom">
                             <strong>Email:</strong>
-                            <%= admin.email %>
+                            <%= professor.email %>
                         </div>
                         <div class="pb-2 mb-2 border-bottom">
                             <strong>Telefone:</strong>
-                            <%= admin.telefone %>
+                            <%= professor.telefone %>
                         </div>
 
                         <div class="pb-2 mb-2 border-bottom">
                             <strong>Endereço:</strong><br>
                             <strong>Rua:</strong>
-                            <%= admin.rua %><br>
+                            <%= professor.rua %><br>
                                 <strong>Bairro:</strong>
-                                <%= admin.bairro %>
+                                <%= professor.bairro %>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
     </section>
 </div>
