@@ -14,7 +14,8 @@ const router_Atividade = require("./routes/atividade_router");
 const router_Turma = require("./routes/turma_router");
 const router_Sala = require("./routes/sala_router");
 const router_Grade = require("./routes/grade_router");
-const router_perfil = require("./routes/perfil_router")
+const router_perfil = require("./routes/perfil_router");
+const router_Disciplina_Serie = require("./routes/disciplina_serie_router");
 const app = express();
 
 app.set("view engine", "ejs");
@@ -39,6 +40,7 @@ app.use("/turma",router_Turma);
 app.use("/sala",router_Sala);
 app.use("/grade",router_Grade);
 app.use("/perfil", router_perfil);
+app.use("/disciplina_serie", router_Disciplina_Serie);
 
 
 app.listen(5000, ()=>{

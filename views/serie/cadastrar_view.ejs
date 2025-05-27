@@ -16,6 +16,40 @@
                         <label for="txtSerie" class="form-label">Serie * </label>
                     </div>
                 </div>
+
+                <h4 class="text-primary">Disciplinas</h4>
+                <div class="form-group">
+                    <button type="button" class="btn btn-success" id="btn_add_disc">Adicionar Nova Disciplina</button>
+                </div>
+                <select class="form-control" id="slctDisciplina_hidden" hidden>
+                    <option selected disabled>Selecione a Disciplina</option>
+                    <%for(let i=0; i < lista_disciplinas.length; i++){%>
+                        <option value="<%= lista_disciplinas[i].id%>">
+                            <%= lista_disciplinas[i].nome%>
+                        </option>
+                        <%}%>
+                </select>
+
+                <div class="form-group disciplina">
+                    <div class="row item_disciplina justify-content-between" id="item_disciplina_0">
+                        <div class="col-md-5">
+                            <select class="form-control" id="slctDisciplina_0">
+                                <option selected disabled>Selecione a Disciplina</option>
+                                <%for(let i=0; i < lista_disciplinas.length; i++){%>
+                                    <option value="<%= lista_disciplinas[i].id%>">
+                                        <%= lista_disciplinas[i].nome%>
+                                    </option>
+                                <%}%>
+                            </select>
+                            <label for="slctDisciplina_0">Disciplina *</label>
+                        </div>
+                        <div class="col-md-1">
+                            <button type="button" class="btn btn-danger" data-id="0" id="btn_excluir_0">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 <button type="submit" class=" btn btn-primary" id="btn_cadastro">Finalizar cadastro</button>
                 <a href="/serie" class="btn btn-dark">Retornar</a>
             
@@ -38,6 +72,51 @@
                         <label for="txtSerie" class="form-label">Serie * </label>
                     </div>
                 </div>
+
+                <h4 class="text-primary">Disciplinas</h4>
+                <div class="form-group">
+                    <button type="button" class="btn btn-success" id="btn_add_disc">Adicionar Nova Disciplina</button>
+                </div>
+                <select class="form-control" id="slctDisciplina_hidden" hidden>
+                    <option selected disabled>Selecione a Disciplina</option>
+                    <%for(let i=0; i < lista_disciplinas.length; i++){%>
+                        <option value="<%= lista_disciplinas[i].id%>">
+                            <%= lista_disciplinas[i].nome%>
+                        </option>
+                    <%}%>
+                </select>
+
+                 <div class="form-group disciplina">
+                <% for( let i = 0; i < lista_disciplina_serie.length; i++ ) { %>
+                    <div class="row item_disciplina justify-content-between" id="item_disciplina_<%= i%>">
+                        <div class="col-md-5">
+                            <select class="form-control" id="slctDisciplina_<%= i %>">
+                                <option selected disabled>Selecione a Disciplina</option>                                
+                                <%for(let j=0; j < lista_disciplinas.length; j++){%>
+                                    <% if (lista_disciplinas[j].id == lista_disciplina_serie[i].id_disciplina) { %>
+                                        <option value="<%= lista_disciplinas[j].id%>" selected>
+                                            <%= lista_disciplinas[j].nome%>
+                                        </option>  
+                                    <% } else { %>
+                                        <option value="<%= lista_disciplinas[j].id%>">
+                                            <%= lista_disciplinas[j].nome%>
+                                        </option>                          
+                                    <% } %>
+                                    
+                                <%}%>
+                            </select>
+                            <label for="slctDisciplina_<%= i %>">Disciplina *</label>
+                        </div>
+                        
+                        <div class="col-md-1">
+                            <button type="button" class="btn btn-danger" data-id="<%= i %>" id="btn_excluir_<%= i %>">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+
                 <button type="submit" class=" btn btn-primary" id="btn_atualizar">Finalizar Edição</button>
                 <a href="/serie" class="btn btn-dark">Retornar</a>            
             </section>

@@ -62,7 +62,7 @@
                     <label for="slctSala">Sala *</label>
                 </div>
                 <div class="col-md-4">
-                    <select class="form-control" id="slctPeriodo">
+                    <select class="form-control" id="slctPeriodo" disabled>
                         <option value="" selected disabled>Selecione um periodo</option>
                         <option value="1">manhã</option>
                         <option value="2">Tarde</option>                        
@@ -97,6 +97,7 @@
                         <tr id="horario_4"></tr>
                         <tr id="horario_5"></tr>
                         <tr id="horario_6"></tr>
+                        <tr id="horario_7"></tr>
                     </tbody>
                 </table>
             </div>
@@ -157,11 +158,6 @@
                         <div class="col">
                             <select class="form-control" id="slctDisciplina">
                                 <option value="">Nenhuma</option>
-                                <%for(let i=0; i < lista_disciplinas.length; i++){%>
-                                    <option value="<%= lista_disciplinas[i].id%>">
-                                        <%= lista_disciplinas[i].nome%>
-                                    </option>
-                                <%}%>
                             </select>
                             <label for="slctDisciplina">Disciplina *</label>
                         </div>
@@ -315,6 +311,7 @@
                         <tr id="horario_4"></tr>
                         <tr id="horario_5"></tr>
                         <tr id="horario_6"></tr>
+                        <tr id="horario_7"></tr>
                     </tbody>
                 </table>
             </div>
@@ -375,11 +372,6 @@
                         <div class="col">
                             <select class="form-control" id="slctDisciplina">
                                 <option value="">Nenhuma</option>
-                                <%for(let i=0; i < lista_disciplinas.length; i++){%>
-                                    <option value="<%= lista_disciplinas[i].id%>">
-                                        <%= lista_disciplinas[i].nome%>
-                                    </option>
-                                <%}%>
                             </select>
                             <label for="slctDisciplina">Disciplina *</label>
                         </div>

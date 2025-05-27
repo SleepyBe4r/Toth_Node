@@ -50,9 +50,6 @@ class Grade_Controller{
         let grade_para_alterar  = undefined;
         let turma_M = new Turma_Model();
         let lista_turmas = await turma_M.listar_sem_grade();
-         
-        let disciplina_M = new Disciplina_Model();
-        let lista_disciplinas = await disciplina_M.listar();
 
         let serie_M = new Serie_Model();
         let lista_series = await serie_M.listar();
@@ -85,7 +82,6 @@ class Grade_Controller{
             layout: "layout_admin_home.ejs", 
             grade_para_alterar,
             lista_turmas,
-            lista_disciplinas,
             lista_professores,
             lista_series,
             lista_anos,
@@ -121,41 +117,45 @@ class Grade_Controller{
 
         if (resultado_grade) {
             for (let i = 0; i < grade.length; i++) {
-                let item_grade_M = new Item_Grade_Model();
-                item_grade_M.id_grade = ultimo_id_grade;                
-
-                let resultado_item = await item_grade_M.inserir(); 
-                let ultimo_id_item = await item_grade_M.selecionar_ultimo_id(); 
-
-                let horario_M = new Horario_Model();
-
-                horario_M.id_grade = ultimo_id_grade;
-                horario_M.id_item = ultimo_id_item;
-                horario_M.dia_semana = grade[i].dia;
-                horario_M.horario_inicio = grade[i].horario_inicio;
-                horario_M.horario_fim = grade[i].horario_fim;
-                horario_M.periodo = grade[i].periodo;
-
-                let resultado_horario = await horario_M.inserir();
-                
-                let disc_grade_M = new Disciplina_grade_Model();
-
-                disc_grade_M.id_grade = ultimo_id_grade;
-                disc_grade_M.id_item = ultimo_id_item;
-                disc_grade_M.id_disciplina = grade[i].disciplina;
-
-                let resultado_disc_grade = await disc_grade_M.inserir();
-
-                let prof_grade_M = new Professor_Grade_Model();
-
-                prof_grade_M.id_grade = ultimo_id_grade;
-                prof_grade_M.id_item = ultimo_id_item;
-                prof_grade_M.cpf_professor = grade[i].professor;
-
-                let resultado_prof_grade = await prof_grade_M.inserir();
-
-                if (resultado_item && resultado_horario && resultado_disc_grade && resultado_prof_grade) {
-                    lista_grade.push(resultado_item);                    
+                let disciplina_M = new Disciplina_Model()
+                let achou_disciplina = await disciplina_M.obter(grade[i].disciplina);
+                if(achou_disciplina){
+                    let item_grade_M = new Item_Grade_Model();
+                    item_grade_M.id_grade = ultimo_id_grade;                
+    
+                    let resultado_item = await item_grade_M.inserir(); 
+                    let ultimo_id_item = await item_grade_M.selecionar_ultimo_id(); 
+    
+                    let horario_M = new Horario_Model();
+    
+                    horario_M.id_grade = ultimo_id_grade;
+                    horario_M.id_item = ultimo_id_item;
+                    horario_M.dia_semana = grade[i].dia;
+                    horario_M.horario_inicio = grade[i].horario_inicio;
+                    horario_M.horario_fim = grade[i].horario_fim;
+                    horario_M.periodo = grade[i].periodo;
+    
+                    let resultado_horario = await horario_M.inserir();
+                    
+                    let disc_grade_M = new Disciplina_grade_Model();
+    
+                    disc_grade_M.id_grade = ultimo_id_grade;
+                    disc_grade_M.id_item = ultimo_id_item;
+                    disc_grade_M.id_disciplina = grade[i].disciplina;
+    
+                    let resultado_disc_grade = await disc_grade_M.inserir();
+    
+                    let prof_grade_M = new Professor_Grade_Model();
+    
+                    prof_grade_M.id_grade = ultimo_id_grade;
+                    prof_grade_M.id_item = ultimo_id_item;
+                    prof_grade_M.cpf_professor = grade[i].professor;
+    
+                    let resultado_prof_grade = await prof_grade_M.inserir();
+    
+                    if (resultado_item && resultado_horario && resultado_disc_grade && resultado_prof_grade) {
+                        lista_grade.push(resultado_item);                    
+                    }
                 }
             }
         }
@@ -307,41 +307,45 @@ class Grade_Controller{
                 });
     
                 if (!achou) {
-                    let item_grade_M = new Item_Grade_Model();
-                    item_grade_M.id_grade = id_grade;                
+                    let disciplina_M = new Disciplina_Model()
+                    let achou_disciplina = await disciplina_M.obter(grade[i].disciplina);
+                    if(achou_disciplina){
+                        let item_grade_M = new Item_Grade_Model();
+                        item_grade_M.id_grade = id_grade;                
 
-                    let resultado_item = await item_grade_M.inserir(); 
-                    let ultimo_id_item = await item_grade_M.selecionar_ultimo_id(); 
+                        let resultado_item = await item_grade_M.inserir(); 
+                        let ultimo_id_item = await item_grade_M.selecionar_ultimo_id(); 
 
-                    let horario_M = new Horario_Model();
+                        let horario_M = new Horario_Model();
 
-                    horario_M.id_grade = id_grade;
-                    horario_M.id_item = ultimo_id_item;
-                    horario_M.dia_semana = grade[i].dia;
-                    horario_M.horario_inicio = grade[i].horario_inicio;
-                    horario_M.horario_fim = grade[i].horario_fim;
-                    horario_M.periodo = grade[i].periodo;
+                        horario_M.id_grade = id_grade;
+                        horario_M.id_item = ultimo_id_item;
+                        horario_M.dia_semana = grade[i].dia;
+                        horario_M.horario_inicio = grade[i].horario_inicio;
+                        horario_M.horario_fim = grade[i].horario_fim;
+                        horario_M.periodo = grade[i].periodo;
 
-                    let resultado_horario = await horario_M.inserir();
-                    
-                    let disc_grade_M = new Disciplina_grade_Model();
+                        let resultado_horario = await horario_M.inserir();
+                        
+                        let disc_grade_M = new Disciplina_grade_Model();
 
-                    disc_grade_M.id_grade = id_grade;
-                    disc_grade_M.id_item = ultimo_id_item;
-                    disc_grade_M.id_disciplina = grade[i].disciplina;
+                        disc_grade_M.id_grade = id_grade;
+                        disc_grade_M.id_item = ultimo_id_item;
+                        disc_grade_M.id_disciplina = grade[i].disciplina;
 
-                    let resultado_disc_grade = await disc_grade_M.inserir();
+                        let resultado_disc_grade = await disc_grade_M.inserir();
 
-                    let prof_grade_M = new Professor_Grade_Model();
+                        let prof_grade_M = new Professor_Grade_Model();
 
-                    prof_grade_M.id_grade = id_grade;
-                    prof_grade_M.id_item = ultimo_id_item;
-                    prof_grade_M.cpf_professor = grade[i].professor;
+                        prof_grade_M.id_grade = id_grade;
+                        prof_grade_M.id_item = ultimo_id_item;
+                        prof_grade_M.cpf_professor = grade[i].professor;
 
-                    let resultado_prof_grade = await prof_grade_M.inserir();
+                        let resultado_prof_grade = await prof_grade_M.inserir();
 
-                    if (resultado_item && resultado_horario && resultado_disc_grade && resultado_prof_grade) {
-                        lista_grade.push(resultado_item);                    
+                        if (resultado_item && resultado_horario && resultado_disc_grade && resultado_prof_grade) {
+                            lista_grade.push(resultado_item);                    
+                        }
                     }
                 } else {                 
                     let horario_M = new Horario_Model();

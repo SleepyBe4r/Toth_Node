@@ -50,6 +50,17 @@ class Serie_Model{
         }
         return lista;
     }
+
+    async selecionar_ultimo_id(){             
+        let SQL_text = "SELECT id_series FROM series ORDER BY id_series DESC LIMIT 1";
+        let db = new Database();
+        let id;
+        let rows = await db.ExecutaComando(SQL_text);
+        id = rows[0]["id_series"];
+
+
+        return id;
+    }
     
     async inserir(){
         let SQL_text = `INSERT INTO series (serie) 

@@ -31,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     ];
 
     var tabela_iniciada = false;
+    var serie_selecionada = false;
 
     function cadastrar() {
         let input_periodo = document.querySelector('#slctPeriodo');
@@ -335,7 +336,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     function iniciar_tabela() {
-        let input_periodo = this;
+        let input_periodo = document.querySelector("#slctPeriodo");
         let input_horario = document.querySelector("#slctHorario");
         let btn_horario = document.querySelector("#btn_modal_horario");
 
@@ -554,15 +555,60 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    function atualizar_disciplina() {
+        let resetar_tabela = false;
+        if (serie_selecionada) {
+            if(confirm("Ao trocar a Série, a Grade será zerada. \nDeseja realmente continuar?")){
+                resetar_tabela = true;
+            }
+        }
+
+        let input_serie = document.querySelector("#slctSerie");
+
+        fetch("/disciplina_serie/obter_por_serie/" + input_serie.value, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then((resposta) => resposta.json())
+        .then((dados) => {
+            if (dados.ok){
+                let input_disciplina = document.querySelector("#slctDisciplina");
+                for(let i=0; i < dados.lista.length; i++) {
+                    let option = document.createElement("option");
+                    if(resetar_tabela){
+                        for (let j = 1; j < input_disciplina.options.length; j++) {                        
+                            input_disciplina.remove(j); 
+                        }
+                    }
+                    option.text = dados.lista[i].nome;
+                    option.value = dados.lista[i].id_disciplina;
+                    input_disciplina.add(option);
+                }
+                serie_selecionada = true;
+                if(resetar_tabela){
+                    tabela_iniciada = false;
+                    iniciar_tabela();
+                }
+                let input_periodo = document.querySelector("#slctPeriodo");
+                input_periodo.disabled = false;
+            } 
+        })
+        .catch((erro) => console.error("erro:", erro));
+    }
 
     document.querySelector("#btn_add_horario").addEventListener("click", add_horario);
-    document.querySelector("#slctPeriodo").addEventListener("change", iniciar_tabela);
+    document.querySelector("#slctSerie").addEventListener("change", atualizar_disciplina);
     
     let input_usuario = document.querySelector("#hidden_grade").value;
     if (input_usuario == ""){
         document.querySelector("#btn_cadastro").addEventListener("click", cadastrar);
+        document.querySelector("#slctPeriodo").addEventListener("change", iniciar_tabela);
     } else{
         document.querySelector("#btn_atualizar").addEventListener("click", atualizar);
         iniciar_tabela_edicao();
+        document.querySelector("#slctPeriodo").addEventListener("change", iniciar_tabela);
+        atualizar_disciplina();
     }
 });
