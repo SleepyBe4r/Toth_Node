@@ -13,33 +13,33 @@
                     <th>ID</th>
                     <th>Titulo</th>
                     <th>Descricao</th>
-                    <th>Disciplina</th>
-                    <th>Turma</th>
                     <th>Data Inicio</th>
                     <th>Data Final</th>
-                    <th>Status</th>
-                    <!-- <th>Ações</th> -->
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
                 <%for(let i=0; i < lista_atividades.length; i++){%>
                     <tr>
-                        <td><input type='checkbox' class='check_del' data-id="<%= lista_atividades[i].id%>" data-name="<%= lista_atividades[i].nome%>"></td>
-                        <td><%= lista_atividades[i].id%></td>
+                        <td><input type='checkbox' class='check_del' data-id="<%= lista_atividades[i].id_atividades%>" data-name="<%= lista_atividades[i].nome%>"></td>
+                        <td><%= lista_atividades[i].id_atividades%></td>
                         <td><%= lista_atividades[i].nome%></td>
                         <td><%= lista_atividades[i].descricao%></td>
-                        <td><%= lista_atividades[i].id_disciplina%></td>
-                        <td><%= lista_atividades[i].id_turma%></td>
-                        <td><%= lista_atividades[i].dt_inicio%></td>
-                        <td><%= lista_atividades[i].dt_final%></td>
-                        <td><%= lista_atividades[i].status%></td>
-                        <!-- <td>
-                            <a href="" class="btn btn-info">Ver mais</a>
-                            <a href="/atividade/editar/<%= lista_atividades[i].id%>" class="btn btn-primary">
+                        <td><%= lista_atividades[i].dt_inicio.toLocaleDateString('pt-BR') %></td>
+                        <td><%= lista_atividades[i].dt_final.toLocaleDateString('pt-BR') %></td>
+                        <td>
+                            <% if(lista_atividades[i].id_quadro == null) {%>
+                                <a href="" class="btn btn-info disabled">Ver mais</a>
+                            <% } else { %>
+                                <a href="" class="btn btn-info">Ver mais</a>
+                            <% } %>
+                                 
+                                    
+                            <a href="/atividade/editar/<%= lista_atividades[i].id_atividades%>" class="btn btn-primary">
                                 Editar
                             </a>
-                            <button class="btn btn-danger excluir" data-id="<%= lista_atividades[i].id%>" data-name="<%= lista_atividades[i].nome%>">Excluir</button>
-                        </td> -->
+                            <button class="btn btn-danger excluir" data-id="<%= lista_atividades[i].id_atividades%>" data-name="<%= lista_atividades[i].nome%>">Excluir</button>
+                        </td>
                     </tr>
                 <%}%>
             </tbody>

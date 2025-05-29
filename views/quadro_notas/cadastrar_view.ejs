@@ -1,0 +1,136 @@
+
+<script src="/js/validacao.js"></script>
+<script src="/js/quadro_notas/cadastro.js"></script>
+
+    <input type="hidden" value="<%= quadro_notas_para_alterar%>" id="hidden_quadro_notas"> 
+    <%if (typeof quadro_notas_para_alterar == "undefined") {%>
+        <!-- Main Section -->
+        <div class="col-md-9">
+            <!-- Formulário de Lançamento -->
+            <section id="form_notas" class="mb-5">
+                <h4 class="text-primary">Cadastrar Quadro Notas</h4>
+                
+                <div class="form-group form-row">
+                    <div class="col-md-3">
+                        <select class="form-control" id="slctAno">
+                            <option value="" selected disabled>Selecione o ano letivo</option>
+                            <%for(let i=0; i < lista_anos.length; i++){%>
+                                <option value="<%= lista_anos[i].id%>">
+                                    <%= lista_anos[i].ano_letivo%>
+                                </option>
+                            <%}%>
+                        </select>
+                        <label for="slctAno">Ano Letivo *</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="slctSerie">
+                            <option value="" selected disabled>Selecione a serie</option>
+                            <%for(let i=0; i < lista_series.length; i++){%>
+                                <option value="<%= lista_series[i].id%>">
+                                    <%= lista_series[i].serie%>
+                                </option>
+                            <%}%>
+                        </select>
+                        <label for="slctSerie">Serie *</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="slctTurma">
+                            <option value="" selected disabled>Selecione a turma</option>
+                            <%for(let i=0; i < lista_turmas.length; i++){%>
+                                <option value="<%= lista_turmas[i].id%>">
+                                    <%= lista_turmas[i].turma%>
+                                </option>
+                            <%}%>
+                        </select>
+                        <label for="slctTurma">Turma *</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="slctBimestre">
+                            <option value="" selected disabled>Selecione o bimestre</option>
+                            <option value="1">1º Bimestre</option>
+                            <option value="2">2º Bimestre</option>
+                            <option value="3">3º Bimestre</option>
+                            <option value="4">4º Bimestre</option>
+                        </select>
+                        <label for="slctBimestre">Bimestre *</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="slctDisciplina">
+                            <option value="" selected disabled>Selecione a disciplina</option>
+                            <%for(let i=0; i < lista_disciplinas.length; i++){%>
+                                <option value="<%= lista_disciplinas[i].id%>">
+                                    <%= lista_disciplinas[i].nome%>
+                                </option>
+                            <%}%>
+                        </select>
+                        <label for="slctDisciplina">Disciplina *</label>
+                    </div>
+                </div>
+
+                <h4 class="text-primary">Atividades</h4>
+                <div class="form-group">
+                    <button type="button" class="btn btn-success" id="btn_add_atividade">Adicionar Nova Atividade</button>
+                </div>
+
+                <select class="form-control" id="slctAtividade_hidden" hidden>
+                    <option selected disabled>Selecione a Atividade</option>
+                    <%for(let i=0; i < lista_atividades.length; i++){%>
+                        <option value="<%= lista_atividades[i].id_atividades%>">
+                            <%= lista_atividades[i].nome%>
+                        </option>
+                    <%}%>
+                </select>
+
+                <div class="form-group atividade">
+                    <div class="row item_atividade justify-content-between" id="item_atividade_0">
+                        <div class="col-md-8">
+                            <select class="form-control" id="slctAtividade_0">
+                                <option selected disabled>Selecione a Atividade</option>
+                                <%for(let i=0; i < lista_atividades.length; i++){%>
+                                    <option value="<%= lista_atividades[i].id_atividades%>">
+                                        <%= lista_atividades[i].nome%>
+                                    </option>
+                                <%}%>
+                            </select>
+                            <label for="slctAtividade_0">Atividade *</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" id="txtPesoAtividade_0" placeholder="Peso da Atividade" required>
+                            <label for="txtPesoAtividade_0">Peso da Atividade *</label>
+                        </div>
+                        <div class="col-md-1">
+                            <button type="button" class="btn btn-danger" data-id="0" id="btn_excluir_0">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class=" btn btn-primary" id="btn_cadastro">Finalizar cadastro</button>
+                <a href="/quadro_notas" class="btn btn-dark">Retornar</a>
+            
+            </section>
+        </div> 
+
+    <%} else{%>
+
+        <!-- Main Section -->
+        <div class="col-md-9">
+            <!-- Formulário de Lançamento -->
+            <section id="form_notas" class="mb-5">
+                <h4 class="text-primary">Editar Quadro Notas</h4>
+                
+                    <input type="hidden" value="<%= quadro_notas_para_alterar.id%>" id="hidden_id">
+
+                    <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <input type="number" class="form-control" id="txtAno" placeholder="2024" value="<%= quadro_notas_para_alterar.quadro_notas%>" required>
+                        <label for="txtAno" class="form-label">Ano * </label>
+                    </div>
+                </div>
+                <button type="submit" class=" btn btn-primary" id="btn_atualizar">Finalizar Edição</button>
+                <a href="/quadro_notas" class="btn btn-dark">Retornar</a>
+            
+            </section>
+        </div> 
+    <%}%>

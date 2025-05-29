@@ -1,20 +1,20 @@
 
 document.addEventListener("DOMContentLoaded", ()=>{
 
-    function excluir(e, atividade_id, atividade, linha){
+    function excluir(e, serie_id, serie, linha){
 
-        if(typeof atividade_id == "undefined" && typeof atividade == "undefined" ){
-            atividade_id = this.dataset.id;
-            atividade = this.dataset.name;
+        if(typeof serie_id == "undefined" && typeof serie == "undefined" ){
+            serie_id = this.dataset.id;
+            serie = this.dataset.name;
             linha = this.parentElement.parentElement;
         } 
         
         let obj = {
-            id: atividade_id
+            id: serie_id
         };
 
-        if (confirm(`Deseja realmente EXCLUIR a Atividade ${atividade}`)) {
-            fetch("/atividade/excluir",{
+        if (confirm(`Deseja realmente EXCLUIR a Série ${serie}`)) {
+            fetch("/serie/excluir",{
                method:"POST",
                headers:{
                     "Content-Type":"application/json"
@@ -24,12 +24,12 @@ document.addEventListener("DOMContentLoaded", ()=>{
             .then((resposta) => resposta.json())
             .then((dados)=>{
                 if(dados.ok) {
-                    alert(`A Atividade ${atividade} foi excluido!`);
+                    alert(`A Série ${serie} foi excluida!`);
                     linha.style.transition = '.5s';
                     linha.style.opacity = '0';
                     setTimeout(()=> linha.remove(), 500);
                 }
-                else alert("Erro ao excluir o Atividade");
+                else alert("Erro ao excluir a Série");
             })
             .catch((erro) => console.error("erro:" ,erro));    
         }
@@ -50,16 +50,16 @@ document.addEventListener("DOMContentLoaded", ()=>{
     }
 
     function excluir_selecionados() {
-        let atividade_id;
-        let ano;
+        let serie_id;
+        let serie;
         let check_list = document.querySelectorAll(".check_del");
 
         if (check_list.length > 0) {
             check_list.forEach(ck_item => {
-                atividade_id = ck_item.dataset.id;
-                ano = ck_item.dataset.name;
+                serie_id = ck_item.dataset.id;
+                serie = ck_item.dataset.name;
                 let linha = ck_item.parentElement.parentElement;
-                if(ck_item.checked){ excluir(0, atividade_id, ano, linha); }
+                if(ck_item.checked){ excluir(0, serie_id, serie, linha); }
             });        
         } else { alert("Não há item para ser excluído")}
 

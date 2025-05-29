@@ -248,43 +248,49 @@ function validarDataNascimentoAdulto(data_obj,erro_obj) {
     return true;
 }
 
-function validarDatasTurma(data_inicio_obj,data_fim_obj,erro_obj) {
-    const dtInicio = data_inicio_obj.value;
-    const dtFim = data_fim_obj.value;
-  
-    // Limpar qualquer erro anterior
-    erro_obj.innerHTML = "";
-  
-    // Verificar se as datas foram preenchidas
-    if (!dtInicio || !dtFim) {
-      erro_obj.innerHTML = "Por favor, preencha ambas as datas (Início e Fim).";
-      return false;
-    }
-  
-    // Converter as datas para objetos Date
-    const dataInicio = new Date(dtInicio);
-    const dataFim = new Date(dtFim);
-    const dataAtual = new Date();
-  
-    // Verificar se as datas são válidas (não são datas inválidas)
-    if (isNaN(dataInicio.getTime()) || isNaN(dataFim.getTime())) {
-      erro_obj.innerHTML = "Por favor, insira datas válidas.";
-      return false;
-    }
-  
-    // Verificar se a data de início é maior que a data de fim
-    if (dataInicio > dataFim) {
-      erro_obj.innerHTML = "A data de início não pode ser posterior à data de fim.";
-      return false;
-    }
-  
-    // Verificar se a data de início ou de fim são anteriores à data atual
-    if (dataInicio < dataAtual || dataFim < dataAtual) {
-      erro_obj.innerHTML = "As datas não podem ser anteriores à data de hoje.";
-      return false;
-    }
-  
-    return true;
+function validarDatas(data_inicio_obj, data_fim_obj, erro_obj) {
+  const dtInicio = data_inicio_obj.value;
+  const dtFim = data_fim_obj.value;
+
+  // Limpar qualquer erro anterior
+  erro_obj.innerHTML = "";
+
+  // Verificar se as datas foram preenchidas
+  if (!dtInicio || !dtFim) {
+    erro_obj.innerHTML = "Por favor, preencha ambas as datas (Início e Fim).";
+    return false;
+  }
+
+  // Converter as datas para objetos Date (apenas ano-mês-dia)
+  const [anoInicio, mesInicio, diaInicio] = dtInicio.split('-').map(Number);
+  const [anoFim, mesFim, diaFim] = dtFim.split('-').map(Number);
+
+  const dataInicio = new Date(anoInicio, mesInicio - 1, diaInicio);
+  const dataFim = new Date(anoFim, mesFim - 1, diaFim);
+
+  // Data de hoje (sem horário)
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+
+  // Verificar se as datas são válidas
+  if (isNaN(dataInicio.getTime()) || isNaN(dataFim.getTime())) {
+    erro_obj.innerHTML = "Por favor, insira datas válidas.";
+    return false;
+  }
+
+  // Verificar se a data de início é maior que a data de fim
+  if (dataInicio > dataFim) {
+    erro_obj.innerHTML = "A data de início não pode ser posterior à data de fim.";
+    return false;
+  }
+
+  // Verificar se a data de início ou de fim são anteriores à data atual
+  if (dataInicio < hoje || dataFim < hoje) {
+    erro_obj.innerHTML = "As datas não podem ser anteriores à data de hoje.";
+    return false;
+  }
+
+  return true;
 }
 
 

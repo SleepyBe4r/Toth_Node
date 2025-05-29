@@ -1,4 +1,3 @@
-<script src="/js/atividade/excluir.js"></script>
 
 
 <!-- Main Section -->
@@ -9,43 +8,29 @@
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
-                    <th><input type="checkbox" id="ckTodos"></th>
-                    <th>ID</th>
+                    <th>ID da Atividade</th>
                     <th>Titulo</th>
-                    <th>Descricao</th>
+                    <th>Abre em</th>
+                    <th>Finaliza em</th>
                     <th>Disciplina</th>
-                    <th>Data Inicio</th>
-                    <th>Data Final</th>
-                    <th>Status</th>
                     <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
                 <%for(let i=0; i < lista_atividades.length; i++){%>
                     <tr>
-                        <td><input type='checkbox' class='check_del' data-id="<%= lista_atividades[i].id%>" data-name="<%= lista_atividades[i].nome%>"></td>
-                        <td><%= lista_atividades[i].id%></td>
+                        <td><%= lista_atividades[i].id_nota%></td>
                         <td><%= lista_atividades[i].nome%></td>
-                        <td><%= lista_atividades[i].descricao%></td>
-                        <td><%= lista_atividades[i].id_disciplina%></td>
-                        <td><%= lista_atividades[i].dt_inicio%></td>
-                        <td><%= lista_atividades[i].dt_final%></td>
-                        <td><%= lista_atividades[i].status%></td>
+                        <td><%= new Date(lista_atividades[i].dt_inicio).toLocaleString('pt-BR').split(",")[0];%></td>
+                        <td><%= new Date(lista_atividades[i].dt_final).toLocaleString('pt-BR').split(",")[0];%></td>
+                        <td><%= lista_atividades[i].disciplina%></td>
                         <td>
-                            <% if(lista_atividades[i].status == "liberada" || lista_atividades[i].status == "prorrogado"){%>
-                                <a href="/atividade/ver_mais_A/<%= lista_atividades[i].id%>" class="btn btn-info">Ver mais</a>
-                            <%} else{%>
-                                <a href="/atividade/ver_mais_A/<%= lista_atividades[i].id%>" class="btn btn-info disabled">Ver mais</a>   
-                            <%}%>
+                            <a href="/atividade/ver_mais_A/<%= lista_atividades[i].id_nota%>" class="btn btn-info">Ver mais</a>
                         </td>
                     </tr>
                 <%}%>
             </tbody>
         </table>
-        <div>
-            <a href="/atividade/cadastrar" class="btn btn-primary">Cadastrar Atividade</a>
-            <input type="button" class="btn btn-danger" value="excluir selecionados" id="btnExcluirSelecionados">
-        </div>
     </section>
 </div>
 <!-- Content End -->

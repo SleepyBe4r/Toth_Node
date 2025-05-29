@@ -9,61 +9,32 @@
             <!-- Formulário de Lançamento -->
             <section id="form_notas" class="mb-5">
                 <h4 class="text-primary">Cadastrar Atividade</h4>
-                
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <select id="slctDisciplina" class="custom-select" required>
-                            <option value="" selected disabled>Selecione uma disciplina</option>
-                            <%for(let i = 0; i < lista_Disciplina.length; i++){%>
-                                <option value="<%= lista_Disciplina[i].id%>"><%= lista_Disciplina[i].nome%></option>
-                            <%}%>
-                        </select>
-                        <label for="slctDisciplina" class="form-label">Disciplina * </label>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                            <select id="slctTurma" class="custom-select" required disabled>
-                                <option value="" selected disabled>Selecione uma Disciplina</option>
-                            </select>
-                        <label for="slctTurma" class="form-label">Turma * </label>
-                    </div>
-                </div>
 
                 <div class="row">
-                    <div class="col-md-3 mb-3">
-                        <input type="text" class="form-control" id="txtNomeAtividade" placeholder="Atividade 1" required disabled>
+                    <div class="col-md-12 mb-3">
+                        <input type="text" class="form-control" id="txtNomeAtividade" placeholder="Atividade 1" required>
                         <label for="txtNomeAtividade" class="form-label">Nome da Atividade * </label>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-9 mb-3">
-                        <textarea class="form-control" id="txtDescricao" disabled></textarea>
+                    <div class="col-md-12 mb-3">
+                        <textarea class="form-control" id="txtDescricao" style="resize: none; height: 200px;"></textarea>
                         <label for="txtDescricao" class="form-label">Descrição * </label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-3 mb-3">
-                        <input type="number" class="form-control" id="txtNota" disabled>
-                        <label for="txtNota" class="form-label">Nota * </label>
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <input type="number" class="form-control" id="txtPeso" disabled>
-                        <label for="txtPeso" class="form-label">Peso * </label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3 mb-3">
-                        <input type="date" class="form-control" id="dtInicial" disabled>
+                        <input type="date" class="form-control" id="dtInicial">
                         <label for="dtInicial" class="form-label">Data Inicial * </label>
                     </div>
                     <div class="col-md-3 mb-3">
-                        <input type="date" class="form-control" id="dtFinal" disabled>
+                        <input type="date" class="form-control" id="dtFinal">
                         <label for="dtFinal" class="form-label">Data Final * </label>
                     </div>
                     <label id="erro_dt" class="form-label text-danger"></label>
                 </div>
-                <button type="submit" class=" btn btn-primary" id="btn_cadastro">Enviar Atividade</button>
-                <button type="submit" class=" btn btn-primary invisible" id="btn_responder">Finalizar Edição</button>
-                <a href="/atividade" class="btn btn-dark">Retornar</a>
+                <button type="submit" class=" btn btn-primary" id="btn_cadastro">Finalizar cadastro</button>
+                <a href="/atividade//P_listar" class="btn btn-dark">Retornar</a>
             
             </section>
         </div> 
@@ -74,18 +45,36 @@
         <div class="col-md-9">
             <!-- Formulário de Lançamento -->
             <section id="form_notas" class="mb-5">
-                <h4 class="text-primary">Editar Ano Letivo</h4>
-                
-                    <input type="hidden" value="<%= atividade_para_alterar.id%>" id="hidden_id">
+                <h4 class="text-primary">Editar Atividade</h4>
 
-                    <div class="row">
-                    <div class="col-md-3 mb-3">
-                        <input type="number" class="form-control" id="txtAnoTurma" placeholder="2024" value="<%= atividade_para_alterar.ano_letivo%>" required>
-                        <label for="txtAnoTurma" class="form-label">Ano * </label>
+                <input type="hidden" value="<%= atividade_para_alterar.id_atividades%>" id="hidden_id">
+
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <input type="text" class="form-control" id="txtNomeAtividade" placeholder="Atividade 1" required value="<%= atividade_para_alterar.nome%>">
+                        <label for="txtNomeAtividade" class="form-label">Nome da Atividade * </label>
                     </div>
                 </div>
-                <button type="submit" class=" btn btn-primary" id="btn_atualizar">Finalizar Edição</button>
-                <a href="/ano_letivo" class="btn btn-dark">Retornar</a>
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <textarea class="form-control" id="txtDescricao" style="resize: none; height: 200px;"><%= atividade_para_alterar.descricao %> </textarea>
+                        <label for="txtDescricao" class="form-label">Descrição * </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <input type="date" class="form-control" id="dtInicial" value="<%= atividade_para_alterar.dt_inicio.toISOString().slice(0, 10) %>">
+                        <label for="dtInicial" class="form-label">Data Inicial * </label>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        
+                        <input type="date" class="form-control" id="dtFinal" value="<%= atividade_para_alterar.dt_final.toISOString().slice(0, 10) %>">
+                        <label for="dtFinal" class="form-label">Data Final * </label>
+                    </div>
+                    <label id="erro_dt" class="form-label text-danger"></label>
+                </div>
+                <button type="submit" class=" btn btn-primary" id="btn_atualizar">Finalizar edição</button>
+                <a href="/atividade/P_listar" class="btn btn-dark">Retornar</a>
             
             </section>
         </div> 

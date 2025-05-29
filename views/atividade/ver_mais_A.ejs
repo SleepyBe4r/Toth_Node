@@ -1,0 +1,48 @@
+
+<script src="/js/validacao.js"></script>
+<script src="/js/atividade/ver_mais.js"></script>
+
+<style>
+    main {
+        min-height: none !important;
+    }
+</style>
+<!-- Main Section -->
+<div class="col-md-9">
+    <section class="mb-5">
+        <div class="row">
+            <input type="hidden" id="hidden_id_nota" value="<%= atividade.id_nota%>">
+            <div class="col-md-12 mb-3">
+                <h3>Atividade - <%= atividade.nome%></h3>
+            </div>
+            <div class="col-md-12 mb-3">
+                <textarea class="form-control" id="txtDescricao" style="resize: none; height: 200px;" disabled><%= atividade.descricao%></textarea>
+                <label for="txtDescricao" class="form-label">descrição</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12 mb-3">
+                <input type="file" class="form-control" id="inputResposta" name="inputResposta" accept=".pdf,.doc,.docx,.txt">
+                <label for="inputResposta" class="form-label">resposta * </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Observações Gerais: </label>
+                <% if (atividade.status == "corrigida") { %>
+                    <label class="form-label">valor: <%= atividade.nota%></label>
+                    <label class="form-label">peso: <%= atividade.peso%>%</label>                                        
+                    <textarea class="form-control" id="txtFeedback" disabled><%= atividade.feedback%></textarea>
+                    <label for="txtFeedback" class="form-label">feedback</label>
+                <% } %>
+                <label class="form-label">Data Inicial: <%= atividade.dt_inicio.toLocaleDateString('pt-BR')%></label>
+                <label class="form-label">Data Final: <%= atividade.dt_final.toLocaleDateString('pt-BR')%></label>
+            </div>
+        </div>
+        
+        <div>
+            <button type="submit" class=" btn btn-primary" id="btn_resposta">Entregar Atividade</button>            
+        </div>
+    </section>
+</div>
+<!-- Content End -->

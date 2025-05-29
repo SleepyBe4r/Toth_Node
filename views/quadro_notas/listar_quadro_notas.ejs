@@ -1,0 +1,50 @@
+<script src="/js/quadro_notas/excluir.js"></script>
+
+<!-- Main Section -->
+<div class="col-md-9">
+    <section class="mb-5">
+        <h4 class="text-primary">Quadro Notas</h4>
+
+        
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" id="ckTodos"></th>
+                    <th>id do quadro</th>
+                    <th>professor</th>
+                    <th>turma</th>
+                    <th>series</th>
+                    <th>ano_letivo</th>
+                    <th>bimestre</th>
+                    <th>disciplina</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%for(let i=0; i < lista_quadro_notas.length; i++){%>
+                    <tr>
+                        <td><input type='checkbox' class='check_del' data-id="<%= lista_quadro_notas[i].id_quadro%>" data-name="<%= lista_quadro_notas[i].id_turma%>"></td>
+                        <td><%= lista_quadro_notas[i].id_quadro%></td>
+                        <td><%= lista_quadro_notas[i].cpf_professor%></td>
+                        <td><%= lista_quadro_notas[i].id_turma%></td>
+                        <td><%= lista_quadro_notas[i].id_series%></td>
+                        <td><%= lista_quadro_notas[i].id_ano_letivo%></td>
+                        <td><%= lista_quadro_notas[i].bimestre%></td>
+                        <td><%= lista_quadro_notas[i].id_disciplina%></td>
+                        <td>
+                            <a href="/quadro_notas/editar/<%= lista_quadro_notas[i].id_quadro%>" class="btn btn-primary">
+                                Editar
+                            </a>
+                            <button class="btn btn-danger excluir" data-id="<%= lista_quadro_notas[i].id_quadro%>" data-name="<%= lista_quadro_notas[i].id_turma%>">Excluir</button>
+                        </td>
+                    </tr>
+                <%}%>
+            </tbody>
+        </table>
+        <div>
+            <a href="/quadro_notas/cadastrar" class="btn btn-primary">Cadastrar Quadro Notas</a>
+            <input type="button" class="btn btn-danger" value="excluir selecionados" id="btnExcluirSelecionados">
+        </div>
+    </section>
+</div>
+<!-- Content End -->

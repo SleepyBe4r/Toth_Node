@@ -9,19 +9,23 @@ document.addEventListener("DOMContentLoaded", ()=>{
         let input_serie = document.querySelector("#txtSerie");
         let lista_validacao = [];
 
-        let input_disciplina = [];
+        let lista_input_disciplina = [];
         for (let i = 0; i < lista_serie.length; i++) {
-            input_disciplina.push({
-                disciplina: document.querySelector(`#slctDisciplina_${lista_serie[i]}`)
-            });
+            let input_disciplina = document.querySelector(`#slctDisciplina_${lista_serie[i]}`);
+            if (input_disciplina && input_disciplina.value !== "") {
+                lista_input_disciplina.push({
+                    disciplina: input_disciplina
+                });
+            }
         }
 
         if (input_serie.value === "") lista_validacao.push(input_serie.id);
-        for (let i = 0; i < input_disciplina.length; i++) {
-            for (let j = 0; j < input_disciplina.length; j++) {   
+        for (let i = 0; i < lista_input_disciplina.length; i++) {
+            for (let j = 0; j < lista_input_disciplina.length; j++) {   
                 if (i != j) {
-                    if(input_disciplina[i].disciplina.value == input_disciplina[j].disciplina.value){
-                        lista_validacao.push(input_disciplina[i].disciplina.id)
+                    if(lista_input_disciplina[i].disciplina.value == lista_input_disciplina[j].disciplina.value){
+                        lista_validacao.push(lista_input_disciplina[i].disciplina.id);
+                        lista_validacao.push(lista_input_disciplina[j].disciplina.id);
                     }
                 }     
             }
@@ -29,9 +33,9 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
         if(lista_validacao.length == 0){
             let disciplinas = [];
-            for (let i = 0; i < input_disciplina.length; i++) {
+            for (let i = 0; i < lista_input_disciplina.length; i++) {                
                 disciplinas.push({
-                    disciplina: parseInt(input_disciplina[i].disciplina.value)
+                    disciplina: parseInt(lista_input_disciplina[i].disciplina.value)
                 });
             }
 
@@ -65,19 +69,23 @@ document.addEventListener("DOMContentLoaded", ()=>{
         let input_serie = document.querySelector("#txtSerie");
         let lista_validacao = [];
 
-        let input_disciplina = [];
+        let lista_input_disciplina = [];
         for (let i = 0; i < lista_serie.length; i++) {
-            input_disciplina.push({
-                disciplina: document.querySelector(`#slctDisciplina_${lista_serie[i]}`)
-            });
+            let input_disciplina = document.querySelector(`#slctDisciplina_${lista_serie[i]}`);
+            if (input_disciplina && input_disciplina.value !== "") {
+                lista_input_disciplina.push({
+                    disciplina: input_disciplina
+                });
+            }
         }
 
         if (input_serie.value === "") lista_validacao.push(input_serie.id);
-        for (let i = 0; i < input_disciplina.length; i++) {
-            for (let j = 0; j < input_disciplina.length; j++) {   
+        for (let i = 0; i < lista_input_disciplina.length; i++) {
+            for (let j = 0; j < lista_input_disciplina.length; j++) {   
                 if (i != j) {
-                    if(input_disciplina[i].disciplina.value == input_disciplina[j].disciplina.value){
-                        lista_validacao.push(input_disciplina[i].disciplina.id)
+                    if(lista_input_disciplina[i].disciplina.value == lista_input_disciplina[j].disciplina.value){
+                        lista_validacao.push(lista_input_disciplina[i].disciplina.id);
+                        lista_validacao.push(lista_input_disciplina[j].disciplina.id);
                     }
                 }     
             }
@@ -85,9 +93,9 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
         if(lista_validacao.length == 0){
             let disciplinas = [];
-            for (let i = 0; i < input_disciplina.length; i++) {
+            for (let i = 0; i < lista_input_disciplina.length; i++) {
                 disciplinas.push({
-                    disciplina: parseInt(input_disciplina[i].disciplina.value)
+                    disciplina: parseInt(lista_input_disciplina[i].disciplina.value)
                 });
             }
 
@@ -137,7 +145,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
             <label for="slctDisciplina_${ultimo_id}">Disciplina </label>
         </div>
         <div class="col-md-1">
-            <button type="button" class="btn btn-danger" onclick="remover_disciplina()" data-id="${ultimo_id}" id="btn_excluir_${ultimo_id}">            
+            <button type="button" class="btn btn-danger" data-id="${ultimo_id}" id="btn_excluir_${ultimo_id}">            
                 <i class="fas fa-minus"></i>
             </button>
         </div>

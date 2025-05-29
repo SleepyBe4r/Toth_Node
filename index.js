@@ -16,6 +16,7 @@ const router_Sala = require("./routes/sala_router");
 const router_Grade = require("./routes/grade_router");
 const router_perfil = require("./routes/perfil_router");
 const router_Disciplina_Serie = require("./routes/disciplina_serie_router");
+const router_Quadro_Notas = require("./routes/quadro_notas_router");
 const app = express();
 
 app.set("view engine", "ejs");
@@ -41,6 +42,7 @@ app.use("/sala",router_Sala);
 app.use("/grade",router_Grade);
 app.use("/perfil", router_perfil);
 app.use("/disciplina_serie", router_Disciplina_Serie);
+app.use("/quadro_notas", router_Quadro_Notas);
 
 
 app.listen(5000, ()=>{
