@@ -14,5 +14,6 @@ router.post("/cadastrar", autentic.validar_Professor, quadro_notas_C.cadastrar_q
 router.post("/excluir", autentic.validar_Professor, quadro_notas_C.excluir_quadro_notas);
 router.get("/editar/:id", autentic.validar_Professor, quadro_notas_C.listar_editar);
 router.post("/editar", autentic.validar_Professor, quadro_notas_C.editar_quadro_notas);
+router.get("/filtrar", autentic.validar_Professor, quadro_notas_C.filtrar);
 
 module.exports = router;

@@ -8,6 +8,6 @@ let autentic = new Autenticacao();
 const router = express.Router();
 
 let disciplina_C = new Disciplina_Serie_Controller();
-router.post("/obter_por_serie/:id", autentic.validar_Admin, disciplina_C.obter_por_serie);
+router.post("/obter_por_serie/:id", autentic.validar_Funcionario, disciplina_C.obter_por_serie);
 
 module.exports = router;

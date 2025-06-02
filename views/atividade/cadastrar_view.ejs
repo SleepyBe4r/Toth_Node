@@ -13,23 +13,23 @@
                 <div class="row">
                     <div class="col-md-12 mb-3">
                         <input type="text" class="form-control" id="txtNomeAtividade" placeholder="Atividade 1" required>
-                        <label for="txtNomeAtividade" class="form-label">Nome da Atividade * </label>
+                        <label for="txtNomeAtividade" class="form-label"><strong>Nome da Atividade *</strong> </label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12 mb-3">
                         <textarea class="form-control" id="txtDescricao" style="resize: none; height: 200px;"></textarea>
-                        <label for="txtDescricao" class="form-label">Descrição * </label>
+                        <label for="txtDescricao" class="form-label"><strong>Descrição *</strong></label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-3 mb-3">
                         <input type="date" class="form-control" id="dtInicial">
-                        <label for="dtInicial" class="form-label">Data Inicial * </label>
+                        <label for="dtInicial" class="form-label"><strong>Data Inicial *</strong></label>
                     </div>
                     <div class="col-md-3 mb-3">
                         <input type="date" class="form-control" id="dtFinal">
-                        <label for="dtFinal" class="form-label">Data Final * </label>
+                        <label for="dtFinal" class="form-label"><strong>Data Final *</strong></label>
                     </div>
                     <label id="erro_dt" class="form-label text-danger"></label>
                 </div>
@@ -52,24 +52,24 @@
                 <div class="row">
                     <div class="col-md-12 mb-3">
                         <input type="text" class="form-control" id="txtNomeAtividade" placeholder="Atividade 1" required value="<%= atividade_para_alterar.nome%>">
-                        <label for="txtNomeAtividade" class="form-label">Nome da Atividade * </label>
+                        <label for="txtNomeAtividade" class="form-label"><strong>Nome da Atividade: *</strong></label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-12 mb-3">
                         <textarea class="form-control" id="txtDescricao" style="resize: none; height: 200px;"><%= atividade_para_alterar.descricao %> </textarea>
-                        <label for="txtDescricao" class="form-label">Descrição * </label>
+                        <label for="txtDescricao" class="form-label"><strong>Descrição: *</strong></label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-3 mb-3">
                         <input type="date" class="form-control" id="dtInicial" value="<%= atividade_para_alterar.dt_inicio.toISOString().slice(0, 10) %>">
-                        <label for="dtInicial" class="form-label">Data Inicial * </label>
+                        <label for="dtInicial" class="form-label"><strong>Data Inicial: *</strong></label>
                     </div>
                     <div class="col-md-3 mb-3">
                         
                         <input type="date" class="form-control" id="dtFinal" value="<%= atividade_para_alterar.dt_final.toISOString().slice(0, 10) %>">
-                        <label for="dtFinal" class="form-label">Data Final * </label>
+                        <label for="dtFinal" class="form-label"><strong>Data Final: *</strong></label>
                     </div>
                     <label id="erro_dt" class="form-label text-danger"></label>
                 </div>

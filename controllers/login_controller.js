@@ -50,16 +50,17 @@ class Login_Controller{
                 msg_senha = "Campo obrigatorio";
             }
         }
-        if(resp.header == "null"){
-            resp.render("home/login_view.ejs", {
-                retorno:{ 
-                    usuario_erro: msg_usuario,
-                    senha_erro: msg_senha,
-                    geral_erro: msg,
-                    usuario: usuario,
-                    senha: senha
-                }});
-        }
+        
+        resp.render("home/login_view.ejs", {
+            retorno:{ 
+                usuario_erro: msg_usuario,
+                senha_erro: msg_senha,
+                geral_erro: msg,
+                usuario: usuario,
+                senha: senha
+            }
+        });
+        
     }
 }
 

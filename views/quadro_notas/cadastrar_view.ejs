@@ -20,7 +20,7 @@
                                 </option>
                             <%}%>
                         </select>
-                        <label for="slctAno">Ano Letivo *</label>
+                        <label for="slctAno"><strong>Ano Letivo: *</strong></label>
                     </div>
                     <div class="col-md-3">
                         <select class="form-control" id="slctSerie">
@@ -31,7 +31,7 @@
                                 </option>
                             <%}%>
                         </select>
-                        <label for="slctSerie">Serie *</label>
+                        <label for="slctSerie"><strong>Serie: *</strong></label>
                     </div>
                     <div class="col-md-3">
                         <select class="form-control" id="slctTurma">
@@ -42,7 +42,7 @@
                                 </option>
                             <%}%>
                         </select>
-                        <label for="slctTurma">Turma *</label>
+                        <label for="slctTurma"><strong>Turma: *</strong></label>
                     </div>
                     <div class="col-md-3">
                         <select class="form-control" id="slctBimestre">
@@ -52,18 +52,18 @@
                             <option value="3">3º Bimestre</option>
                             <option value="4">4º Bimestre</option>
                         </select>
-                        <label for="slctBimestre">Bimestre *</label>
+                        <label for="slctBimestre"><strong>Bimestre: *</strong></label>
                     </div>
                     <div class="col-md-3">
-                        <select class="form-control" id="slctDisciplina">
+                        <select class="form-control" id="slctDisciplina" disabled>
                             <option value="" selected disabled>Selecione a disciplina</option>
                             <%for(let i=0; i < lista_disciplinas.length; i++){%>
-                                <option value="<%= lista_disciplinas[i].id%>">
+                                <option value="<%= lista_disciplinas[i].id_disciplina%>">
                                     <%= lista_disciplinas[i].nome%>
                                 </option>
                             <%}%>
                         </select>
-                        <label for="slctDisciplina">Disciplina *</label>
+                        <label for="slctDisciplina"><strong>Disciplina: *</strong></label>
                     </div>
                 </div>
 
@@ -92,11 +92,11 @@
                                     </option>
                                 <%}%>
                             </select>
-                            <label for="slctAtividade_0">Atividade *</label>
+                            <label for="slctAtividade_0"><strong>Atividade: *</strong></label>
                         </div>
                         <div class="col-md-3">
                             <input type="text" class="form-control" id="txtPesoAtividade_0" placeholder="Peso da Atividade" required>
-                            <label for="txtPesoAtividade_0">Peso da Atividade *</label>
+                            <label for="txtPesoAtividade_0"><strong>Peso da Atividade: *</strong></label>
                         </div>
                         <div class="col-md-1">
                             <button type="button" class="btn btn-danger" data-id="0" id="btn_excluir_0">
@@ -120,13 +120,145 @@
             <section id="form_notas" class="mb-5">
                 <h4 class="text-primary">Editar Quadro Notas</h4>
                 
-                    <input type="hidden" value="<%= quadro_notas_para_alterar.id%>" id="hidden_id">
+                <input type="hidden" value="<%= quadro_notas_para_alterar.id_quadro%>" id="hidden_id">
 
-                    <div class="row">
-                    <div class="col-md-3 mb-3">
-                        <input type="number" class="form-control" id="txtAno" placeholder="2024" value="<%= quadro_notas_para_alterar.quadro_notas%>" required>
-                        <label for="txtAno" class="form-label">Ano * </label>
+                <div class="form-group form-row">
+                    <div class="col-md-3">
+                        <select class="form-control" id="slctAno">
+                            <option value="" disabled>Selecione o ano letivo</option>
+                            <%for(let i=0; i < lista_anos.length; i++){%>
+                                <% if (lista_anos[i].id == quadro_notas_para_alterar.id_ano_letivo) { %>
+                                    <option value="<%= lista_anos[i].id%>" selected>
+                                        <%= lista_anos[i].ano_letivo%>
+                                    </option>    
+                                <% } else { %>
+                                    <option value="<%= lista_anos[i].id%>">
+                                        <%= lista_anos[i].ano_letivo%>
+                                    </option>                            
+                                <% } %>
+                            <%}%>
+                        </select>
+                        <label for="slctAno"><strong>Ano Letivo: *</strong></label>
                     </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="slctSerie">
+                            <option value="" disabled>Selecione a serie</option>
+                            <%for(let i=0; i < lista_series.length; i++){%>
+                                <% if (lista_series[i].id == quadro_notas_para_alterar.id_series) { %>
+                                    <option value="<%= lista_series[i].id%>" selected>
+                                        <%= lista_series[i].serie%>
+                                    </option>    
+                                <% } else { %>
+                                    <option value="<%= lista_series[i].id%>">
+                                        <%= lista_series[i].serie%>
+                                    </option>                            
+                                <% } %>
+                            <%}%>
+                        </select>
+                        <label for="slctSerie"><strong>Serie: *</strong></label>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="slctTurma">
+                            <option value="" disabled>Selecione a turma</option>
+                            <%for(let i=0; i < lista_turmas.length; i++){%>
+                                <% if (lista_turmas[i].id == quadro_notas_para_alterar.id_turma) { %>
+                                    <option value="<%= lista_turmas[i].id%>" selected>
+                                        <%= lista_turmas[i].turma%>
+                                    </option>    
+                                <% } else { %>
+                                    <option value="<%= lista_turmas[i].id%>">
+                                        <%= lista_turmas[i].turma%>
+                                    </option>                            
+                                <% } %>
+                            <%}%>
+                        </select>
+                        <label for="slctTurma"><strong>Turma: *</strong></label>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="slctBimestre">
+                            <option value="" disabled>Selecione o bimestre</option>
+                            <option value="1" <%= quadro_notas_para_alterar.bimestre == 1 ? "selected" : "" %> >1º Bimestre</option>
+                            <option value="2" <%= quadro_notas_para_alterar.bimestre == 2 ? "selected" : "" %> >2º Bimestre</option>
+                            <option value="3" <%= quadro_notas_para_alterar.bimestre == 3 ? "selected" : "" %> >3º Bimestre</option>
+                            <option value="4" <%= quadro_notas_para_alterar.bimestre == 4 ? "selected" : "" %> >4º Bimestre</option>
+                        </select>
+                        <label for="slctBimestre"><strong>Bimestre: *</strong></label>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control" id="slctDisciplina">
+                            <option value="" disabled>Selecione a disciplina</option>
+                            <%for(let i=0; i < lista_disciplinas.length; i++){%>
+                                <% if (lista_disciplinas[i].id_disciplina == quadro_notas_para_alterar.id_disciplina) { %>
+                                    <option value="<%= lista_disciplinas[i].id_disciplina%>" selected>
+                                        <%= lista_disciplinas[i].nome%>
+                                    </option>
+                                <% } else { %>
+                                    <option value="<%= lista_disciplinas[i].id_disciplina%>">
+                                        <%= lista_disciplinas[i].nome%>
+                                    </option>
+                                <% } %>
+                                
+                            <%}%>
+                        </select>
+                        <label for="slctDisciplina"><strong>Disciplina: *</strong></label>
+                    </div>
+                </div>
+
+                <h4 class="text-primary">Atividades</h4>
+                <div class="form-group">
+                    <button type="button" class="btn btn-success" id="btn_add_atividade">Adicionar Nova Atividade</button>
+                </div>
+
+                <select class="form-control" id="slctAtividade_hidden" hidden>
+                    <option selected disabled>Selecione a Atividade</option>
+                    <%for(let i=0; i < atividades_para_alterar.length; i++){%>
+                        <option value="<%= atividades_para_alterar[i].id_atividades%>">
+                            <%= atividades_para_alterar[i].nome%>
+                        </option>
+                    <%}%>
+                    <%for(let i=0; i < lista_atividades.length; i++){%>
+                        <option value="<%= lista_atividades[i].id_atividades%>">
+                            <%= lista_atividades[i].nome%>
+                        </option>
+                    <%}%>
+                </select>
+
+                <div class="form-group atividade">
+                    <% for( let i = 0; i < atividades_para_alterar.length; i++ ) { %>
+                        <div class="row item_atividade justify-content-between" id="item_atividade_<%= atividades_para_alterar[i].id_atividades %>">
+                            <div class="col-md-8">
+                                <select class="form-control" id="slctAtividade_<%= atividades_para_alterar[i].id_atividades %>">
+                                    <option selected disabled>Selecione a Atividade</option>
+                                    <%for(let j=0; j < atividades_para_alterar.length; j++){%>
+                                        <% if (atividades_para_alterar[i].id_atividades == atividades_para_alterar[j].id_atividades) { %>
+                                            <option value="<%= atividades_para_alterar[j].id_atividades%>" selected>
+                                                <%= atividades_para_alterar[j].nome%>
+                                            </option>
+                                        <% } else { %>
+                                            <option value="<%= atividades_para_alterar[j].id_atividades%>">
+                                                <%= atividades_para_alterar[j].nome%>
+                                            </option>                         
+                                        <% } %>
+                                    <%}%>
+                                    <%for(let i=0; i < lista_atividades.length; i++){%>
+                                        <option value="<%= lista_atividades[i].id_atividades%>">
+                                            <%= lista_atividades[i].nome%>
+                                        </option>
+                                    <%}%>
+                                </select>
+                                <label for="slctAtividade_<%= atividades_para_alterar[i].id_atividades %>"><strong>Atividade: *</strong></label>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" id="txtPesoAtividade_<%= atividades_para_alterar[i].id_atividades %>" placeholder="Peso da Atividade" value="<%= atividades_para_alterar[i].peso %>">
+                                <label for="txtPesoAtividade_<%= atividades_para_alterar[i].id_atividades %>"><strong>Peso da Atividade: *</strong></label>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" class="btn btn-danger" data-id="<%= atividades_para_alterar[i].id_atividades %>" id="btn_excluir_<%= atividades_para_alterar[i].id_atividades %>">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    <%}%>
                 </div>
                 <button type="submit" class=" btn btn-primary" id="btn_atualizar">Finalizar Edição</button>
                 <a href="/quadro_notas" class="btn btn-dark">Retornar</a>

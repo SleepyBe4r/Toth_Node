@@ -13,12 +13,12 @@
                 <div class="row">
                     <div class="col-md-3 mb-3">
                         <input type="text" class="form-control" id="txtSala" placeholder="H-01" required>
-                        <label for="txtSala" class="form-label">Sala * </label>
+                        <label for="txtSala" class="form-label"><strong>Sala: *</strong></label>
                     </div>
 
                     <div class="col-md-3 mb-3">
                         <input type="number" class="form-control" id="txtQtdeAlunos" placeholder="20" required>
-                        <label for="txtQtdeAlunos" class="form-label">Capacidade de alunos * </label>
+                        <label for="txtQtdeAlunos" class="form-label"><strong>Capacidade de alunos: *</strong></label>
                     </div>
                 </div>
                 <button type="submit" class=" btn btn-primary" id="btn_cadastro">Finalizar cadastro</button>
@@ -40,12 +40,12 @@
                 <div class="row">
                     <div class="col-md-3 mb-3">
                         <input type="text" class="form-control" id="txtSala" placeholder="H-01" value="<%= sala_para_alterar.sala%>" required>
-                        <label for="txtSala" class="form-label">Sala * </label>
+                        <label for="txtSala" class="form-label"><strong>Sala: *</strong></label>
                     </div>
 
                     <div class="col-md-3 mb-3">
                         <input type="number" class="form-control" id="txtQtdeAlunos" placeholder="20" value="<%= sala_para_alterar.capacidade_alunos%>" required>
-                        <label for="txtQtdeAlunos" class="form-label">Capacidade de alunos * </label>
+                        <label for="txtQtdeAlunos" class="form-label"><strong>Capacidade de alunos: *</strong></label>
                     </div>
                 </div>
                 <button type="submit" class=" btn btn-primary" id="btn_atualizar">Finalizar Edição</button>

@@ -17,6 +17,9 @@ router.post("/cadastrar", autentic.validar_Professor, atividade_C.cadastrar_ativ
 router.get("/ver_mais_A/:id", autentic.validar_Aluno, atividade_C.listar_ver_mais_A);
 router.post("/responder", autentic.validar_Aluno, upload.single("resposta"), atividade_C.responder_atividade);
 router.post("/excluir", atividade_C.excluir_atividade);
+router.get("/ver_mais_P/:id", autentic.validar_Professor, upload.single("resposta"), atividade_C.listar_ver_mais_P);
+router.get("/download/:id_nota", autentic.validar_Professor, atividade_C.baixar_resposta);
+router.post("/corrigir", autentic.validar_Professor, atividade_C.corrigir_atividade);
 router.get("/editar/:id", atividade_C.listar_editar);
 router.post("/editar", atividade_C.editar_atividade);
 

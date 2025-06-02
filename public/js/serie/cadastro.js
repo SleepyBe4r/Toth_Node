@@ -142,7 +142,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
             <select class="form-control" id="slctDisciplina_${ultimo_id}">
                 
             </select>
-            <label for="slctDisciplina_${ultimo_id}">Disciplina </label>
+            <label for="slctDisciplina_${ultimo_id}"><strong>Disciplina: *</strong> </label>
         </div>
         <div class="col-md-1">
             <button type="button" class="btn btn-danger" data-id="${ultimo_id}" id="btn_excluir_${ultimo_id}">            

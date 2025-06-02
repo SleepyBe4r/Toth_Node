@@ -61,6 +61,13 @@ document.addEventListener("DOMContentLoaded", ()=>{
             }
         }
 
+        if (porcentagem_peso != 100) {
+            alert("A soma dos pesos das atividades devem ser 100%!");
+            for (let i = 0; i < lista_input_atividade.length; i++) {
+                lista_validacao.push(lista_input_atividade[i].peso.id);
+            }
+        }
+
         if(lista_validacao.length == 0){
             let atividades = [];
             for (let i = 0; i < lista_input_atividade.length; i++) {
@@ -88,8 +95,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
             })
             .then((resposta) => resposta.json())
             .then((dados) => {
-                if(dados.ok) alert(dados.msg);
-                window.location.href = '/quadro_notas';
+                alert(dados.msg);
+                if(dados.ok) window.location.href = '/quadro_notas';
             })
             .catch((erro) => console.error("erro:", erro));
 
@@ -101,42 +108,88 @@ document.addEventListener("DOMContentLoaded", ()=>{
     function atualizar() {
         
         let input_id = document.querySelector("#hidden_id");
-        let input_serie = document.querySelector("#txtSerie");
+        let input_ano_letivo = document.querySelector("#slctAno");
+        let input_serie = document.querySelector("#slctSerie");
+        let input_turma = document.querySelector("#slctTurma");
+        let input_bimestre = document.querySelector("#slctBimestre");
+        let input_disciplina = document.querySelector("#slctDisciplina");
         let lista_validacao = [];
 
-        let input_disciplina = [];
+        let lista_input_atividade = [];
         for (let i = 0; i < lista_atividade.length; i++) {
-            input_disciplina.push({
-                disciplina: document.querySelector(`#slctDisciplina_${lista_atividade[i]}`)
-            });
+            let input_atividade = document.querySelector(`#slctAtividade_${lista_atividade[i]}`);
+            let input_peso = document.querySelector(`#txtPesoAtividade_${lista_atividade[i]}`);            
+            if (
+                input_atividade && input_peso &&
+                input_atividade.value !== "" && input_peso.value !== ""
+            ) {
+                lista_input_atividade.push({
+                    atividade: input_atividade,
+                    peso: input_peso
+                });
+            } else {
+                input_peso.value = "";
+                input_atividade.value = "";
+                input_atividade.selectedIndex = 0;
+            }
         }
 
+        
+        if (input_ano_letivo.value === "") lista_validacao.push(input_ano_letivo.id);
         if (input_serie.value === "") lista_validacao.push(input_serie.id);
-        for (let i = 0; i < input_disciplina.length; i++) {
-            for (let j = 0; j < input_disciplina.length; j++) {   
+        if (input_turma.value === "") lista_validacao.push(input_turma.id);
+        if (input_bimestre.value === "") lista_validacao.push(input_bimestre.id);
+        if (input_disciplina.value === "") lista_validacao.push(input_disciplina.id);
+        for (let i = 0; i < lista_input_atividade.length; i++) {
+            for (let j = 0; j < lista_input_atividade.length; j++) {   
                 if (i != j) {
-                    if(input_disciplina[i].disciplina.value == input_disciplina[j].disciplina.value){
-                        lista_validacao.push(input_disciplina[i].disciplina.id)
+                    if(lista_input_atividade[i].atividade.value == lista_input_atividade[j].atividade.value){                        
+                        lista_validacao.push(lista_input_atividade[i].atividade.id);
+                        lista_validacao.push(lista_input_atividade[j].atividade.id);
                     }
                 }     
+            }
+        }
+        let porcentagem_peso = 0;
+        for (let i = 0; i < lista_input_atividade.length; i++) {
+            porcentagem_peso += parseInt(lista_input_atividade[i].peso.value.replace('%', ''));
+            if(lista_input_atividade[i].peso.value === "") lista_validacao.push(lista_input_atividade[i].peso.id);
+        }
+
+        if (porcentagem_peso > 100) {
+            alert("A soma dos pesos das atividades não pode ultrapassar 100%!");
+            for (let i = 0; i < lista_input_atividade.length; i++) {
+                lista_validacao.push(lista_input_atividade[i].peso.id);
+            }
+        }
+
+        if (porcentagem_peso != 100) {
+            alert("A soma dos pesos das atividades devem ser 100%!");
+            for (let i = 0; i < lista_input_atividade.length; i++) {
+                lista_validacao.push(lista_input_atividade[i].peso.id);
             }
         }
 
         if(lista_validacao.length == 0){
             let atividades = [];
-            for (let i = 0; i < input_disciplina.length; i++) {
+            for (let i = 0; i < lista_input_atividade.length; i++) {
                 atividades.push({
-                    disciplina: parseInt(input_disciplina[i].disciplina.value)
+                    id_atividade: parseInt(lista_input_atividade[i].atividade.value),
+                    peso: parseInt(lista_input_atividade[i].peso.value.replace('%', ''))
                 });
             }
 
             let obj = {
-                id_serie: input_id.value,
-                serie : input_serie.value,
+                id_quadro: parseInt(input_id.value),
+                id_ano_letivo: parseInt(input_ano_letivo.value),
+                id_serie: parseInt(input_serie.value),
+                id_turma: parseInt(input_turma.value),
+                bimestre: parseInt(input_bimestre.value),
+                id_disciplina: parseInt(input_disciplina.value),
                 atividades: atividades
             }
 
-            fetch("/serie/editar", {
+            fetch("/quadro_notas/editar", {
                 method :"POST",
                 headers:{
                     "Content-Type": "application/json"
@@ -145,8 +198,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
             })
             .then((resposta) => resposta.json())
             .then((dados) => {
-                if(dados.ok) alert(dados.msg);
-                window.location.href = '/serie';
+                alert(dados.msg);
+                if(dados.ok) window.location.href = '/quadro_notas';
             })
             .catch((erro) => console.error("erro:", erro));
 
@@ -173,11 +226,11 @@ document.addEventListener("DOMContentLoaded", ()=>{
             <select class="form-control" id="slctAtividade_${ultimo_id}">
                 
             </select>
-            <label for="slctAtividade_${ultimo_id}">Atividade *</label>
+            <label for="slctAtividade_${ultimo_id}"><strong>Atividade: *</strong></label>
         </div>
         <div class="col-md-3">
             <input type="text" class="form-control" id="txtPesoAtividade_${ultimo_id}" placeholder="Peso da Atividade" required>
-            <label for="txtPesoAtividade_${ultimo_id}">Peso da Atividade *</label>
+            <label for="txtPesoAtividade_${ultimo_id}"><strong>Peso da Atividade: *</strong></label>
         </div>
         <div class="col-md-1">
             <button type="button" class="btn btn-danger" data-id="${ultimo_id}" id="btn_excluir_${ultimo_id}">
@@ -236,7 +289,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
                 numero = 100;
             }
 
-            this.value = numero !== '' ? numero + '%' : '';
+            this.value = numero !== '' ? numero : '';
         });
 
         // Remove o % ao focar para facilitar edição
@@ -258,6 +311,35 @@ document.addEventListener("DOMContentLoaded", ()=>{
         });
     }
 
+    function atualizar_disciplina() {        
+        let input_serie = document.querySelector("#slctSerie");
+
+        fetch("/disciplina_serie/obter_por_serie/" + input_serie.value, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then((resposta) => resposta.json())
+        .then((dados) => {
+            if (dados.ok){
+                let input_disciplina = document.querySelector("#slctDisciplina");
+                for(let i=0; i < dados.lista.length; i++) {
+                    let option = document.createElement("option");
+                    
+                    for (let j = 1; j < input_disciplina.options.length; j++) {                        
+                        input_disciplina.remove(j); 
+                    }
+                    option.text = dados.lista[i].nome;
+                    option.value = dados.lista[i].id_disciplina;                    
+                    input_disciplina.add(option);
+                }                
+                input_disciplina.disabled = false;
+            } 
+        })
+        .catch((erro) => console.error("erro:", erro));
+    }
+
     // Aplica a máscara para todos os campos de peso de atividade já existentes
     document.querySelectorAll('[id^="txtPesoAtividade_"]').forEach(aplicarMascaraPercentual);
 
@@ -275,6 +357,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     observer.observe(document.querySelector('.form-group.atividade'), { childList: true });
     
     document.querySelector("#btn_add_atividade").addEventListener("click", add_atividade);
+    document.querySelector("#slctSerie").addEventListener("change", atualizar_disciplina);
 
     let input_quadro = document.querySelector("#hidden_quadro_notas").value;
     if (input_quadro == "") {         
@@ -283,7 +366,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
         document.querySelector("#btn_excluir_0").addEventListener("click", remover_atividade);
     } else {
         document.querySelector("#btn_atualizar").addEventListener("click", atualizar);
-        let div_atividade = document.querySelector(".form-group.disciplina");
+        let div_atividade = document.querySelector(".form-group.atividade");
         for (let i = 0; i < div_atividade.children.length; i++) {
             lista_atividade.push(div_atividade.children[i].id.split("item_atividade_").pop());
             ultimo_id = parseInt(lista_atividade[i]);

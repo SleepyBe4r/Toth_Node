@@ -1,20 +1,20 @@
 
 document.addEventListener("DOMContentLoaded", ()=>{
 
-    function excluir(e, serie_id, serie, linha){
+    function excluir(e, quadro_id, quadro_notas, linha){
 
-        if(typeof serie_id == "undefined" && typeof serie == "undefined" ){
-            serie_id = this.dataset.id;
-            serie = this.dataset.name;
+        if(typeof quadro_id == "undefined" && typeof quadro_notas == "undefined" ){
+            quadro_id = this.dataset.id;
+            quadro_notas = this.dataset.name;
             linha = this.parentElement.parentElement;
         } 
         
         let obj = {
-            id: serie_id
+            id: quadro_id
         };
 
-        if (confirm(`Deseja realmente EXCLUIR a Série ${serie}`)) {
-            fetch("/serie/excluir",{
+        if (confirm(`Deseja realmente EXCLUIR o Quadro ${quadro_notas}`)) {
+            fetch("/quadro_notas/excluir",{
                method:"POST",
                headers:{
                     "Content-Type":"application/json"
@@ -24,12 +24,12 @@ document.addEventListener("DOMContentLoaded", ()=>{
             .then((resposta) => resposta.json())
             .then((dados)=>{
                 if(dados.ok) {
-                    alert(`A Série ${serie} foi excluida!`);
+                    alert(`O Quadro ${quadro_notas} foi excluida!`);
                     linha.style.transition = '.5s';
                     linha.style.opacity = '0';
                     setTimeout(()=> linha.remove(), 500);
                 }
-                else alert("Erro ao excluir a Série");
+                else alert("Erro ao excluir o Quadro");
             })
             .catch((erro) => console.error("erro:" ,erro));    
         }
@@ -50,16 +50,16 @@ document.addEventListener("DOMContentLoaded", ()=>{
     }
 
     function excluir_selecionados() {
-        let serie_id;
-        let serie;
+        let quadro_id;
+        let quadro_notas;
         let check_list = document.querySelectorAll(".check_del");
 
         if (check_list.length > 0) {
             check_list.forEach(ck_item => {
-                serie_id = ck_item.dataset.id;
-                serie = ck_item.dataset.name;
+                quadro_id = ck_item.dataset.id;
+                quadro_notas = ck_item.dataset.name;
                 let linha = ck_item.parentElement.parentElement;
-                if(ck_item.checked){ excluir(0, serie_id, serie, linha); }
+                if(ck_item.checked){ excluir(0, quadro_id, quadro_notas, linha); }
             });        
         } else { alert("Não há item para ser excluído")}
 

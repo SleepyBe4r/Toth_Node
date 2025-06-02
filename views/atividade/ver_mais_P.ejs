@@ -1,0 +1,94 @@
+
+<script src="/js/validacao.js"></script>
+<script src="/js/atividade/ver_mais.js"></script>
+
+<style>
+    main {
+        min-height: none !important;
+    }
+</style>
+<!-- Main Section -->
+<div class="col-md-9">
+    <section class="mb-5">
+        <div class="row">
+            <input type="hidden" id="hidden_usuario" value="P">
+            <input type="hidden" id="hidden_id_nota" value="<%= atividade.id_nota%>">
+            <div class="col-md-12 mb-3">
+                <h3 class="text-primary"><strong>Atividade</strong> - <%= atividade.nome%></h3>
+            </div>
+            <div class="col-md-12 mb-3">
+                <textarea class="form-control" id="txtDescricao" style="resize: none; height: 200px;" disabled><%= atividade.descricao%></textarea>
+                <label for="txtDescricao" class="form-label"><strong>Descrição:</strong></label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <label class="form-label"><strong>Observações Gerais:</strong> </label>                
+                <label class="form-label"><strong>Data Inicial:</strong> <%= atividade.dt_inicio.toLocaleDateString('pt-BR')%></label>
+                <label class="form-label"><strong>Data Final:</strong> <%= atividade.dt_final.toLocaleDateString('pt-BR')%></label>
+            </div>
+        </div>
+
+        <h4 class="text-primary">Alunos</h4>
+
+        <div class="form-group alunos">                
+            <select class="form-control" id="slctNota_hidden" hidden>
+                <%for(let i=0; i < notas_para_corrigir.length; i++){%>
+                    <option value="<%= notas_para_corrigir[i].id_nota%>">
+                    </option>
+                <%}%>
+            </select>
+            
+            <% notas_para_corrigir.map(function(value, index) { %>                    
+                <div class="card mb-3" id="item_nota_<%= value.id_nota %>">
+                    <div class="card-body">
+                        <div class="row mb-2">
+                            <div class="col-md-3">
+                                <p class="mb-1"><strong>Aluno:</strong> <%= value.nome %></p>
+                                <p class="mb-1"><strong>Status:</strong> <%= value.status %></p>                                
+                            </div>
+                            <div class="col-md-3">
+                            </div>
+                            <div class="col-md-3">
+                                <% if (value.status == "respondida" || value.status == "corrigida") { %>                                    
+                                    <a href="/atividade/download/<%= value.id_nota %>" class="btn btn-outline-primary btn-sm mb-2">
+                                        <i class="fas fa-file"></i> Baixar Resposta
+                                    </a>
+                                <% }else{ %>
+                                    <a href="/atividade/download/<%= value.id_nota %>" class="btn btn-outline-primary btn-sm mb-2 disabled">
+                                        <i class="fas fa-file"></i> Baixar Resposta
+                                    </a>
+                                <% } %>
+                            </div>
+                            <div class="col-md-3">                                
+                                <% if (value.status == "respondida" || value.status == "corrigida") { %>
+                                    <input class="form-control" type="number" name="txtNota_<%= value.id_nota %>" id="txtNota_<%= value.id_nota %>" value="<%= value.nota %>">                                 
+                                <% }else{ %>
+                                    <input class="form-control" type="number" name="txtNota_<%= value.id_nota %>" id="txtNota_<%= value.id_nota %>" value="<%= value.nota %>" disabled>                                 
+                                <% } %>
+                                
+                                <label for="txtNota_<%= value.id_nota %>" class="form-label"><strong>Nota:</strong></label>
+                            </div>
+                        </div>
+                        <div class="row align-items-end">
+                            <div class="col-md-12">
+                                <% if (value.status == "respondida" || value.status == "corrigida") { %>
+                                    <textarea class="form-control" id="txtFeedback_<%= value.id_nota %>" name="txtFeedback_<%= value.id_nota %>" rows="2" style="resize: none;"><%= value.feedback %></textarea>                                    
+                                <% }else{ %>
+                                    <textarea class="form-control" id="txtFeedback_<%= value.id_nota %>" name="txtFeedback_<%= value.id_nota %>" rows="2" style="resize: none;" disabled><%= value.feedback %></textarea>                                                                                
+                                <% } %>
+                                <label for="txtFeedback_<%= value.id_nota %>" class="form-label"><strong>Feedback:</strong></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+
+        <div>
+            <button type="submit" class=" btn btn-primary" id="btn_corrigir">Finalizar Correção</button>            
+            <a href="/atividade/P_listar" class="btn btn-dark">Retornar</a>
+        </div>
+    </section>
+</div>
+<!-- Content End -->

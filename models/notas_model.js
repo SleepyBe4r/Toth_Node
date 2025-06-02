@@ -161,6 +161,29 @@ class Notas_Model{
         return lista;
     }
     
+    async listar_por_atividade() {
+        let SQL_text = "SELECT * FROM notas WHERE id_atividade = ?";
+        let db = new Database();
+        let valores = [this.#id_atividade];
+        let lista = [];
+        let rows = await db.ExecutaComando(SQL_text, valores);
+        for (let i = 0; i < rows.length; i++) {
+            lista.push(new Notas_Model(
+                rows[i]["id_nota"],
+                rows[i]["id_atividade"],
+                rows[i]["peso"],
+                rows[i]["nota"],
+                rows[i]["feedback"],
+                rows[i]["atividade_resposta"],
+                rows[i]["atividade_resposta_extencao"],
+                rows[i]["status"],
+                rows[i]["id_matricula"],
+                rows[i]["id_quadro"]
+            ));
+        }
+        return lista;
+    }
+
     async obter(id_nota){
         let SQL_text = "SELECT * FROM notas WHERE id_nota = ?";
         let db = new Database();

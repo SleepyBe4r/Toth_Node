@@ -6,32 +6,32 @@
         <h1 class="text-center text-dark">Login</h1>
         <form action="/login" method="post">
           <div class="form-group">
-            <%if(typeof retorno.usuario == "undefined") {%>
+            <%if(typeof retorno.usuario != "undefined") {%>
               <input type="text" class="form-control" id="txt_usuario" name="txt_usuario" placeholder="Usuario: " value="<%= retorno.usuario%>" />
             <%} else {%>
               <input type="text" class="form-control" id="txt_usuario" name="txt_usuario" placeholder="Usuario: "/>
             <%}%>
 
-            <%if(typeof retorno.usuario_erro == "undefined") {%>
-              <label class="error"><%= retorno.usuario_erro%></label>
+            <%if(typeof retorno.usuario_erro != "undefined") {%>
+              <label class="error text-danger"><%= retorno.usuario_erro%></label>
             <%}%>
           </div>
           <br>
           <div class="form-group">
-            <%if(typeof retorno.senha == "undefined") {%>
+            <%if(typeof retorno.senha != "undefined") {%>
               <input type="password" class="form-control" id="txt_senha" name="txt_senha" placeholder="Senha: " value="<%= retorno.senha%>" />
             <%} else {%>
               <input type="password" class="form-control" id="txt_senha" name="txt_senha" placeholder="Senha: "/>
             <%}%>
 
-            <%if(typeof retorno.senha_erro == "undefined") {%>
-              <label class="error"><%= retorno.senha_erro%></label>
+            <%if(typeof retorno.senha_erro != "undefined") {%>
+              <label class="error text-danger"><%= retorno.senha_erro%></label>
             <%}%>
           </div>
           <br>
           <div class="form-group d-flex flex-column align-items-center">
-            <%if(typeof retorno.geral_erro == "undefined") {%>
-              <label class="error"><%= retorno.geral_erro%></label>
+            <%if(typeof retorno.geral_erro != "undefined") {%>
+              <label class="error text-danger"><%= retorno.geral_erro%></label>
             <%}%>
             <button type="submit" class="btn btn-block btn-primary">Login</button>
             <!-- <a href="#" class="text-dark mt-2">Esqueceu sua senha?</a> -->

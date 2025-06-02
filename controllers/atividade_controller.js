@@ -3,6 +3,7 @@ const Atividade_Model = require("../models/atividade_model");
 const Disciplina_Model = require("../models/disciplina_model");
 const Matricula_Model = require("../models/matricula_model");
 const Notas_Model = require("../models/notas_model");
+const PessoaModel = require("../models/pessoa_model");
 const Quadro_Notas_Model = require("../models/quadro_notas_model");
 const Serie_Model = require("../models/serie_model");
 const Turma_Model = require("../models/turma_model");
@@ -130,6 +131,78 @@ class Atividade_Controller{
         }
     }
 
+    async listar_ver_mais_P(req, resp){ 
+        
+        let atividade_M = new Atividade_Model();
+        let notas_M = new Notas_Model();
+        let matricula_M = new Matricula_Model();
+        let pessoa_M = new PessoaModel();
+        let quadro_notas_M = new Quadro_Notas_Model();
+        let id = req.params.id;
+
+        let lista_atividades = await atividade_M.obter(id);
+        notas_M.id_atividade = lista_atividades[0].id_atividades;
+        let lista_notas = await notas_M.listar_por_atividade();    
+        let lista_quadro = await quadro_notas_M.obter(lista_atividades[0].id_quadro);   
+
+        matricula_M.id_ano_letivo = lista_quadro[0].id_ano_letivo;
+        matricula_M.id_series = lista_quadro[0].id_series;
+        matricula_M.id_turma = lista_quadro[0].id_turma;
+        let lista_matricula = await matricula_M.listar_por_turma();
+
+        let notas_para_corrigir = [];
+        for(let i = 0; i < lista_matricula.length; i++){
+            let lista_pessoas = await pessoa_M.obter(lista_matricula[0].cpf_aluno);
+            let nota = lista_notas.find(nota => nota.id_matricula === lista_matricula[i].id_matricula);                    
+
+            notas_para_corrigir.push({
+                id_nota: nota.id_nota,
+                nome: lista_pessoas.nome,
+                nota: nota.nota,
+                feedback: nota.feedback,
+                nome_arquivo: `resposta_${lista_pessoas.nome}.${nota.atividade_resposta_extencao}`,
+                status: nota.status,
+                id_matricula: nota.id_matricula,
+            });
+        }
+
+        let atividade = {
+            id_atividade: lista_atividades[0].id_atividades,
+            nome: lista_atividades[0].nome,
+            descricao: lista_atividades[0].descricao,
+            dt_inicio: lista_atividades[0].dt_inicio,
+            dt_final: lista_atividades[0].dt_final
+        };
+        
+       
+        resp.render("atividade/ver_mais_P.ejs", { layout: "layout_professor_home.ejs", atividade, notas_para_corrigir});
+    }
+
+    async baixar_resposta(req, resp){
+        const id_nota = req.params.id_nota;
+
+        const notas_M = new Notas_Model();
+        const matricula_M = new Matricula_Model();
+        const pessoa_M = new PessoaModel();
+
+        const nota = await notas_M.obter(id_nota);        
+        const matricula = await matricula_M.obter(nota[0].id_matricula);
+        const pessoa = await pessoa_M.obter(matricula[0].cpf_aluno); // ou equivalente
+
+        if (!nota[0] || !nota[0].atividade_resposta) {
+            return resp.status(404).send("Arquivo não encontrado");
+        }
+
+        const nomeArquivo = `resposta_${pessoa.nome}.${nota[0].atividade_resposta_extencao}`;
+
+        resp.set({
+            'Content-Disposition': `attachment; filename="${nomeArquivo}"`,
+            'Content-Type': 'application/octet-stream',
+        });
+
+        resp.send(nota[0].atividade_resposta); // deve ser o buffer do blob
+    }
+
     async listar_cadastro(req, resp){
         let atividade_para_alterar = undefined;
 
@@ -172,6 +245,53 @@ class Atividade_Controller{
                 msg: "Erro ao cadastrar a Atividade"
             })
         }
+    }
+
+    async corrigir_atividade(req, resp){
+        if( req.body.length == ""){
+            resp.send({
+                ok : false,
+                msg: "campos invalidos"
+            })
+            return;
+        }
+
+        let notas = req.body;
+        let notas_M = new Notas_Model();
+        
+        let lista_resposta = [];
+        for (const nota of notas) {
+            let nota_old = await notas_M.obter(nota.id_nota);
+            nota_old = nota_old[0];
+
+            notas_M.id_nota = nota.id_nota;
+            notas_M.id_atividade = nota_old.id_atividade;
+            notas_M.peso = nota_old.peso;
+            notas_M.nota = nota.nota;
+            notas_M.feedback = nota.feedback;
+            notas_M.atividade_resposta = nota_old.atividade_resposta;
+            notas_M.atividade_resposta_extencao = nota_old.atividade_resposta_extencao;
+            notas_M.status = "corrigida";
+            notas_M.id_matricula = nota_old.id_matricula;
+            notas_M.id_quadro = nota_old.id_quadro;
+            
+            let resultado_nota = await notas_M.atualizar();
+            
+            if (resultado_nota) lista_resposta.push("ok");
+        }
+
+        if(notas.length == lista_resposta.length){
+            resp.send({
+                ok : true,
+                msg: "Correção atualizada com sucesso"
+            })
+        } else{            
+            resp.send({
+                ok : false,
+                msg: "Erro ao atualizar a Correção"
+            })
+        }
+
     }
 
     async listar_editar(req, resp){

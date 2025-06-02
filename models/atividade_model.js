@@ -60,11 +60,39 @@ class Atividade_Model{
         this.#id_quadro = id_quadro;
     }
 
-    async listar(){
-        let SQL_text = "SELECT * FROM atividades";
+    async listar(termo, quadro){
+        //preparar o where para filtrar o sql
+        let whereFiltro = "";
+        let valores = [];
+        if(termo && termo != "") {                        
+             //validar se o termo é numero
+            if(!isNaN(termo)) {
+             // aqui filtro pelo nro do pedido
+              whereFiltro = " where id_atividades = ? ";
+              valores.push(termo);
+            }
+            else {
+                //aqui filtro pelo nome do produto  
+                
+                whereFiltro = " where nome like ? ";
+                valores.push("%"+ termo +"%");
+            }
+        }
+
+        if(quadro && quadro != "") {
+            if(valores.length == 0){
+                whereFiltro += " WHERE id_quadro = ? ";       
+                valores.push(quadro);
+            } else {
+                whereFiltro += "AND id_quadro = ? ";       
+                valores.push(quadro);
+            }
+        }
+
+        let SQL_text = `SELECT * FROM atividades ${whereFiltro}`;
         let db = new Database();
         let lista = [];
-        let rows = await db.ExecutaComando(SQL_text);
+        let rows = await db.ExecutaComando(SQL_text, valores);
         for(let i = 0; i < rows.length; i++){
             lista.push(new Atividade_Model( rows[i]["id_atividades"], 
                                             rows[i]["nome"],

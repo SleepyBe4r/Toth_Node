@@ -294,12 +294,12 @@ document.addEventListener("DOMContentLoaded", () => {
                             if(input_disciplina.value == "" && input_professor.value == ''){
                                 item_horario.innerHTML = `
                                     <label class="text-dark" data-id_disc=""><b>------</b></label> <br>
-                                    <span data-id_prof=""><small>Professor: <br> ------</small></span>     
+                                    <span data-id_prof=""><small><strong>Professor:</strong> <br> ------</small></span>     
                                 `;
                             } else{
                                 item_horario.innerHTML = `
                                     <label class="text-dark" data-id_disc="${input_disciplina.value}"><b>${input_disciplina.selectedOptions[0].text}</b></label> <br>
-                                    <span data-id_prof="${input_professor.value}"><small>Professor: <br> ${input_professor.selectedOptions[0].text}</small></span>  
+                                    <span data-id_prof="${input_professor.value}"><small><strong>Professor:</strong> <br> ${input_professor.selectedOptions[0].text}</small></span>  
                                 `;
                             }
                         }                
@@ -307,12 +307,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         if(input_disciplina.value == "" && input_professor.value == ''){
                             item_horario.innerHTML = `
                                 <label class="text-dark" data-id_disc=""><b>------</b></label> <br>
-                                <span data-id_prof=""><small>Professor: <br> ------</small></span>        
+                                <span data-id_prof=""><small><strong>Professor:</strong> <br> ------</small></span>        
                             `;
                         } else{
                             item_horario.innerHTML = `
                                 <label class="text-dark" data-id_disc="${input_disciplina.value}"><b>${input_disciplina.selectedOptions[0].text}</b></label> <br>
-                                <span data-id_prof="${input_professor.value}"><small>Professor: <br> ${input_professor.selectedOptions[0].text}</small></span>  
+                                <span data-id_prof="${input_professor.value}"><small><strong>Professor:</strong> <br> ${input_professor.selectedOptions[0].text}</small></span>  
                             `;
                         }
                     }
@@ -365,31 +365,31 @@ document.addEventListener("DOMContentLoaded", () => {
                                 <td class="p-2 align-middle" id="hora_${i + 1}" >${manha[i].horario_inicio}/${manha[i].horario_fim}</td>
                                 <td class="p-2" id="dom_${i + 1}" >
                                     <label class="text-dark" data-id_disc=""><b>------</b></label> <br>
-                                    <span data-id_prof=""><small>Professor: <br> ------</small></span>                                   
+                                    <span data-id_prof=""><small><strong>Professor:</strong> <br> ------</small></span>                                   
                                 </td>
                                 <td class="p-2" id="seg_${i + 1}" >
                                     <label class="text-dark" data-id_disc=""><b>------</b></label> <br>
-                                    <span data-id_prof=""><small>Professor: <br> ------</small></span>   
+                                    <span data-id_prof=""><small><strong>Professor:</strong> <br> ------</small></span>   
                                 </td>
                                 <td class="p-2" id="ter_${i + 1}" >                                
                                     <label class="text-dark" data-id_disc=""><b>------</b></label> <br>
-                                    <span data-id_prof=""><small>Professor: <br> ------</small></span>   
+                                    <span data-id_prof=""><small><strong>Professor:</strong> <br> ------</small></span>   
                                 </td>
                                 <td class="p-2" id="qua_${i + 1}" >                                
                                     <label class="text-dark" data-id_disc=""><b>------</b></label> <br>
-                                    <span data-id_prof=""><small>Professor: <br> ------</small></span>   
+                                    <span data-id_prof=""><small><strong>Professor:</strong> <br> ------</small></span>   
                                 </td>
                                 <td class="p-2" id="qui_${i + 1}" >                                
                                     <label class="text-dark" data-id_disc=""><b>------</b></label> <br>
-                                    <span data-id_prof=""><small>Professor: <br> ------</small></span>   
+                                    <span data-id_prof=""><small><strong>Professor:</strong> <br> ------</small></span>   
                                 </td>
                                 <td class="p-2" id="sex_${i + 1}" >                                
                                     <label class="text-dark" data-id_disc=""><b>------</b></label> <br>
-                                    <span data-id_prof=""><small>Professor: <br> ------</small></span>   
+                                    <span data-id_prof=""><small><strong>Professor:</strong> <br> ------</small></span>   
                                 </td>
                                 <td class="p-2" id="sab_${i + 1}" >                                
                                     <label class="text-dark" data-id_disc=""><b>------</b></label> <br>
-                                    <span data-id_prof=""><small>Professor: <br> ------</small></span>   
+                                    <span data-id_prof=""><small><strong>Professor:</strong> <br> ------</small></span>   
                                 </td>
                             `;
     
@@ -415,31 +415,31 @@ document.addEventListener("DOMContentLoaded", () => {
                                 <td class="p-2 align-middle" id="hora_${i + 1}" >${tarde[i].horario_inicio}/${tarde[i].horario_fim}</td>
                                 <td class="p-2" id="dom_${i + 1}" >
                                     <label class="text-dark" data-id_disc=""><b>------</b></label> <br>
-                                    <span data-id_prof=""><small>Professor: <br> ------</small></span>                                   
+                                    <span data-id_prof=""><small><strong>Professor:</strong> <br> ------</small></span>                                   
                                 </td>
                                 <td class="p-2" id="seg_${i + 1}" >
                                     <label class="text-dark" data-id_disc=""><b>------</b></label> <br>
-                                    <span data-id_prof=""><small>Professor: <br> ------</small></span>   
+                                    <span data-id_prof=""><small><strong>Professor:</strong> <br> ------</small></span>   
                                 </td>
                                 <td class="p-2" id="ter_${i + 1}" >                                
                                     <label class="text-dark" data-id_disc=""><b>------</b></label> <br>
-                                    <span data-id_prof=""><small>Professor: <br> ------</small></span>   
+                                    <span data-id_prof=""><small><strong>Professor:</strong> <br> ------</small></span>   
                                 </td>
                                 <td class="p-2" id="qua_${i + 1}" >                                
                                     <label class="text-dark" data-id_disc=""><b>------</b></label> <br>
-                                    <span data-id_prof=""><small>Professor: <br> ------</small></span>   
+                                    <span data-id_prof=""><small><strong>Professor:</strong> <br> ------</small></span>   
                                 </td>
                                 <td class="p-2" id="qui_${i + 1}" >                                
                                     <label class="text-dark" data-id_disc=""><b>------</b></label> <br>
-                                    <span data-id_prof=""><small>Professor: <br> ------</small></span>   
+                                    <span data-id_prof=""><small><strong>Professor:</strong> <br> ------</small></span>   
                                 </td>
                                 <td class="p-2" id="sex_${i + 1}" >                                
                                     <label class="text-dark" data-id_disc=""><b>------</b></label> <br>
-                                    <span data-id_prof=""><small>Professor: <br> ------</small></span>   
+                                    <span data-id_prof=""><small><strong>Professor:</strong> <br> ------</small></span>   
                                 </td>
                                 <td class="p-2" id="sab_${i + 1}" >                                
                                     <label class="text-dark" data-id_disc=""><b>------</b></label> <br>
-                                    <span data-id_prof=""><small>Professor: <br> ------</small></span>   
+                                    <span data-id_prof=""><small><strong>Professor:</strong> <br> ------</small></span>   
                                 </td>
                             `;
                             input_horario.innerHTML += `
@@ -541,7 +541,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     conteudo += `
                         <td class="p-2" data-id_item="${horario_alterar?.id_item || ''}" id="${dias_semana[dia].dia}_${i + 1}" >
                             <label class="text-dark" data-id_disc="${horario_alterar?.id_disciplina || ''}"><b>${disciplina}</b></label> <br>
-                            <span data-id_prof="${horario_alterar?.cpf_professor || ''}"><small>Professor: <br> ${professor}</small></span>
+                            <span data-id_prof="${horario_alterar?.cpf_professor || ''}"><small><strong>Professor:</strong> <br> ${professor}</small></span>
                         </td>
                     `;
                 }

@@ -95,6 +95,24 @@ class Matricula_Model{
         return lista;
     }
 
+    async obter(id_matricula){
+        let SQL_text = "SELECT * FROM matriculas where id_matricula = ?";
+        let db = new Database();
+        let valores = [id_matricula];
+        let lista = [];
+        let rows = await db.ExecutaComando(SQL_text, valores);
+        for(let i = 0; i < rows.length; i++){
+            lista.push(new Matricula_Model(rows[i]["id_matricula"], 
+                                            rows[i]["data_matricula"],
+                                            rows[i]["dt_trancamento"],
+                                            rows[i]["cpf_aluno"],
+                                            rows[i]["id_turma"],
+                                            rows[i]["id_ano_letivo"],
+                                            rows[i]["id_series"]));
+        }
+        return lista;
+    }
+
     async obter_por_aluno(cpf_aluno){
         let SQL_text = "SELECT * FROM matriculas where cpf_aluno = ?";
         let db = new Database();
