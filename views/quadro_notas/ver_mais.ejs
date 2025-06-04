@@ -1,0 +1,27 @@
+
+<div class="col-md-9">
+  
+  <h1>Quadro de notas</h1>
+  <h2>Turma: <%= turma.nome %> - Professor: <%= turma.professor %></h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Aluno</th>
+        <% atividades.forEach(atividade => { %>
+          <th><%= atividade.nome %></th>
+        <% }); %>
+      </tr>
+    </thead>
+    <tbody>
+      <% alunos.forEach(aluno => { %>
+        <tr>
+          <td><%= aluno.nome %></td>
+          <% atividades.forEach(atividade => { %>
+            <td><%= aluno.notas[atividade.id] ?? '-' %></td>
+          <% }); %>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>

@@ -31,8 +31,8 @@
             <div class="col-md-3 mb-3">
                 <label class="form-label"><strong>Observações Gerais:</strong> </label>
                 <% if (atividade.status == "corrigida") { %>
-                    <label class="form-label"><strong>valor:</strong> <%= atividade.nota%></label>
-                    <label class="form-label"><strong>peso:</strong> <%= atividade.peso%>%</label>                                        
+                    <label class="form-label"><strong>nota:</strong>   <%= atividade.nota%></label>
+                    <label class="form-label"><strong>peso:</strong>   <%= atividade.peso%>%</label>                                        
                     <textarea class="form-control" id="txtFeedback" disabled><%= atividade.feedback%></textarea>
                     <label for="txtFeedback" class="form-label"><strong>feedback:</strong></label>
                 <% } %>

@@ -75,7 +75,7 @@
                 <tr>
                     <th><input type="checkbox" id="ckTodos"></th>
                     <th>id do quadro</th>
-                    <th>ano_letivo</th>
+                    <th>ano letivo</th>
                     <th>series</th>
                     <th>turma</th>
                     <th>bimestre</th>
@@ -94,6 +94,7 @@
                         <td><%= lista_quadro_notas[i].bimestre%></td>
                         <td><%= lista_quadro_notas[i].nome_disciplina%></td>
                         <td>
+                            <a href="/quadro_notas/ver_mais/<%= lista_quadro_notas[i].id_quadro%>" class="btn btn-info">Ver mais</a>
                             <a href="/quadro_notas/editar/<%= lista_quadro_notas[i].id_quadro%>" class="btn btn-primary">
                                 Editar
                             </a>

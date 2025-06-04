@@ -1,6 +1,7 @@
 const Ano_Letivo_Model = require("../models/ano_letivo_model");
 const Atividade_Model = require("../models/atividade_model");
 const Disciplina_Model = require("../models/disciplina_model");
+const Disciplina_Serie_Model = require("../models/disciplina_serie_model");
 const Matricula_Model = require("../models/matricula_model");
 const Notas_Model = require("../models/notas_model");
 const PessoaModel = require("../models/pessoa_model");
@@ -19,6 +20,7 @@ class Atividade_Controller{
     async listar_view_aluno(req, resp){
         let atividade_M = new Atividade_Model();
         let notas_M = new Notas_Model();
+        let disciplina_M = new Disciplina_Model();
         let matricula_M = new Matricula_Model();
         let lista_matricula = await matricula_M.obter_por_aluno(req.cookies.usuario_logado);
 
@@ -31,8 +33,7 @@ class Atividade_Controller{
             let quadro_notas_M = new Quadro_Notas_Model();
             let quadro_notas = await quadro_notas_M.obter(atividade[0].id_quadro);
 
-            let disciplina_M = new Disciplina_Model();
-            let disciplinas = await disciplina_M.obter(quadro_notas[0].id_disciplina);
+            let disciplinas = await disciplina_M.obter(quadro_notas[0].id_disciplina);            
 
             if(lista_notas[i].status != "fechada"){
                 lista_atividades.push({
@@ -44,7 +45,17 @@ class Atividade_Controller{
                 });
             }
         }
-        resp.render("atividade/listar_atividade_A.ejs", { layout: "layout_aluno_home.ejs", lista_atividades});
+
+        let disc_serie_M = new Disciplina_Serie_Model();
+        let lista_disciplina_serie = await disc_serie_M.listar_por_serie(lista_matricula[0].id_series);
+
+        let lista_disciplina_aluno = [];
+        for(let i = 0; i < lista_disciplina_serie.length; i++){
+            let disciplina = await disciplina_M.obter(lista_disciplina_serie[i].id_disciplina);
+            lista_disciplina_aluno.push(disciplina[0].nome);
+        }
+
+        resp.render("atividade/listar_atividade_A.ejs", { layout: "layout_aluno_home.ejs", lista_atividades, lista_disciplina_aluno});
     }
 
     async listar_ver_mais_A(req, resp){ 
