@@ -22,5 +22,6 @@ router.get("/download/:id_nota", autentic.validar_Professor, atividade_C.baixar_
 router.post("/corrigir", autentic.validar_Professor, atividade_C.corrigir_atividade);
 router.get("/editar/:id", atividade_C.listar_editar);
 router.post("/editar", atividade_C.editar_atividade);
+router.get("/filtrar", autentic.validar_Professor, atividade_C.filtrar);
 
 module.exports = router;

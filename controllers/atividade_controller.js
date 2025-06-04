@@ -367,6 +367,27 @@ class Atividade_Controller{
             })
         }
     }
+
+    async filtrar(req, res) {
+        let atividade_M = new Atividade_Model();
+        // Filtra atividades usando apenas o termo de busca (query.termo)
+        let termo = req.query.termo || "";
+        let lista_atividades_DB = await atividade_M.listar(termo);
+
+        // Retorna apenas as atividades encontradas
+        let lista_atividades = [];
+        for (let i = 0; i < lista_atividades_DB.length; i++) {
+            lista_atividades.push({
+                id_atividade: lista_atividades_DB[i].id_atividades,
+                nome: lista_atividades_DB[i].nome,
+                descricao: lista_atividades_DB[i].descricao,
+                dt_inicio: lista_atividades_DB[i].dt_inicio,
+                dt_final: lista_atividades_DB[i].dt_final,
+                id_quadro: lista_atividades_DB[i].id_quadro
+            });
+        }
+        res.send({lista: lista_atividades});
+        }
 }
 
 module.exports = Atividade_Controller;
