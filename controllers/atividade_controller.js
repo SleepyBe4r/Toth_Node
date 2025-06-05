@@ -184,9 +184,32 @@ class Atividade_Controller{
             dt_inicio: lista_atividades[0].dt_inicio,
             dt_final: lista_atividades[0].dt_final
         };
-        
-       
-        resp.render("atividade/ver_mais_P.ejs", { layout: "layout_professor_home.ejs", atividade, notas_para_corrigir});
+
+        let turma_M = new Turma_Model();
+        let turma = await turma_M.obter(lista_quadro[0].id_turma);
+        turma = turma[0];
+
+        let serie_M = new Serie_Model();
+        let serie = await serie_M.obter(lista_quadro[0].id_series);
+        serie = serie[0];
+
+        let ano_letivo_M = new Ano_Letivo_Model();
+        let ano = await ano_letivo_M.obter(lista_quadro[0].id_ano_letivo);
+        ano = ano[0];
+
+        let disciplina_M = new Disciplina_Model();
+        let disciplina = await disciplina_M.obter(lista_quadro[0].id_disciplina);
+        disciplina = disciplina[0];
+
+        let print_info = {
+            nome_turma: turma?.turma || "",
+            nome_serie: serie?.serie || "",
+            nome_ano: ano?.ano_letivo || "",
+            bimestre: lista_quadro[0].bimestre,
+            nome_disciplina: disciplina?.nome || "",
+        };
+
+        resp.render("atividade/ver_mais_P.ejs", { layout: "layout_professor_home.ejs", atividade, notas_para_corrigir, print_info });
     }
 
     async baixar_resposta(req, resp){

@@ -40,8 +40,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
     }
 
     function corrigir() {
-        let input_id_A = document.querySelector("#hidden_id_nota");
-        let input_resposta = document.querySelector("#inputResposta");
         let input_nota_hidden = document.querySelector("#slctNota_hidden");
         let lista_validacao = [];
         
@@ -94,10 +92,18 @@ document.addEventListener("DOMContentLoaded", ()=>{
     }
 
 
+    function exportarExcel() {
+        var wb = XLSX.utils.table_to_book(document.getElementById("tabelaNotas"));
+        /* Export to file (start a download) */
+        XLSX.writeFile(wb, "notas.xlsx");
+    }
+
+
     let usuario = document.querySelector("#hidden_usuario").value;
     if(usuario == "A"){
         document.querySelector("#btn_resposta").addEventListener("click", responder);    
     } else if(usuario == "P"){
+        document.getElementById("btn-exportar").addEventListener("click", exportarExcel);
         document.querySelector("#btn_corrigir").addEventListener("click", corrigir);    
     }
 });

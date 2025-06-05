@@ -1,15 +1,28 @@
 
 <script src="/js/validacao.js"></script>
 <script src="/js/atividade/ver_mais.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 
 <style>
     main {
         min-height: none !important;
     }
+    .print {
+        display: none;
+    }
+    @media print {
+        .print {
+            display: block;
+        }
+        .esconder {
+            display: none;
+        }
+    }
+
 </style>
 <!-- Main Section -->
 <div class="col-md-9">
-    <section class="mb-5">
+    <section class="mb-5 esconder">
         <div class="row">
             <input type="hidden" id="hidden_usuario" value="P">
             <input type="hidden" id="hidden_id_nota" value="<%= atividade.id_nota%>">
@@ -31,6 +44,14 @@
 
         <h4 class="text-primary">Alunos</h4>
 
+        <div>
+            <div class="esconder">                
+                <button id="btn-exportar" class="btn btn-success"><i class="fas fa-file"></i> Exportar para Excel</button>
+                <button class="btn btn-secondary" onclick="window.print()" ><i class="fas fa-file"></i> Exportar para PDF</button>
+                
+            </div>
+            <br>
+        </div>
         <div class="form-group alunos">                
             <select class="form-control" id="slctNota_hidden" hidden>
                 <%for(let i=0; i < notas_para_corrigir.length; i++){%>
@@ -83,12 +104,100 @@
                     </div>
                 </div>
             <% }) %>
-        </div>
+        </div>        
 
         <div>
             <button type="submit" class=" btn btn-primary" id="btn_corrigir">Finalizar Correção</button>            
             <a href="/atividade/P_listar" class="btn btn-dark">Retornar</a>
         </div>
+
+        <div class="table-responsive " hidden>
+            <table class="table table-bordered" id="tabelaNotas">
+                <thead>
+                <tr>
+                    <th colspan="3"><strong>Atividade:</strong> <%= atividade.nome %></th>
+                </tr>
+                <tr>
+                    <th colspan="3"><strong>Descrição:</strong> <%= atividade.descricao %></th>
+                </tr>
+                <tr>
+                    <th><strong>Data Inicial:</strong> <%= atividade.dt_inicio.toLocaleDateString('pt-BR') %></th>
+                    <th><strong>Data Final:</strong> <%= atividade.dt_final.toLocaleDateString('pt-BR') %></th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <th><strong>Turma:</strong> <%= print_info.nome_turma %></th>
+                    <th><strong>Série:</strong> <%= print_info.nome_serie %></th>
+                    <th><strong>Ano:</strong> <%= print_info.nome_ano %>, <strong>Bimestre:</strong> <%= print_info.bimestre %>, <strong>Disciplina:</strong> <%= print_info.nome_disciplina %></th>
+                </tr>
+                <tr>
+                    <th>Aluno</th>
+                    <th>Nota</th>
+                    <th>Feedback</th>
+                </tr>
+                </thead>
+                <tbody>
+                <% notas_para_corrigir.forEach(function(value) { %>
+                    <tr>
+                    <td><%= value.nome %></td>
+                    <td><%= value.nota %></td>
+                    <td><%= value.feedback %></td>
+                    </tr>
+                <% }) %>
+                </tbody>
+            </table>
+            </div>
     </section>
+
+    <section class="print">
+        <div class="row">
+            <input type="hidden" id="hidden_usuario" value="P">
+            <input type="hidden" id="hidden_id_nota" value="<%= atividade.id_nota%>">
+            <div class="col-md-12 mb-3">
+                <h3 class="text-primary"><strong>Atividade</strong> - <%= atividade.nome%></h3>
+            </div>
+            <div class="col-md-12 mb-3">
+                <textarea class="form-control" id="txtDescricao" style="resize: none; height: auto;" disabled><%= atividade.descricao%></textarea>
+                <label for="txtDescricao" class="form-label"><strong>Descrição:</strong></label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-9 mb-3">           
+                <label class="form-label"><strong>Data Inicial:</strong> <%= atividade.dt_inicio.toLocaleDateString('pt-BR')%></label>
+                <label class="form-label"><strong>Data Final:</strong> <%= atividade.dt_final.toLocaleDateString('pt-BR')%></label>
+            </div>
+            <div class="col-md-9 mb-3">
+                <label class="form-label"><strong>Turma:</strong> <%= print_info.nome_turma %></label><br>
+                <label class="form-label"><strong>Série:</strong> <%= print_info.nome_serie %></label><br>
+                <label class="form-label"><strong>Ano Letivo:</strong> <%= print_info.nome_ano %></label><br>
+                <label class="form-label"><strong>Bimestre:</strong> <%= print_info.bimestre %></label><br>
+                <label class="form-label"><strong>Disciplina:</strong> <%= print_info.nome_disciplina %></label>
+            </div>
+        </div>
+
+        <h4 class="text-primary">Alunos</h4>
+        
+        <div class="form-group alunos">                                       
+            <% notas_para_corrigir.map(function(value, index) { %>                    
+                <div class="card mb-3" id="item_nota_<%= value.id_nota %>">
+                    <div class="card-body row">
+                        <div class="col-md-3">
+                            <p class="mb-1"><strong>Aluno:</strong> <%= value.nome %></p>                              
+                            <label id="lblNota_<%= value.id_nota %>" class="form-label"><strong>Nota: <%= value.nota %></strong></label>
+                        </div>
+                        <div class="col-md-9">
+                            <% if (value.status == "respondida" || value.status == "corrigida") { %>
+                                <textarea class="form-control" id="txtFeedback_<%= value.id_nota %>" name="txtFeedback_<%= value.id_nota %>" rows="2" style="resize: none;"><%= value.feedback %></textarea>                                    
+                            <% }else{ %>
+                                <textarea class="form-control" id="txtFeedback_<%= value.id_nota %>" name="txtFeedback_<%= value.id_nota %>" rows="2" style="resize: none;" disabled><%= value.feedback %></textarea>                                                                                
+                            <% } %>
+                            <label for="txtFeedback_<%= value.id_nota %>" class="form-label"><strong>Feedback:</strong></label>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </section>
+
 </div>
 <!-- Content End -->
