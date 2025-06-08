@@ -27,6 +27,7 @@
                     <th>Titulo</th>
                     <th>Data Inicio</th>
                     <th>Data Final</th>
+                    <th>Status</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -38,14 +39,21 @@
                         <td><%= lista_atividades[i].nome%></td>
                         <td><%= lista_atividades[i].dt_inicio.toLocaleDateString('pt-BR') %></td>
                         <td><%= lista_atividades[i].dt_final.toLocaleDateString('pt-BR') %></td>
+                        <td><%= lista_atividades[i].status %></td>
                         <td>
                             <% if(lista_atividades[i].id_quadro == null) {%>
                                 <a href="" class="btn btn-info disabled">Ver mais</a>
+                                <button href="" class="btn btn-success disabled">Liberar</button>
                             <% } else { %>
                                 <a href="/atividade/ver_mais_P/<%= lista_atividades[i].id_atividades%>" class="btn btn-info">Ver mais</a>
+                                <% if(lista_atividades[i].status == 'fechada') { %>
+                                    <button data-id="<%= lista_atividades[i].id_atividades%>" data-name="<%= lista_atividades[i].nome%>" class="btn btn-success btn_liberar">Liberar</button>
+                                <% } else { %>
+                                    <button href="" class="btn btn-success disabled">Liberada</button>
+                                <% } %>
                             <% } %>
-                                 
-                                    
+
+
                             <a href="/atividade/editar/<%= lista_atividades[i].id_atividades%>" class="btn btn-primary">
                                 Editar
                             </a>

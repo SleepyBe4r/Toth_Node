@@ -13,7 +13,30 @@ class Atividade_Controller{
   
     async listar_view_professor(req, resp){
         let atividade_M = new Atividade_Model();
-        let lista_atividades = await atividade_M.listar();
+        let lista_atividades_DB = await atividade_M.listar();
+
+        let lista_atividades = lista_atividades_DB.map(atividade => ({
+            id_atividades: atividade.id_atividades,
+            nome: atividade.nome,
+            descricao: atividade.descricao,
+            dt_inicio: atividade.dt_inicio,
+            dt_final: atividade.dt_final,
+            id_quadro: atividade.id_quadro,
+            status: "sem notas" // Inicializa o status como "sem notas"
+        }));
+        
+        let notas_M = new Notas_Model();
+
+        for(let i = 0; i < lista_atividades.length; i++){
+            notas_M.id_atividade = lista_atividades[i].id_atividades;
+            let lista_notas = await notas_M.listar_por_atividade();
+            if(lista_notas.length > 0){
+                lista_atividades[i].status = lista_notas[0].status;
+            } else{
+                lista_atividades[i].status = "sem notas";
+            }
+        }
+        
         resp.render("atividade/listar_atividade_P.ejs", { layout: "layout_professor_home.ejs", lista_atividades});
     }
 
@@ -411,6 +434,40 @@ class Atividade_Controller{
         }
         res.send({lista: lista_atividades});
         }
+
+    async liberar_atividade(req, res) {
+        let notas_M = new Notas_Model();
+
+        notas_M.id_atividade = req.body.atividade_id;
+        let lista_notas = await notas_M.listar_por_atividade();
+        let lista_resposta = [];
+
+        if (lista_notas.length > 0) {
+            // Se houver notas, atualiza o status delas para 'liberado'
+            for (let i = 0; i < lista_notas.length; i++) {
+                notas_M.id_nota = lista_notas[i].id_nota;
+                notas_M.id_atividade = lista_notas[i].id_atividade;
+                notas_M.peso = lista_notas[i].peso;
+                notas_M.nota = lista_notas[i].nota;
+                notas_M.feedback = lista_notas[i].feedback;
+                notas_M.atividade_resposta = lista_notas[i].atividade_resposta;
+                notas_M.atividade_resposta_extencao = lista_notas[i].atividade_resposta_extencao;
+                notas_M.id_matricula = lista_notas[i].id_matricula;
+                notas_M.id_quadro = lista_notas[i].id_quadro;
+                // Atualiza o status da nota para 'liberado'
+                notas_M.status = "liberado";
+                if (await notas_M.atualizar()) {
+                    lista_resposta.push("ok");
+                }
+            }
+        }
+
+        if (lista_resposta.length == lista_notas.length) {
+            res.send({ ok: true, msg: "Atividade liberada com sucesso" });
+        } else {
+            res.send({ ok: false, msg: "Erro ao liberar a Atividade" });
+        }
+    }
 }
 
 module.exports = Atividade_Controller;

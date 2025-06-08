@@ -61,7 +61,7 @@
             </select>
             
             <% notas_para_corrigir.map(function(value, index) { %>                    
-                <div class="card mb-3" id="item_nota_<%= value.id_nota %>">
+                <div class="card mb-3" id="item_nota_<%= value.id_nota %>" data-nome="<%= value.nome %>">
                     <div class="card-body">
                         <div class="row mb-2">
                             <div class="col-md-3">
@@ -201,3 +201,40 @@
 
 </div>
 <!-- Content End -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Atualiza a div de print e a tabela ao modificar inputs de nota ou feedback
+        document.querySelectorAll('input[id^="txtNota_"], textarea[id^="txtFeedback_"]').forEach(function(el) {
+            el.addEventListener('input', function() {
+                const id_nota = this.id.split('_')[1];
+                // Atualiza print
+                const printNota = document.querySelector('.print #lblNota_' + id_nota);
+                const printFeedback = document.querySelector('.print #txtFeedback_' + id_nota);
+                const mainNota = document.getElementById('txtNota_' + id_nota);
+                const mainFeedback = document.getElementById('txtFeedback_' + id_nota);
+
+                if (printNota && mainNota) {
+                    printNota.innerHTML = '<strong>Nota: ' + mainNota.value + '</strong>';
+                }
+                if (printFeedback && mainFeedback) {
+                    printFeedback.value = mainFeedback.value;
+                }
+
+                // Atualiza tabela
+                const tabela = document.getElementById('tabelaNotas');
+                if (tabela) {
+                    // Busca o nome do aluno pelo data attribute
+                    const card = document.getElementById('item_nota_' + id_nota);
+                    const nomeAluno = card ? card.getAttribute('data-nome') : '';
+                    Array.from(tabela.tBodies[0].rows).forEach(function(row) {
+                        if (row.cells[0].textContent.trim() === nomeAluno) {
+                            row.cells[1].textContent = mainNota ? mainNota.value : '';
+                            row.cells[2].textContent = mainFeedback ? mainFeedback.value : '';
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>

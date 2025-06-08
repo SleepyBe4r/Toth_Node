@@ -91,12 +91,12 @@ document.addEventListener("DOMContentLoaded", ()=>{
         }
     }
 
-
     function exportarExcel() {
         var wb = XLSX.utils.table_to_book(document.getElementById("tabelaNotas"));
         /* Export to file (start a download) */
         XLSX.writeFile(wb, "notas.xlsx");
     }
+
 
 
     let usuario = document.querySelector("#hidden_usuario").value;

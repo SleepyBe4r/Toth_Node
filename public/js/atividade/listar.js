@@ -44,4 +44,34 @@ document.addEventListener("DOMContentLoaded", function() {
            document.getElementById("corpoTabelaQuadro").innerHTML = html;
         })
     }
+
+    let botoes_liberar = document.querySelectorAll(".btn.btn-success.btn_liberar");
+    botoes_liberar.forEach(e => {
+       e.addEventListener("click", liberar);
+    });
+
+    function liberar(event) {
+        event.preventDefault();
+        let atividade_id = this.dataset.id;
+        let nome = this.dataset.name;
+
+        if (confirm(`Deseja liberar a Atividade ${nome}?`)) {
+            fetch("/atividade/liberar", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ atividade_id})
+            })
+            .then((resposta) => resposta.json())
+            .then((dados) => {
+                if (dados.ok) {
+                    alert(`A Atividade ${nome} foi liberada!`)
+                } else {
+                    alert("Erro ao liberar a Atividade");
+                }
+            })
+            .catch((erro) => console.error("erro:", erro));
+        }
+    }
 })

@@ -172,7 +172,7 @@ class Quadro_Notas_Controller{
                     if (hoje < dataInicio || hoje > dataFim) {
                         quadro_notas_atividade_M.status = "fechada";
                     } else {
-                        quadro_notas_atividade_M.status = "aberto";
+                        quadro_notas_atividade_M.status = "aberta";
                     }
 
                     await quadro_notas_atividade_M.inserir() == true ? resposta_nota.push(true) : '';
@@ -391,7 +391,7 @@ class Quadro_Notas_Controller{
                         if (hoje < dataInicio || hoje > dataFim) {
                             quadro_notas_atividade_M.status = "fechada";
                         } else {
-                            quadro_notas_atividade_M.status = "aberto";
+                            quadro_notas_atividade_M.status = "aberta";
                         }
 
                         await quadro_notas_atividade_M.inserir() == true ? resposta_nota.push(true) : '';
