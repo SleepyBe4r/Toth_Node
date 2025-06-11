@@ -21,7 +21,6 @@ class Serie_Controller {
         const nome_serie = req.body.serie?.trim();
         const disciplinas = req.body.disciplinas;
 
-     
         if (!nome_serie || disciplinas.length === 0) {
             resp.send({
                 ok: false,
@@ -36,12 +35,11 @@ class Serie_Controller {
         if (!regex_valido.test(nome_serie) || !contem_letras.test(nome_serie)) {
             resp.send({
                 ok: false,
-                msg: "Nome da série inválido. Use apenas letras, números e os símbolos ª e º, com pelo menos uma letra."
+                msg: "Nome da série inválido. Use apenas letras, números, espaços e os símbolos ª e º. Não use underline (_) ou outros símbolos especiais, e inclua pelo menos uma letra."
             });
             return;
         }
 
-       
         let serie_M = new Serie_Model();
         let series_existentes = await serie_M.listar();
         let nome_ja_existe = series_existentes.some(s => s.serie.toLowerCase() === nome_serie.toLowerCase());
@@ -54,7 +52,6 @@ class Serie_Controller {
             return;
         }
 
-        
         serie_M.serie = nome_serie;
         let resultado_serie = await serie_M.inserir();
         let ultimo_id = await serie_M.selecionar_ultimo_id();
@@ -118,17 +115,42 @@ class Serie_Controller {
     }
 
     async editar_serie(req, resp) {
-        if (req.body.serie == "" && req.body.disciplinas.length == 0) {
+        const nome_serie = req.body.serie?.trim();
+        const disciplinas = req.body.disciplinas;
+
+        if (!nome_serie || disciplinas.length === 0) {
             resp.send({
                 ok: false,
-                msg: "Campo incompleto"
+                msg: "Campos obrigatórios não preenchidos"
+            });
+            return;
+        }
+
+        const regex_valido = /^[a-zA-Z0-9ªº\s]+$/;
+        const contem_letras = /[a-zA-Z]/;
+
+        if (!regex_valido.test(nome_serie) || !contem_letras.test(nome_serie)) {
+            resp.send({
+                ok: false,
+                msg: "Nome da série inválido. Use apenas letras, números, espaços e os símbolos ª e º. Não use underline (_) ou outros símbolos especiais, e inclua pelo menos uma letra."
             });
             return;
         }
 
         let serie_M = new Serie_Model();
         serie_M.id = req.body.id_serie;
-        serie_M.serie = req.body.serie;
+        serie_M.serie = nome_serie;
+
+        let series_existentes = await serie_M.listar();
+        let nome_ja_existe = series_existentes.some(s => s.serie.toLowerCase() === nome_serie.toLowerCase() && s.id != serie_M.id);
+
+        if (nome_ja_existe) {
+            resp.send({
+                ok: false,
+                msg: "Já existe uma série com esse nome."
+            });
+            return;
+        }
 
         let lista_serie = await serie_M.atualizar();
 
@@ -137,13 +159,12 @@ class Serie_Controller {
         let lista_disc_serie_old = await disc_serie_M.listar_por_serie(req.body.id_serie);
 
         if (lista_serie) {
-            for (let item_disc of req.body.disciplinas) {
+            for (let item_disc of disciplinas) {
                 let achou = false;
                 lista_disc_serie_old.forEach((ds_old, index) => {
-                    for (const disciplina of req.body.disciplinas) {
+                    for (const disciplina of disciplinas) {
                         if (ds_old.id_series == req.body.id_serie &&
-                            ds_old.id_disciplina == disciplina.disciplina
-                        ) {
+                            ds_old.id_disciplina == disciplina.disciplina) {
                             achou = true;
                             lista_disc_serie_old.splice(index, 1);
                         }
@@ -162,15 +183,14 @@ class Serie_Controller {
             }
         }
 
-        lista_disc_serie_old.forEach(async (ds_old, index) => {
+        for (const ds_old of lista_disc_serie_old) {
             let disc_serie_exclusao_M = new Disciplina_Serie_Model();
             disc_serie_exclusao_M.id_series = req.body.id_serie;
             disc_serie_exclusao_M.id_disciplina = ds_old.id_disciplina;
+            await disc_serie_exclusao_M.excluir();
+        }
 
-            if (await disc_serie_exclusao_M.excluir()) lista_disc_serie_old.splice(index, 1);
-        });
-
-        if (req.body.disciplinas.length == lista_disc_serie.length) {
+        if (disciplinas.length == lista_disc_serie.length) {
             resp.send({
                 ok: true,
                 msg: "Série editada com sucesso"
