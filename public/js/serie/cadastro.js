@@ -53,7 +53,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
             })
             .then((resposta) => resposta.json())
             .then((dados) => {
-                if(dados.ok) alert(dados.msg);
+                alert(dados.msg)
+                if(dados.ok);
                 window.location.href = '/serie';
             })
             .catch((erro) => console.error("erro:", erro));
@@ -114,7 +115,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
             })
             .then((resposta) => resposta.json())
             .then((dados) => {
-                if(dados.ok) alert(dados.msg);
+                alert(dados.msg);
+                if(dados.ok) 
                 window.location.href = '/serie';
             })
             .catch((erro) => console.error("erro:", erro));
