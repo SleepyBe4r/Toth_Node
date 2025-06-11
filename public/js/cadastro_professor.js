@@ -3,53 +3,37 @@
  * Coleta dados do formulário, valida e envia para o backend
  */
 
-class CadastroProfessor {
+document.addEventListener("DOMContentLoaded", () => {
+    const formulario = document.getElementById('formCadastroProfessor');
+    const botaoSubmit = formulario?.querySelector('button[type="submit"]');
     
-    constructor() {
-        this.formulario = null;
-        this.botaoSubmit = null;
-        this.init();
+    if (formulario) {
+        configurarEventos();
+        configurarFormatacao();
     }
-
-    /**
-     * Inicializa os eventos e configurações
-     */
-    init() {
-        document.addEventListener('DOMContentLoaded', () => {
-            this.formulario = document.getElementById('formCadastroProfessor');
-            this.botaoSubmit = this.formulario?.querySelector('button[type="submit"]');
-            
-            if (this.formulario) {
-                this.configurarEventos();
-                this.configurarFormatacao();
-            }
-        });
-    }
-
+    
     /**
      * Configura os eventos do formulário
      */
-    configurarEventos() {
+    function configurarEventos() {
         // Evento de submit do formulário
-        this.formulario.addEventListener('submit', (event) => {
-            this.processarCadastro(event);
+        formulario.addEventListener('submit', (event) => {
+            processarCadastro(event);
         });
 
         // Evento de reset do formulário
-        this.formulario.addEventListener('reset', () => {
-            this.limparValidacoes();
+        formulario.addEventListener('reset', () => {
+            limparValidacoes();
         });
-    }
-
-    /**
+    }    /**
      * Configura formatação automática dos campos
      */
-    configurarFormatacao() {
+    function configurarFormatacao() {
         // Formatação de CPF
         const cpfInput = document.getElementById('cpf');
         if (cpfInput) {
             cpfInput.addEventListener('input', (e) => {
-                this.formatarCPF(e.target);
+                formatarCPF(e.target);
             });
         }
 
@@ -57,7 +41,7 @@ class CadastroProfessor {
         const telefoneInput = document.getElementById('telefone');
         if (telefoneInput) {
             telefoneInput.addEventListener('input', (e) => {
-                this.formatarTelefone(e.target);
+                formatarTelefone(e.target);
             });
         }
 
@@ -65,7 +49,7 @@ class CadastroProfessor {
         const nomeInput = document.getElementById('nome');
         if (nomeInput) {
             nomeInput.addEventListener('input', (e) => {
-                this.validarNomeInput(e.target);
+                validarNomeInput(e.target);
             });
         }
 
@@ -83,10 +67,10 @@ class CadastroProfessor {
      * Coleta todos os dados do formulário
      * @returns {Object} Objeto com todos os dados do formulário
      */
-    coletarDadosFormulario() {
-        if (!this.formulario) return null;
+    function coletarDadosFormulario() {
+        if (!formulario) return null;
 
-        const formData = new FormData(this.formulario);
+        const formData = new FormData(formulario);
         const dados = {};
 
         // Converter FormData para objeto JavaScript
