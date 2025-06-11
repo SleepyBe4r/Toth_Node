@@ -96,71 +96,11 @@
           <i class="flaticon-043-teddy-bear"></i>
           <span class="text-white">Toth Academy</span>
         </a>
-      </div>
-  </div>
+      </div>  </div>
   <!-- Footer End -->
 
-  <!-- JavaScript -->
-  <script>
-    let professores = JSON.parse(localStorage.getItem('professores')) || [];
-    const tabela = document.getElementById('lista_professores');
-
-    function carregarProfessores() {
-        let html = '';
-        professores.forEach(professor => {            
-
-            html += `
-                <tr>
-                    <td><input type="checkbox" name="check_del" data-id="${professor.id}"></td>
-                    <td>${professor.nome}</td>
-                    <td>${professor.cpf}</td>
-                    <td>${professor.telefone}</td>
-                    <td>
-                        <button class="btn btn-danger btn-sm" onclick="excluirProfessor('${professor.id}')">Excluir</button>
-                    </td>
-                </tr>
-            `;
-        });
-
-        tabela.innerHTML = html;
-    }
-
-    function excluirProfessor(id) {
-        localStorage.removeItem("professores");
-        let lista_aux = [];
-
-        professores.forEach(e => {
-            if (id != e.id) {
-                lista_aux.push(e);
-            }
-        });
-
-        localStorage.setItem('professores', JSON.stringify(lista_aux));
-        professores = JSON.parse(localStorage.getItem('professores')) || [];
-        carregarProfessores();
-    }
-
-    function excluirSelecionados() {
-        const checkboxes = document.querySelectorAll("input[name='check_del']:checked");
-        checkboxes.forEach(checkbox => excluirProfessor(checkbox.dataset.id));
-        document.getElementById("ckTodos").checked = false;
-    }
-
-    function selecionarTodos() {
-        const checkboxes = document.querySelectorAll("input[name='check_del']");
-        const selecionarTodos = document.getElementById("ckTodos").checked;
-        checkboxes.forEach(checkbox => (checkbox.checked = selecionarTodos));
-    }
-    function sair() {
-        localStorage.removeItem("usuarioAtual");
-        window.location="/login";
-      }
-    document.addEventListener("DOMContentLoaded", () => {
-        carregarProfessores();
-        document.getElementById("ckTodos").addEventListener("change", selecionarTodos);
-        document.getElementById("btnExcluirSelecionados").addEventListener("click", excluirSelecionados);
-    });
-</script>
+  <!-- Script para listagem de professores -->
+  <script src="/js/professores/excluirjs.js"></script>
 
 </body>
 
