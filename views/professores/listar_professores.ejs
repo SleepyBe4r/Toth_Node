@@ -33,19 +33,18 @@
                     <td><%= professor.fone %></td>
                     <td><%= professor.titulacao %></td>
                     <td><%= new Date(professor.dataAdmissao).toLocaleDateString('pt-BR') %></td>
-                    <td>
-                      <a href="/admin/professores/editar/<%= professor.cpf %>" class="btn btn-sm btn-info">
-                        <i class="fas fa-edit"></i>
-                      </a>
-                      <form action="/admin/professores/excluir" method="POST" style="display: inline;">
-                        <input type="hidden" name="cpf" value="<%= professor.cpf %>" required>
-                        <button type="submit" 
-                                class="btn btn-sm btn-danger"
-                                onclick="return confirm('Tem certeza que deseja excluir o professor <%= professor.nome %>?')">
-                          <i class="fas fa-trash"></i>
-                        </button>
-                      </form>
-                    </td>
+<td>
+  <a href="/admin/professores/editar/<%= professor.cpf %>" class="btn btn-sm btn-warning">
+    <i class="fas fa-edit"></i> Editar
+  </a>
+  <!-- Corrija a action do formulário -->
+  <form action="/admin/professores/excluir" method="POST" style="display: inline;">
+    <input type="hidden" name="cpf" value="<%= professor.cpf %>" required>
+    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir o professor <%= professor.cpf %>?')">
+      <i class="fas fa-trash-alt"></i> Excluir
+    </button>
+  </form>
+</td>
                   </tr>
                 <% }); %>
               </tbody>
@@ -121,20 +120,40 @@
         // Fechar modal de confirmação
         $('#modalConfirmacao').modal('hide');
         
-        // Criar um formulário oculto para enviar a exclusão via POST tradicional
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '/admin/professores/excluir';
-        form.style.display = 'none';
-        
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'cpf';
-        input.value = cpfParaExcluir;
-        
-        form.appendChild(input);
-        document.body.appendChild(form);
-        form.submit();
+        // Enviar requisição para excluir professor
+        fetch('/admin/professores/excluir', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ cpf: cpfParaExcluir })
+        })
+        .then(response => response.json())
+        .then(result => {
+          if (result.ok) {
+            // Exibir modal com mensagem de sucesso
+            document.getElementById('feedbackModalLabel').textContent = "Sucesso";
+            document.getElementById('feedbackModalBody').textContent = result.msg;
+            $('#feedbackModal').modal('show');
+            
+            // Recarregar página após fechar o modal
+            $('#feedbackModal').on('hidden.bs.modal', function () {
+              window.location.reload();
+            });
+          } else {
+            // Exibir modal com mensagem de erro
+            document.getElementById('feedbackModalLabel').textContent = "Erro";
+            document.getElementById('feedbackModalBody').textContent = result.msg;
+            $('#feedbackModal').modal('show');
+          }
+        })
+        .catch(error => {
+          console.error('Erro:', error);
+          // Exibir modal com mensagem de erro
+          document.getElementById('feedbackModalLabel').textContent = "Erro";
+          document.getElementById('feedbackModalBody').textContent = "Ocorreu um erro ao processar a solicitação.";
+          $('#feedbackModal').modal('show');
+        });
       }
     });
   });

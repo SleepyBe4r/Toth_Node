@@ -36,13 +36,13 @@ class Professor_Controller {
             let professor = new Professor_Model();
             let listaProfessores = await professor.listar(); 
             
-            resp.render("admin/professores/listar_professores.ejs", { 
+            resp.render("professores/listar_professores.ejs", { 
                 layout: "layout_admin_home.ejs",
                 professores: listaProfessores 
             });
         } catch (error) {
             console.error("Erro ao listar professores:", error);
-            resp.render("admin/professores/listar_professores.ejs", { 
+            resp.render("professores/listar_professores.ejs", { 
                 layout: "layout_admin_home.ejs",
                 professores: [],
                 erro: "Erro ao carregar lista de professores" 
@@ -55,7 +55,7 @@ class Professor_Controller {
     }
 
     listar_cadastroProf_admin(req, resp) {
-        resp.render("admin/professores/cadastrar_professor.ejs", { layout: "layout_admin_home.ejs" });
+        resp.render("professores/cadastrar_professor.ejs", { layout: "layout_admin_home.ejs" });
     }
 
     async cadastrar_Prof(req, resp) {
@@ -63,9 +63,46 @@ class Professor_Controller {
             // Validar dados de entrada
             const { cpf, nome, dt_nascimento, rua, bairro, email, telefone, senha, titulacao, dt_admissao } = req.body;
             
+            // Validar CPF (formato e algoritmo)
+            const cpfLimpo = cpf.replace(/\D/g, '');
+            if (cpfLimpo.length !== 11) {
+                return resp.send({ ok: false, msg: "CPF inválido: deve conter 11 dígitos" });
+            }
+
+            // Verificar se todos os dígitos são iguais (CPF inválido)
+            if (/^(\d)\1{10}$/.test(cpfLimpo)) {
+                return resp.send({ ok: false, msg: "CPF inválido: dígitos repetidos" });
+            }
+
+            // Validação do primeiro dígito verificador
+            let soma = 0;
+            for (let i = 0; i < 9; i++) {
+                soma += parseInt(cpfLimpo.charAt(i)) * (10 - i);
+            }
+
+            let resto = soma % 11;
+            let digitoVerificador1 = resto < 2 ? 0 : 11 - resto;
+
+            if (digitoVerificador1 !== parseInt(cpfLimpo.charAt(9))) {
+                return resp.send({ ok: false, msg: "CPF inválido: primeiro dígito verificador incorreto" });
+            }
+
+            // Validação do segundo dígito verificador
+            soma = 0;
+            for (let i = 0; i < 10; i++) {
+                soma += parseInt(cpfLimpo.charAt(i)) * (11 - i);
+            }
+
+            resto = soma % 11;
+            let digitoVerificador2 = resto < 2 ? 0 : 11 - resto;
+
+            if (digitoVerificador2 !== parseInt(cpfLimpo.charAt(10))) {
+                return resp.send({ ok: false, msg: "CPF inválido: segundo dígito verificador incorreto" });
+            }
+            
             // Verificar se o CPF já existe como pessoa
             let pessoaExistente = new Pessoa_Model();
-            let dadosPessoa = await pessoaExistente.obter(cpf);
+            let dadosPessoa = await pessoaExistente.obter(cpfLimpo);
             if (dadosPessoa) {
                 return resp.send({ ok: false, msg: "CPF já cadastrado no sistema" });
             }
@@ -76,8 +113,67 @@ class Professor_Controller {
             if (emailExistente && emailExistente.length > 0) {
                 return resp.send({ ok: false, msg: "Email já cadastrado como usuário no sistema" });
             }
+            
+            // Validar datas
+            const dataNascimento = new Date(dt_nascimento);
+            const dataAdmissao = new Date(dt_admissao);
+            const hoje = new Date();
 
-            // Criar pessoa
+            // Verificar se as datas são válidas
+            if (isNaN(dataNascimento.getTime()) || isNaN(dataAdmissao.getTime())) {
+                return resp.send({ ok: false, msg: "Data de nascimento ou admissão inválida" });
+            }
+
+            // Verificar se a data de admissão não é futura
+            if (dataAdmissao > hoje) {
+                return resp.send({ ok: false, msg: "Data de admissão não pode ser futura" });
+            }
+
+            // Calcular idade na data de admissão
+            let idadeNaAdmissao = dataAdmissao.getFullYear() - dataNascimento.getFullYear();
+            const mesAdmissao = dataAdmissao.getMonth();
+            const diaAdmissao = dataAdmissao.getDate();
+            const mesNascimento = dataNascimento.getMonth();
+            const diaNascimento = dataNascimento.getDate();
+
+            // Ajustar a idade se ainda não tinha feito aniversário na data de admissão
+            if (mesAdmissao < mesNascimento || (mesAdmissao === mesNascimento && diaAdmissao < diaNascimento)) {
+                idadeNaAdmissao--;
+            }
+
+            // Verificar se tinha pelo menos 18 anos na data de admissão
+            if (idadeNaAdmissao < 18) {
+                return resp.send({ ok: false, msg: "Professor deve ter pelo menos 18 anos na data de admissão" });
+            }
+
+            // Validação do telefone - adicionar após a validação do CPF
+            const telefoneNumeros = telefone.replace(/\D/g, '');
+            if (telefoneNumeros.length !== 10 && telefoneNumeros.length !== 11) {
+                return resp.send({ 
+                    ok: false, 
+                    msg: "Telefone inválido: deve ter 10 dígitos (fixo) ou 11 dígitos (celular)" 
+                });
+            }
+
+            // Validar formato do telefone (DDD + número)
+            const ddd = telefoneNumeros.substring(0, 2);
+            const numerosValidos = parseInt(ddd) >= 11 && parseInt(ddd) <= 99;
+            if (!numerosValidos) {
+                return resp.send({ 
+                    ok: false, 
+                    msg: "DDD inválido: deve estar entre 11 e 99" 
+                });
+            }
+
+            // Se for celular (11 dígitos), validar se começa com 9
+            if (telefoneNumeros.length === 11 && telefoneNumeros[2] !== '9') {
+                return resp.send({ 
+                    ok: false, 
+                    msg: "Número de celular deve começar com 9" 
+                });
+            }
+
+            // Criar pessoa (atualizar para usar o telefone validado)
             let pessoa = new Pessoa_Model();
             pessoa.cpf = cpf;
             pessoa.nome = nome;
@@ -85,7 +181,7 @@ class Professor_Controller {
             pessoa.rua = rua;
             pessoa.bairro = bairro;
             pessoa.email = email;
-            pessoa.fone = telefone;
+            pessoa.fone = telefoneNumeros; // Usar o número já formatado
 
             // Criar professor
             let professor = new Professor_Model();
@@ -163,10 +259,23 @@ class Professor_Controller {
             }
             
             // Sucesso
-            resp.send({ ok: true, msg: "Professor excluído com sucesso!" });
+            if (resultadoProfessor && resultadoPessoa) {
+                resp.send(`<script>
+                    alert('Professor excluído com sucesso!');
+                    window.location.href = '/professor';
+                </script>`);
+            } else {
+                resp.send(`<script>
+                    alert('Erro ao excluir professor');
+                    window.location.href = '/professor';
+                </script>`);
+            }
         } catch (error) {
-            console.error("Erro ao excluir professor:", error);
-            resp.send({ ok: false, msg: "Erro ao processar exclusão: " + error.message });
+            console.error(error);
+            resp.send(`<script>
+                alert('Erro ao excluir professor: ${error.message}');
+                window.location.href = '/professor';
+            </script>`);
         }
     }
 
@@ -201,7 +310,7 @@ class Professor_Controller {
                 ...dadosPessoa
             };
             
-            resp.render("admin/professores/editar_professor.ejs", { 
+            resp.render("professores/editar_professor.ejs", { 
                 layout: "layout_admin_home.ejs",
                 professor: dados 
             });

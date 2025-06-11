@@ -1,4 +1,3 @@
-
 const express = require("express");
 const Admin_Controller = require("../controllers/admin_controller");
 const Professor_Controller = require("../controllers/professor_controller");
@@ -17,7 +16,7 @@ router.get("/home", autentic.validar_Admin, admin_C.home_view);
 router.get("/professores", autentic.validar_Admin, professor_C.listar_view_admin);
 router.get("/professores/cadastrar", autentic.validar_Admin, professor_C.listar_cadastroProf_admin);
 router.post("/professores/cadastrar", autentic.validar_Admin, professor_C.cadastrar_Prof);
-router.post("/professores/excluir", autentic.validar_Admin, professor_C.excluir_Prof);
+router.post("/professores/excluir", admin_C.excluir_Prof);
 router.get("/professores/editar/:cpf", autentic.validar_Admin, professor_C.listar_editar_admin);
 router.post("/professores/editar", autentic.validar_Admin, professor_C.editar_Prof);
 

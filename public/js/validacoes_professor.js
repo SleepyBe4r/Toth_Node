@@ -1,230 +1,235 @@
 /**
- * Arquivo de validações e utilitários para o CRUD de professores
- * Contém funções para validar CPF, telefone, nome, email, data de admissão e outros campos
+ * Arquivo de validações específicas para o cadastro e edição de professores
  */
 
-/**
- * Valida um CPF
- * @param {string} cpf - CPF a ser validado
- * @returns {boolean} - true se o CPF for válido, false caso contrário
- */
+// Função para validar CPF
 function validarCPF(cpf) {
-  // Remove caracteres não numéricos
-  cpf = cpf.replace(/\D/g, '');
-  
-  // Verifica se tem 11 dígitos
-  if (cpf.length !== 11) {
-    return false;
-  }
-  
-  // Verifica se todos os dígitos são iguais (CPF inválido, mas passa na validação matemática)
-  if (/^(\d)\1{10}$/.test(cpf)) {
-    return false;
-  }
-  
-  // Validação do primeiro dígito verificador
-  let soma = 0;
-  for (let i = 0; i < 9; i++) {
-    soma += parseInt(cpf.charAt(i)) * (10 - i);
-  }
-  
-  let resto = soma % 11;
-  let digitoVerificador1 = resto < 2 ? 0 : 11 - resto;
-  
-  if (digitoVerificador1 !== parseInt(cpf.charAt(9))) {
-    return false;
-  }
-  
-  // Validação do segundo dígito verificador
-  soma = 0;
-  for (let i = 0; i < 10; i++) {
-    soma += parseInt(cpf.charAt(i)) * (11 - i);
-  }
-  
-  resto = soma % 11;
-  let digitoVerificador2 = resto < 2 ? 0 : 11 - resto;
-  
-  return digitoVerificador2 === parseInt(cpf.charAt(10));
-}
-
-/**
- * Valida um telefone
- * @param {string} telefone - Telefone a ser validado
- * @returns {boolean} - true se o telefone for válido, false caso contrário
- */
-function validarTelefone(telefone) {
-  // Remove caracteres não numéricos
-  const numeroLimpo = telefone.replace(/\D/g, '');
-  
-  // Verifica se tem entre 10 e 11 dígitos (com ou sem DDD)
-  if (numeroLimpo.length < 10 || numeroLimpo.length > 11) {
-    return false;
-  }
-  
-  // Verifica se o DDD é válido (se tiver 11 dígitos)
-  if (numeroLimpo.length === 11) {
-    const ddd = numeroLimpo.substring(0, 2);
-    if (parseInt(ddd) < 11 || parseInt(ddd) > 99) {
-      return false;
+    // Remover caracteres não numéricos
+    cpf = cpf.replace(/\D/g, '');
+    
+    // Verificar se tem 11 dígitos
+    if (cpf.length !== 11) {
+        return { valido: false, mensagem: "CPF deve conter exatamente 11 dígitos" };
     }
-  }
-  
-  return true;
+    
+    // Verificar se todos os dígitos são iguais (CPF inválido)
+    if (/^(\d)\1{10}$/.test(cpf)) {
+        return { valido: false, mensagem: "CPF inválido: dígitos repetidos" };
+    }
+    
+    // Validação do primeiro dígito verificador
+    let soma = 0;
+    for (let i = 0; i < 9; i++) {
+        soma += parseInt(cpf.charAt(i)) * (10 - i);
+    }
+    
+    let resto = soma % 11;
+    let digitoVerificador1 = resto < 2 ? 0 : 11 - resto;
+    
+    if (digitoVerificador1 !== parseInt(cpf.charAt(9))) {
+        return { valido: false, mensagem: "CPF inválido: primeiro dígito verificador incorreto" };
+    }
+    
+    // Validação do segundo dígito verificador
+    soma = 0;
+    for (let i = 0; i < 10; i++) {
+        soma += parseInt(cpf.charAt(i)) * (11 - i);
+    }
+    
+    resto = soma % 11;
+    let digitoVerificador2 = resto < 2 ? 0 : 11 - resto;
+    
+    if (digitoVerificador2 !== parseInt(cpf.charAt(10))) {
+        return { valido: false, mensagem: "CPF inválido: segundo dígito verificador incorreto" };
+    }
+    
+    return { valido: true };
 }
 
-/**
- * Valida um nome (apenas letras e espaços)
- * @param {string} nome - Nome a ser validado
- * @returns {boolean} - true se o nome for válido, false caso contrário
- */
+// Função para validar telefone
+function validarTelefone(telefone) {
+    // Remover caracteres não numéricos
+    telefone = telefone.replace(/\D/g, '');
+    
+    // Verificar se tem entre 10 e 11 dígitos (com ou sem DDD)
+    if (telefone.length < 10 || telefone.length > 11) {
+        return { valido: false, mensagem: "Telefone deve conter entre 10 e 11 dígitos" };
+    }
+    
+    // Verificar se não é um número negativo
+    if (parseInt(telefone) <= 0) {
+        return { valido: false, mensagem: "Telefone não pode ser um número negativo ou zero" };
+    }
+    
+    return { valido: true };
+}
+
+// Função para validar nome (apenas letras e espaços)
 function validarNome(nome) {
-  // Verifica se contém apenas letras (incluindo acentuadas) e espaços
-  return /^[A-Za-zÀ-ÖØ-öø-ÿ\s]*$/.test(nome) && nome.trim().length > 0;
+    if (!/^[A-Za-zÀ-ÖØ-öø-ÿ\s]*$/.test(nome)) {
+        return { valido: false, mensagem: "Nome deve conter apenas letras e espaços" };
+    }
+    
+    if (nome.trim().length < 3) {
+        return { valido: false, mensagem: "Nome deve ter pelo menos 3 caracteres" };
+    }
+    
+    return { valido: true };
 }
 
-/**
- * Valida um email
- * @param {string} email - Email a ser validado
- * @returns {boolean} - true se o email for válido, false caso contrário
- */
+// Função para validar email
 function validarEmail(email) {
-  // Expressão regular para validar email
-  const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  return regexEmail.test(email);
+    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!regex.test(email)) {
+        return { valido: false, mensagem: "Email inválido" };
+    }
+    return { valido: true };
 }
 
-/**
- * Valida uma data de admissão (não pode ser futura)
- * @param {string} data - Data a ser validada no formato YYYY-MM-DD
- * @returns {boolean} - true se a data for válida, false caso contrário
- */
-function validarDataAdmissao(data) {
-  const dataAdmissao = new Date(data);
-  const hoje = new Date();
-  
-  // Zera as horas para comparar apenas as datas
-  hoje.setHours(0, 0, 0, 0);
-  dataAdmissao.setHours(0, 0, 0, 0);
-  
-  // Verifica se a data é válida e não é futura
-  return !isNaN(dataAdmissao.getTime()) && dataAdmissao <= hoje;
+// Função para validar data de nascimento
+function validarDataNascimento(dataNascimento) {
+    const data = new Date(dataNascimento);
+    const hoje = new Date();
+    
+    // Verificar se é uma data válida
+    if (isNaN(data.getTime())) {
+        return { valido: false, mensagem: "Data de nascimento inválida" };
+    }
+    
+    // Verificar se é uma data futura
+    if (data > hoje) {
+        return { valido: false, mensagem: "Data de nascimento não pode ser futura" };
+    }
+    
+    // Verificar se a pessoa tem pelo menos 18 anos
+    const idade = hoje.getFullYear() - data.getFullYear();
+    const mesAtual = hoje.getMonth();
+    const diaAtual = hoje.getDate();
+    const mesNascimento = data.getMonth();
+    const diaNascimento = data.getDate();
+    
+    // Ajustar a idade se ainda não fez aniversário este ano
+    if (mesAtual < mesNascimento || (mesAtual === mesNascimento && diaAtual < diaNascimento)) {
+        if (idade - 1 < 18) {
+            return { valido: false, mensagem: "Professor deve ter pelo menos 18 anos" };
+        }
+    } else if (idade < 18) {
+        return { valido: false, mensagem: "Professor deve ter pelo menos 18 anos" };
+    }
+    
+    return { valido: true };
 }
 
-/**
- * Valida uma data de nascimento (deve ter pelo menos 18 anos)
- * @param {string} data - Data a ser validada no formato YYYY-MM-DD
- * @returns {boolean} - true se a data for válida, false caso contrário
- */
-function validarDataNascimento(data) {
-  const dataNascimento = new Date(data);
-  const hoje = new Date();
-  
-  // Verifica se a data é válida
-  if (isNaN(dataNascimento.getTime())) {
-    return false;
-  }
-  
-  // Calcula a idade
-  let idade = hoje.getFullYear() - dataNascimento.getFullYear();
-  const mesAtual = hoje.getMonth();
-  const diaAtual = hoje.getDate();
-  const mesNascimento = dataNascimento.getMonth();
-  const diaNascimento = dataNascimento.getDate();
-  
-  // Ajusta a idade se ainda não fez aniversário no ano atual
-  if (mesAtual < mesNascimento || (mesAtual === mesNascimento && diaAtual < diaNascimento)) {
-    idade--;
-  }
-  
-  // Verifica se tem pelo menos 18 anos
-  return idade >= 18;
+// Função para validar data de admissão
+function validarDataAdmissao(dataAdmissao, dataNascimento) {
+    const dataAdm = new Date(dataAdmissao);
+    const dataNasc = new Date(dataNascimento);
+    const hoje = new Date();
+    
+    // Verificar se é uma data válida
+    if (isNaN(dataAdm.getTime())) {
+        return { valido: false, mensagem: "Data de admissão inválida" };
+    }
+    
+    // Verificar se é uma data futura
+    if (dataAdm > hoje) {
+        return { valido: false, mensagem: "Data de admissão não pode ser futura" };
+    }
+    
+    // Calcular idade na data de admissão
+    let idadeNaAdmissao = dataAdm.getFullYear() - dataNasc.getFullYear();
+    const mesAdmissao = dataAdm.getMonth();
+    const diaAdmissao = dataAdm.getDate();
+    const mesNascimento = dataNasc.getMonth();
+    const diaNascimento = dataNasc.getDate();
+    
+    // Ajustar a idade se ainda não tinha feito aniversário na data de admissão
+    if (mesAdmissao < mesNascimento || (mesAdmissao === mesNascimento && diaAdmissao < diaNascimento)) {
+        idadeNaAdmissao--;
+    }
+    
+    // Verificar se tinha pelo menos 18 anos na data de admissão
+    if (idadeNaAdmissao < 18) {
+        return { valido: false, mensagem: "Professor deve ter pelo menos 18 anos na data de admissão" };
+    }
+    
+    return { valido: true };
 }
 
-/**
- * Valida uma titulação
- * @param {string} titulacao - Titulação a ser validada
- * @returns {boolean} - true se a titulação for válida, false caso contrário
- */
-function validarTitulacao(titulacao) {
-  const titulacoesValidas = ['graduado', 'especialista', 'mestre', 'doutor'];
-  return titulacoesValidas.includes(titulacao);
+// Função para validar senha
+function validarSenha(senha) {
+    if (senha.length < 6) {
+        return { valido: false, mensagem: "Senha deve ter pelo menos 6 caracteres" };
+    }
+    return { valido: true };
 }
 
-/**
- * Valida o formulário completo de professor
- * @param {Object} dados - Dados do formulário
- * @param {boolean} modoEdicao - true se for modo de edição, false se for cadastro
- * @returns {Object} - Objeto com resultado da validação
- */
-function validarFormularioProfessor(dados, modoEdicao) {
-  const erros = {};
-  
-  // No modo de cadastro, validamos todos os campos
-  if (!modoEdicao) {
+// Função principal para validar o formulário de professor
+function validarFormularioProfessor(dados, isEdicao) {
+    const erros = {};
+    let valido = true;
+    
     // Validar CPF
-    if (!dados.cpf || !validarCPF(dados.cpf)) {
-      erros.cpf = "CPF inválido";
+    const resultadoCPF = validarCPF(dados.cpf);
+    if (!resultadoCPF.valido) {
+        erros.cpf = resultadoCPF.mensagem;
+        valido = false;
+    }
+    
+    // Validar nome
+    const resultadoNome = validarNome(dados.nome);
+    if (!resultadoNome.valido) {
+        erros.nome = resultadoNome.mensagem;
+        valido = false;
+    }
+    
+    // Validar email
+    const resultadoEmail = validarEmail(dados.email);
+    if (!resultadoEmail.valido) {
+        erros.email = resultadoEmail.mensagem;
+        valido = false;
+    }
+    
+    // Validar telefone
+    const resultadoTelefone = validarTelefone(dados.telefone);
+    if (!resultadoTelefone.valido) {
+        erros.telefone = resultadoTelefone.mensagem;
+        valido = false;
     }
     
     // Validar data de nascimento
-    if (!dados.dt_nascimento || !validarDataNascimento(dados.dt_nascimento)) {
-      erros.dt_nascimento = "Data de nascimento inválida (deve ter pelo menos 18 anos)";
-    }
-    
-    // Validar rua e bairro
-    if (!dados.rua || dados.rua.trim() === '') {
-      erros.rua = "Rua é obrigatória";
-    }
-    
-    if (!dados.bairro || dados.bairro.trim() === '') {
-      erros.bairro = "Bairro é obrigatório";
-    }
-    
-    // Validar senha
-    if (!dados.senha || dados.senha.length < 6) {
-      erros.senha = "Senha deve ter pelo menos 6 caracteres";
+    const resultadoDataNascimento = validarDataNascimento(dados.dt_nascimento);
+    if (!resultadoDataNascimento.valido) {
+        erros.dt_nascimento = resultadoDataNascimento.mensagem;
+        valido = false;
     }
     
     // Validar data de admissão
-    if (!dados.dt_admissao || !validarDataAdmissao(dados.dt_admissao)) {
-      erros.dt_admissao = "Data de admissão inválida (não pode ser futura)";
+    if (dados.dt_nascimento && dados.dt_admissao) {
+        const resultadoDataAdmissao = validarDataAdmissao(dados.dt_admissao, dados.dt_nascimento);
+        if (!resultadoDataAdmissao.valido) {
+            erros.dt_admissao = resultadoDataAdmissao.mensagem;
+            valido = false;
+        }
     }
-  }
-  
-  // Validações comuns para cadastro e edição
-  
-  // Validar nome
-  if (!dados.nome || !validarNome(dados.nome)) {
-    erros.nome = "Nome deve conter apenas letras e espaços";
-  }
-  
-  // Validar email
-  if (!dados.email || !validarEmail(dados.email)) {
-    erros.email = "Email inválido";
-  }
-  
-  // Validar telefone
-  if (!dados.telefone || !validarTelefone(dados.telefone)) {
-    erros.telefone = "Telefone inválido";
-  }
-  
-  // Validar titulação
-  if (!dados.titulacao || !validarTitulacao(dados.titulacao)) {
-    erros.titulacao = "Titulação inválida";
-  }
-  
-  return {
-    valido: Object.keys(erros).length === 0,
-    erros: erros
-  };
+    
+    // Validar senha (apenas no cadastro)
+    if (!isEdicao && dados.senha) {
+        const resultadoSenha = validarSenha(dados.senha);
+        if (!resultadoSenha.valido) {
+            erros.senha = resultadoSenha.mensagem;
+            valido = false;
+        }
+    }
+    
+    // Validar titulação
+    if (!dados.titulacao) {
+        erros.titulacao = "Titulação é obrigatória";
+        valido = false;
+    }
+    
+    return {
+        valido: valido,
+        erros: erros
+    };
 }
-
-// Exportar funções para uso global
-window.validarCPF = validarCPF;
-window.validarTelefone = validarTelefone;
-window.validarNome = validarNome;
-window.validarEmail = validarEmail;
-window.validarDataAdmissao = validarDataAdmissao;
-window.validarDataNascimento = validarDataNascimento;
-window.validarTitulacao = validarTitulacao;
-window.validarFormularioProfessor = validarFormularioProfessor;
