@@ -3,6 +3,157 @@ const Pessoa_Model = require("../models/pessoa_model");
 const Login_Model = require("../models/login_model");
 const Database = require("../utils/database");
 
+/**
+ * Validações centralizadas para professores
+ * Todas as validações foram movidas do frontend para o backend
+ */
+function validarDadosProfessor(dados, isEdicao = false) {
+    const erros = {};
+
+    // Validar campos obrigatórios
+    if (!dados.nome || dados.nome.trim() === '') {
+        erros.nome = 'Nome é obrigatório';
+    } else if (dados.nome.length < 2) {
+        erros.nome = 'Nome deve ter pelo menos 2 caracteres';
+    } else if (!/^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/.test(dados.nome)) {
+        erros.nome = 'Nome deve conter apenas letras e espaços';
+    }
+
+    if (!dados.email || dados.email.trim() === '') {
+        erros.email = 'E-mail é obrigatório';
+    } else {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(dados.email)) {
+            erros.email = 'E-mail inválido';
+        }
+    }
+
+    if (!dados.telefone || dados.telefone.trim() === '') {
+        erros.telefone = 'Telefone é obrigatório';
+    } else {
+        const telefoneNumeros = dados.telefone.replace(/\D/g, '');
+        if (telefoneNumeros.length !== 10 && telefoneNumeros.length !== 11) {
+            erros.telefone = 'Telefone deve ter 10 ou 11 dígitos';
+        } else {
+            const ddd = telefoneNumeros.substring(0, 2);
+            if (parseInt(ddd) < 11 || parseInt(ddd) > 99) {
+                erros.telefone = 'DDD inválido';
+            }
+            if (telefoneNumeros.length === 11 && telefoneNumeros[2] !== '9') {
+                erros.telefone = 'Celular deve começar com 9';
+            }
+        }
+    }
+
+    if (!dados.titulacao || dados.titulacao.trim() === '') {
+        erros.titulacao = 'Titulação é obrigatória';
+    }
+
+    // Validações específicas para cadastro
+    if (!isEdicao) {
+        if (!dados.cpf || dados.cpf.trim() === '') {
+            erros.cpf = 'CPF é obrigatório';
+        } else {
+            const cpfLimpo = dados.cpf.replace(/\D/g, '');
+            if (cpfLimpo.length !== 11) {
+                erros.cpf = 'CPF deve ter 11 dígitos';
+            } else if (/^(\d)\1{10}$/.test(cpfLimpo)) {
+                erros.cpf = 'CPF inválido';
+            } else {
+                // Validação do algoritmo do CPF
+                let soma = 0;
+                for (let i = 0; i < 9; i++) {
+                    soma += parseInt(cpfLimpo.charAt(i)) * (10 - i);
+                }
+                let resto = soma % 11;
+                let digitoVerificador1 = resto < 2 ? 0 : 11 - resto;
+                
+                if (digitoVerificador1 !== parseInt(cpfLimpo.charAt(9))) {
+                    erros.cpf = 'CPF inválido';
+                } else {
+                    soma = 0;
+                    for (let i = 0; i < 10; i++) {
+                        soma += parseInt(cpfLimpo.charAt(i)) * (11 - i);
+                    }
+                    resto = soma % 11;
+                    let digitoVerificador2 = resto < 2 ? 0 : 11 - resto;
+                    
+                    if (digitoVerificador2 !== parseInt(cpfLimpo.charAt(10))) {
+                        erros.cpf = 'CPF inválido';
+                    }
+                }
+            }
+        }
+
+        if (!dados.dt_nascimento || dados.dt_nascimento.trim() === '') {
+            erros.dt_nascimento = 'Data de nascimento é obrigatória';
+        } else {
+            const dataNascimento = new Date(dados.dt_nascimento);
+            if (isNaN(dataNascimento.getTime())) {
+                erros.dt_nascimento = 'Data de nascimento inválida';
+            } else {
+                const hoje = new Date();
+                const idade = hoje.getFullYear() - dataNascimento.getFullYear();
+                if (idade < 18) {
+                    erros.dt_nascimento = 'Professor deve ter pelo menos 18 anos';
+                }
+            }
+        }
+
+        if (!dados.dt_admissao || dados.dt_admissao.trim() === '') {
+            erros.dt_admissao = 'Data de admissão é obrigatória';
+        } else {
+            const dataAdmissao = new Date(dados.dt_admissao);
+            if (isNaN(dataAdmissao.getTime())) {
+                erros.dt_admissao = 'Data de admissão inválida';
+            } else {
+                const hoje = new Date();
+                if (dataAdmissao > hoje) {
+                    erros.dt_admissao = 'Data de admissão não pode ser futura';
+                }
+                
+                if (dados.dt_nascimento) {
+                    const dataNascimento = new Date(dados.dt_nascimento);
+                    if (!isNaN(dataNascimento.getTime())) {
+                        let idadeNaAdmissao = dataAdmissao.getFullYear() - dataNascimento.getFullYear();
+                        const mesAdmissao = dataAdmissao.getMonth();
+                        const diaAdmissao = dataAdmissao.getDate();
+                        const mesNascimento = dataNascimento.getMonth();
+                        const diaNascimento = dataNascimento.getDate();
+                        
+                        if (mesAdmissao < mesNascimento || (mesAdmissao === mesNascimento && diaAdmissao < diaNascimento)) {
+                            idadeNaAdmissao--;
+                        }
+                        
+                        if (idadeNaAdmissao < 18) {
+                            erros.dt_admissao = 'Professor deve ter pelo menos 18 anos na data de admissão';
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!dados.senha || dados.senha.trim() === '') {
+            erros.senha = 'Senha é obrigatória';
+        } else if (dados.senha.length < 6) {
+            erros.senha = 'Senha deve ter pelo menos 6 caracteres';
+        }
+
+        if (!dados.rua || dados.rua.trim() === '') {
+            erros.rua = 'Rua é obrigatória';
+        }
+
+        if (!dados.bairro || dados.bairro.trim() === '') {
+            erros.bairro = 'Bairro é obrigatório';
+        }
+    }
+
+    return {
+        valido: Object.keys(erros).length === 0,
+        erros: erros
+    };
+}
+
 class Professor_Controller {
 
     async home_view(req, resp){
@@ -65,20 +216,32 @@ class Professor_Controller {
                 erro: "Erro ao carregar lista de professores" 
             });
         }
-    }
-
-    listar_cadastroProf(req, resp) {
+    }    listar_cadastroProf(req, resp) {
         resp.render("professor/professor_cadastro_view.ejs", { layout: "layout_professor_home.ejs" });
     }
 
     listar_cadastroProf_admin(req, resp) {
         resp.render("professores/cadastrar_professor.ejs", { layout: "layout_admin_home.ejs" });
-    }
-
-    async cadastrar_Prof(req, resp) {
+    }    async cadastrar_Prof(req, resp) {
         try {
-            // Get data from request body (now as JSON)
-            const { 
+            // Validar dados usando a função centralizada
+            const validacao = validarDadosProfessor(req.body, false);
+            
+            if (!validacao.valido) {
+                // Converter erros do formato {campo: mensagem} para [{campo, mensagem}]
+                const errosFormatados = Object.keys(validacao.erros).map(campo => ({
+                    campo: campo,
+                    mensagem: validacao.erros[campo]
+                }));
+                
+                return resp.send({ 
+                    ok: false, 
+                    msg: "Dados inválidos", 
+                    erros: errosFormatados 
+                });
+            }
+
+            const {
                 cpf, 
                 nome, 
                 dt_nascimento, 
@@ -91,47 +254,12 @@ class Professor_Controller {
                 dt_admissao 
             } = req.body;
 
-            // Validar CPF (formato e algoritmo)
             const cpfLimpo = cpf.replace(/\D/g, '');
-            if (cpfLimpo.length !== 11) {
-                return resp.send({ ok: false, msg: "CPF inválido: deve conter 11 dígitos" });
-            }
-
-            // Verificar se todos os dígitos são iguais (CPF inválido)
-            if (/^(\d)\1{10}$/.test(cpfLimpo)) {
-                return resp.send({ ok: false, msg: "CPF inválido: dígitos repetidos" });
-            }
-
-            // Validação do primeiro dígito verificador
-            let soma = 0;
-            for (let i = 0; i < 9; i++) {
-                soma += parseInt(cpfLimpo.charAt(i)) * (10 - i);
-            }
-
-            let resto = soma % 11;
-            let digitoVerificador1 = resto < 2 ? 0 : 11 - resto;
-
-            if (digitoVerificador1 !== parseInt(cpfLimpo.charAt(9))) {
-                return resp.send({ ok: false, msg: "CPF inválido: primeiro dígito verificador incorreto" });
-            }
-
-            // Validação do segundo dígito verificador
-            soma = 0;
-            for (let i = 0; i < 10; i++) {
-                soma += parseInt(cpfLimpo.charAt(i)) * (11 - i);
-            }
-
-            resto = soma % 11;
-            let digitoVerificador2 = resto < 2 ? 0 : 11 - resto;
-
-            if (digitoVerificador2 !== parseInt(cpfLimpo.charAt(10))) {
-                return resp.send({ ok: false, msg: "CPF inválido: segundo dígito verificador incorreto" });
-            }
             
             // Verificar se o CPF já existe como pessoa
             let pessoaExistente = new Pessoa_Model();
-            let dadosPessoa = await pessoaExistente.obter(cpfLimpo);
-            if (dadosPessoa) {
+            let dadosExistentes = await pessoaExistente.obter(cpfLimpo);
+            if (dadosExistentes) {
                 return resp.send({ ok: false, msg: "CPF já cadastrado no sistema" });
             }
             
@@ -141,113 +269,51 @@ class Professor_Controller {
             if (emailExistente && emailExistente.length > 0) {
                 return resp.send({ ok: false, msg: "Email já cadastrado como usuário no sistema" });
             }
-            
-            // Validar datas
-            const dataNascimento = new Date(dt_nascimento);
-            const dataAdmissao = new Date(dt_admissao);
-            const hoje = new Date();
 
-            // Verificar se as datas são válidas
-            if (isNaN(dataNascimento.getTime()) || isNaN(dataAdmissao.getTime())) {
-                return resp.send({ ok: false, msg: "Data de nascimento ou admissão inválida" });
-            }
-
-            // Verificar se a data de admissão não é futura
-            if (dataAdmissao > hoje) {
-                return resp.send({ ok: false, msg: "Data de admissão não pode ser futura" });
-            }
-
-            // Calcular idade na data de admissão
-            let idadeNaAdmissao = dataAdmissao.getFullYear() - dataNascimento.getFullYear();
-            const mesAdmissao = dataAdmissao.getMonth();
-            const diaAdmissao = dataAdmissao.getDate();
-            const mesNascimento = dataNascimento.getMonth();
-            const diaNascimento = dataNascimento.getDate();
-
-            // Ajustar a idade se ainda não tinha feito aniversário na data de admissão
-            if (mesAdmissao < mesNascimento || (mesAdmissao === mesNascimento && diaAdmissao < diaNascimento)) {
-                idadeNaAdmissao--;
-            }
-
-            // Verificar se tinha pelo menos 18 anos na data de admissão
-            if (idadeNaAdmissao < 18) {
-                return resp.send({ ok: false, msg: "Professor deve ter pelo menos 18 anos na data de admissão" });
-            }
-
-            // Validação do telefone - adicionar após a validação do CPF
             const telefoneNumeros = telefone.replace(/\D/g, '');
-            if (telefoneNumeros.length !== 10 && telefoneNumeros.length !== 11) {
-                return resp.send({ 
-                    ok: false, 
-                    msg: "Telefone inválido: deve ter 10 dígitos (fixo) ou 11 dígitos (celular)" 
-                });
-            }
 
-            // Validar formato do telefone (DDD + número)
-            const ddd = telefoneNumeros.substring(0, 2);
-            const numerosValidos = parseInt(ddd) >= 11 && parseInt(ddd) <= 99;
-            if (!numerosValidos) {
-                return resp.send({ 
-                    ok: false, 
-                    msg: "DDD inválido: deve estar entre 11 e 99" 
-                });
-            }
-
-            // Se for celular (11 dígitos), validar se começa com 9
-            if (telefoneNumeros.length === 11 && telefoneNumeros[2] !== '9') {
-                return resp.send({ 
-                    ok: false, 
-                    msg: "Número de celular deve começar com 9" 
-                });
-            }
-
-            // Criar pessoa (atualizar para usar o telefone validado)
-            let pessoa = new Pessoa_Model();
-            pessoa.cpf = cpf;
-            pessoa.nome = nome;
-            pessoa.data = dt_nascimento;
-            pessoa.rua = rua;
-            pessoa.bairro = bairro;
-            pessoa.email = email;
-            pessoa.fone = telefoneNumeros; // Usar o número já formatado
+            // Criar pessoa
+            let pessoaNova = new Pessoa_Model();
+            pessoaNova.cpf = cpfLimpo;
+            pessoaNova.nome = nome;
+            pessoaNova.data = dt_nascimento;
+            pessoaNova.rua = rua;
+            pessoaNova.bairro = bairro;
+            pessoaNova.email = email;
+            pessoaNova.fone = telefoneNumeros;
 
             // Criar professor
-            let professor = new Professor_Model();
-            professor.cpf = cpf;
-            professor.titulacao = titulacao;
-            professor.dataAdmissao = dt_admissao;
+            let professorNovo = new Professor_Model();
+            professorNovo.cpf = cpfLimpo;
+            professorNovo.titulacao = titulacao;
+            professorNovo.dataAdmissao = dt_admissao;
 
-            // Criar login (usuário)
-            let login = new Login_Model();
-            login.pessoa_cpf = cpf;
-            login.usuario = email;
-            login.senha = senha;
-            login.perfil = 2; // Perfil de professor
+            // Criar login
+            let loginNovo = new Login_Model();
+            loginNovo.pessoa_cpf = cpfLimpo;
+            loginNovo.usuario = email;
+            loginNovo.senha = senha;
+            loginNovo.perfil = 2;
 
-            // Inserir pessoa
-            let resultadoPessoa = await pessoa.inserir();
+            // Inserir dados com transação
+            let resultadoPessoa = await pessoaNova.inserir();
             if (!resultadoPessoa) {
                 return resp.send({ ok: false, msg: "Erro ao cadastrar Pessoa" });
             }
 
-            // Inserir professor
-            let resultadoProfessor = await professor.inserir();
+            let resultadoProfessor = await professorNovo.inserir();
             if (!resultadoProfessor) {
-                // Rollback - excluir pessoa se falhar ao inserir professor
-                await pessoa.excluir();
+                await pessoaNova.excluir();
                 return resp.send({ ok: false, msg: "Erro ao cadastrar Professor" });
             }
 
-            // Inserir login
-            let resultadoLogin = await login.inserir();
+            let resultadoLogin = await loginNovo.inserir();
             if (!resultadoLogin) {
-                // Rollback - excluir professor e pessoa se falhar ao inserir login
-                await professor.excluir();
-                await pessoa.excluir();
+                await professorNovo.excluir();
+                await pessoaNova.excluir();
                 return resp.send({ ok: false, msg: "Erro ao cadastrar login do Professor" });
             }
 
-            // Success response as JSON
             resp.send({ ok: true, msg: "Professor cadastrado com sucesso!" });
         } catch (error) {
             console.error("Erro ao cadastrar professor:", error);
@@ -352,12 +418,27 @@ class Professor_Controller {
             });
         } catch (error) {
             console.error("Erro ao carregar dados para edição:", error);
-            resp.redirect("/admin/professores");
-        }
+            resp.redirect("/admin/professores");        }
     }
 
-    async editar_Prof(req, resp) {
-        try {
+    async editar_Prof(req, resp) {        try {
+            // Validar dados usando a função centralizada
+            const validacao = validarDadosProfessor(req.body, true);
+            
+            if (!validacao.valido) {
+                // Converter erros do formato {campo: mensagem} para [{campo, mensagem}]
+                const errosFormatados = Object.keys(validacao.erros).map(campo => ({
+                    campo: campo,
+                    mensagem: validacao.erros[campo]
+                }));
+                
+                return resp.send({ 
+                    ok: false, 
+                    msg: "Dados inválidos", 
+                    erros: errosFormatados 
+                });
+            }
+
             const { cpf, nome, email, telefone, titulacao } = req.body;
             
             // Verificar se o professor existe
@@ -366,12 +447,14 @@ class Professor_Controller {
             if (!dadosProfessor) {
                 return resp.send({ ok: false, msg: "Professor não encontrado" });
             }
+
+            const telefoneNumeros = telefone.replace(/\D/g, '');
             
             // Atualizar dados do professor
             let professor = new Professor_Model();
             professor.cpf = cpf;
             professor.titulacao = titulacao;
-            professor.dataAdmissao = dadosProfessor.dataAdmissao; // Manter a data de admissão original
+            professor.dataAdmissao = dadosProfessor.dataAdmissao;
             
             // Atualizar dados da pessoa
             let pessoa = new Pessoa_Model();
@@ -380,18 +463,18 @@ class Professor_Controller {
             pessoa.cpf = cpf;
             pessoa.nome = nome;
             pessoa.email = email;
-            pessoa.fone = telefone;
-            pessoa.data = dadosPessoa.data; // Manter a data de nascimento original
-            pessoa.rua = dadosPessoa.rua; // Manter a rua original
-            pessoa.bairro = dadosPessoa.bairro; // Manter o bairro original
+            pessoa.fone = telefoneNumeros;
+            pessoa.data = dadosPessoa.data;
+            pessoa.rua = dadosPessoa.rua;
+            pessoa.bairro = dadosPessoa.bairro;
             
-            // Atualizar login (email/usuário)
+            // Atualizar login
             let login = new Login_Model();
             login.pessoa_cpf = cpf;
             login.usuario = email;
-            login.perfil = 2; // Perfil de professor
+            login.perfil = 2;
             
-            // Obter senha atual para não alterá-la
+            // Obter senha atual
             let db = new Database();
             let dadosLogin = await db.ExecutaComando("SELECT senha FROM logins WHERE pessoa_cpf = ?", [cpf]);
             if (dadosLogin && dadosLogin.length > 0) {

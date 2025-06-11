@@ -1,14 +1,22 @@
 /**
- * Arquivo responsável pelo gerenciamento da edição de professores
- * Coleta dados do formulário, valida e envia para o backend
+ * Arquivo consolidado responsável pela edição de professores
+ * Funciona tanto para área administrativa quanto área do professor
+ * Validações movidas para o backend
  */
 
 document.addEventListener("DOMContentLoaded", () => {
-    const formulario = document.getElementById('formEditarProfessor');
-    const telefoneInput = document.getElementById('telefone');
-    const nomeInput = document.getElementById('nome');
+    // Detectar contexto baseado na URL ou elementos específicos
+    const isAdminArea = window.location.pathname.includes('/admin/');
+    const formEditar = document.getElementById('formEditarProfessor');
     
-    if (formulario) {
+    if (formEditar) {
+        inicializarEdicao();
+    }
+    
+    /**
+     * Inicializar funcionalidades de edição
+     */
+    function inicializarEdicao() {
         configurarEventos();
         configurarFormatacao();
     }
@@ -17,7 +25,10 @@ document.addEventListener("DOMContentLoaded", () => {
      * Configura os eventos do formulário
      */
     function configurarEventos() {
-        formulario.addEventListener('submit', processarEdicao);
+        const formulario = document.getElementById('formEditarProfessor');
+        if (formulario) {
+            formulario.addEventListener('submit', processarEdicao);
+        }
     }
     
     /**
@@ -25,18 +36,43 @@ document.addEventListener("DOMContentLoaded", () => {
      */
     function configurarFormatacao() {
         // Formatação de telefone
+        const telefoneInput = document.getElementById('telefone');
         if (telefoneInput) {
-            telefoneInput.addEventListener('input', (e) => {
-                formatarTelefone(e.target);
-            });
+            telefoneInput.addEventListener('input', formatarTelefone);
         }
         
         // Validação de nome em tempo real
+        const nomeInput = document.getElementById('nome');
         if (nomeInput) {
-            nomeInput.addEventListener('input', (e) => {
-                validarNomeInput(e.target);
-            });
+            nomeInput.addEventListener('input', validarNomeInput);
         }
+    }
+    
+    /**
+     * Processar edição do professor
+     */
+    function processarEdicao(event) {
+        event.preventDefault();
+        
+        // Coletar dados do formulário
+        const dados = coletarDadosFormulario();
+        
+        // Validação simples no frontend (apenas campos vazios)
+        const camposVazios = validarCamposObrigatorios(dados);
+        
+        if (camposVazios.length > 0) {
+            destacarCamposVazios(camposVazios);
+            alert("Por favor, preencha todos os campos obrigatórios.");
+            return;
+        }
+        
+        // Determinar endpoint baseado no contexto
+        const isAdminArea = window.location.pathname.includes('/admin/');
+        const endpoint = isAdminArea ? "/admin/professores/editar" : "/professor/editar";
+        const redirectUrl = isAdminArea ? "/admin/professores" : "/professor/home";
+        
+        // Enviar para backend
+        enviarDadosParaBackend(dados, endpoint, redirectUrl);
     }
     
     /**
@@ -44,116 +80,58 @@ document.addEventListener("DOMContentLoaded", () => {
      * @returns {Object} Objeto com todos os dados do formulário
      */
     function coletarDadosFormulario() {
+        const formulario = document.getElementById('formEditarProfessor');
         const formData = new FormData(formulario);
         const dados = {};
         
         // Converter FormData para objeto JavaScript
         for (let [key, value] of formData.entries()) {
-            dados[key] = typeof value === 'string' ? value.trim() : value;
+            dados[key] = value;
         }
         
         return dados;
     }
     
     /**
-     * Valida todos os campos do formulário
-     * @param {Object} dados - Dados do formulário
-     * @returns {Object} Resultado da validação
+     * Validar campos obrigatórios
      */
-    function validarFormulario(dados) {
-        const erros = {};
-        let isValid = true;
+    function validarCamposObrigatorios(dados) {
+        const camposVazios = [];
+        const camposObrigatorios = ['nome', 'email', 'telefone', 'titulacao'];
         
-        // Validar campos obrigatórios
-        const camposObrigatorios = [
-            { campo: 'nome', nome: 'Nome' },
-            { campo: 'email', nome: 'E-mail' },
-            { campo: 'telefone', nome: 'Telefone' },
-            { campo: 'titulacao', nome: 'Titulação' }
-        ];
-        
-        // Verificar se todos os campos obrigatórios estão preenchidos
-        camposObrigatorios.forEach(({ campo, nome }) => {
-            if (!dados[campo] || dados[campo] === '') {
-                erros[campo] = `${nome} é obrigatório`;
-                isValid = false;
+        camposObrigatorios.forEach(campo => {
+            if (!dados[campo] || dados[campo].trim() === "") {
+                camposVazios.push(campo);
             }
         });
         
-        // Validações específicas
-        if (dados.nome && dados.nome.length < 2) {
-            erros.nome = 'Nome deve ter pelo menos 2 caracteres';
-            isValid = false;
-        }
-        
-        if (dados.email && !validarEmail(dados.email)) {
-            erros.email = 'E-mail inválido';
-            isValid = false;
-        }
-        
-        if (dados.telefone && !validarTelefone(dados.telefone)) {
-            erros.telefone = 'Telefone inválido';
-            isValid = false;
-        }
-        
-        return { valido: isValid, erros };
+        return camposVazios;
     }
     
     /**
-     * Valida formato de email
-     * @param {string} email 
-     * @returns {boolean}
+     * Destacar campos vazios visualmente
      */
-    function validarEmail(email) {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
-    }
-    
-    /**
-     * Valida formato de telefone
-     * @param {string} telefone 
-     * @returns {boolean}
-     */
-    function validarTelefone(telefone) {
-        const apenasNumeros = telefone.replace(/\D/g, '');
-        return apenasNumeros.length === 10 || apenasNumeros.length === 11;
-    }
-    
-    /**
-     * Exibe erros de validação no formulário
-     * @param {Object} erros - Objeto com os erros de validação
-     */
-    function exibirErros(erros) {
-        // Limpar erros anteriores
-        limparValidacoes();
+    function destacarCamposVazios(campos) {
+        // Limpar destaques anteriores
+        document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+        document.querySelectorAll('small[id^="erro-"]').forEach(el => el.textContent = "");
         
-        // Exibir novos erros
-        Object.keys(erros).forEach(campo => {
-            const inputElement = document.getElementById(campo);
+        // Destacar campos vazios
+        campos.forEach(campo => {
+            const input = document.getElementById(campo);
+            if (input) {
+                input.classList.add('is-invalid');
+            }
+            
             const errorElement = document.getElementById(`erro-${campo}`);
-            
-            if (inputElement) {
-                inputElement.classList.add('is-invalid');
-                inputElement.classList.remove('is-valid');
-            }
-            
             if (errorElement) {
-                errorElement.textContent = erros[campo];
+                errorElement.textContent = `${campo.charAt(0).toUpperCase() + campo.slice(1)} é obrigatório`;
             }
         });
-        
-        // Scroll para o primeiro erro
-        const primeiroErro = Object.keys(erros)[0];
-        if (primeiroErro) {
-            const elemento = document.getElementById(primeiroErro);
-            if (elemento) {
-                elemento.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-        }
     }
     
     /**
-     * Limpa todas as validações visuais do formulário
+     * Limpar todas as validações visuais do formulário
      */
     function limparValidacoes() {
         const campos = ['nome', 'email', 'telefone', 'titulacao'];
@@ -173,98 +151,61 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
     /**
-     * Marca campos válidos visualmente
-     * @param {Object} dados - Dados do formulário
-     * @param {Object} erros - Erros de validação
+     * Enviar dados para o backend
      */
-    function marcarCamposValidos(dados, erros) {
-        Object.keys(dados).forEach(campo => {
-            if (!erros[campo] && dados[campo]) {
-                const inputElement = document.getElementById(campo);
-                if (inputElement) {
-                    inputElement.classList.add('is-valid');
-                    inputElement.classList.remove('is-invalid');
+    function enviarDadosParaBackend(dados, endpoint, redirectUrl) {
+        fetch(endpoint, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(dados)
+        })
+        .then(response => response.json())
+        .then(resultado => {
+            if (resultado.ok) {
+                alert(resultado.msg);
+                window.location.href = redirectUrl;
+            } else {
+                // Se houver erros específicos do backend, exibir
+                if (resultado.erros) {
+                    exibirErrosBackend(resultado.erros);
+                } else {
+                    alert(resultado.msg);
                 }
             }
+        })
+        .catch(erro => {
+            console.error("Erro:", erro);
+            alert("Erro ao conectar com o servidor");
         });
     }
     
     /**
-     * Envia os dados para o backend via fetch
-     * @param {Object} dados - Dados do formulário validados
-     * @returns {Promise} Promise com o resultado do envio
+     * Exibir erros específicos retornados pelo backend
      */
-    async function enviarDados(dados) {
-        try {
-            const response = await fetch('/admin/professores/editar', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(dados)
-            });
-            
-            if (!response.ok) {
-                throw new Error(`Erro HTTP: ${response.status} - ${response.statusText}`);
-            }
-            
-            const result = await response.json();
-            return result;
-            
-        } catch (error) {
-            console.error('Erro no fetch:', error);
-            throw new Error(`Erro ao conectar com o servidor: ${error.message}`);
-        }
-    }
-    
-    /**
-     * Função principal que processa a edição
-     * @param {Event} event - Evento de submit do formulário
-     */
-    async function processarEdicao(event) {
-        event.preventDefault();
+    function exibirErrosBackend(erros) {
+        limparValidacoes();
         
-        try {
-            // 1. Coletar dados do formulário
-            const dados = coletarDadosFormulario();
+        Object.keys(erros).forEach(campo => {
+            const inputElement = document.getElementById(campo);
+            const errorElement = document.getElementById(`erro-${campo}`);
             
-            console.log('Dados coletados:', dados);
-            
-            // 2. Validar dados
-            const validacao = validarFormulario(dados);
-            
-            if (!validacao.valido) {
-                exibirErros(validacao.erros);
-                alert('Por favor, corrija os erros no formulário antes de continuar.');
-                return;
+            if (inputElement) {
+                inputElement.classList.add('is-invalid');
             }
             
-            // 3. Marcar campos válidos
-            marcarCamposValidos(dados, {});
-            
-            // 4. Enviar dados para o backend
-            const resultado = await enviarDados(dados);
-            
-            // 5. Processar resposta
-            if (resultado.ok) {
-                alert(resultado.msg || 'Professor editado com sucesso!');
-                window.location.href = '/admin/professores';
-            } else {
-                alert(resultado.msg || 'Erro ao editar professor');
+            if (errorElement) {
+                errorElement.textContent = erros[campo];
             }
-            
-        } catch (error) {
-            console.error('Erro no processamento:', error);
-            alert(error.message || 'Erro inesperado ao processar edição');
-        }
+        });
+        
+        alert("Por favor, corrija os erros no formulário antes de continuar.");
     }
     
-    /**
-     * Formatadores - métodos auxiliares
-     */
-    function formatarTelefone(input) {
-        let value = input.value.replace(/\D/g, '');
+    // Formatadores (mantidos no frontend para UX)
+    function formatarTelefone(e) {
+        let value = e.target.value.replace(/\D/g, '');
         if (value.length > 11) value = value.slice(0, 11);
         
         if (value.length > 10) {
@@ -275,21 +216,21 @@ document.addEventListener("DOMContentLoaded", () => {
             value = value.replace(/^(\d{2})(\d{0,5})$/, "($1) $2");
         }
         
-        input.value = value;
+        e.target.value = value;
     }
-    
-    function validarNomeInput(input) {
-        let value = input.value;
+
+    function validarNomeInput(e) {
+        let value = e.target.value;
         if (!/^[A-Za-zÀ-ÖØ-öø-ÿ\s]*$/.test(value)) {
-            input.value = value.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ\s]/g, '');
+            e.target.value = value.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ\s]/g, '');
             const errorElement = document.getElementById('erro-nome');
             if (errorElement) {
-                errorElement.textContent = 'Nome deve conter apenas letras e espaços';
+                errorElement.textContent = "Nome deve conter apenas letras e espaços";
             }
         } else {
             const errorElement = document.getElementById('erro-nome');
             if (errorElement) {
-                errorElement.textContent = '';
+                errorElement.textContent = "";
             }
         }
     }
