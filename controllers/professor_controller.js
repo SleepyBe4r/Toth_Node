@@ -7,19 +7,36 @@ class Professor_Controller {
 
     async home_view(req, resp){
         try {
-            // Buscar lista de professores para exibir na home do professor
+            // Buscar dados do professor logado
+            const cpfProfessor = req.cookies.usuario_logado;
+            
             let professor = new Professor_Model();
-            let listaProfessores = await professor.listar();
+            let dadosProfessor = await professor.obter(cpfProfessor);
+            
+            // Buscar dados pessoais
+            let pessoa = new Pessoa_Model();
+            let dadosPessoa = await pessoa.obter(cpfProfessor);
+            
+            // Combinar dados do professor e pessoa
+            let professorCompleto = null;
+            if (dadosProfessor && dadosPessoa) {
+                professorCompleto = {
+                    ...dadosProfessor,
+                    ...dadosPessoa,
+                    nome: dadosPessoa.nome,
+                    email: dadosPessoa.email
+                };
+            }
             
             resp.render("professor/professor_home_view.ejs", { 
                 layout: "layout_professor_home.ejs",
-                professores: listaProfessores || [] // Garantir que sempre exista, mesmo que vazio
+                professor: professorCompleto
             });
         } catch (error) {
             console.error("Erro ao carregar home do professor:", error);
             resp.render("professor/professor_home_view.ejs", { 
                 layout: "layout_professor_home.ejs",
-                professores: [] // Array vazio em caso de erro
+                professor: null
             });
         }
     }

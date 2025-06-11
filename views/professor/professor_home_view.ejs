@@ -1,55 +1,34 @@
 <!-- Content Start -->
 <div class="container my-5">
   <div class="row">
-    
-    <!-- Main Section -->
-    <div class="col-md-9">
-
-      <!-- Professores Section -->
-      <section id="professores" class="mb-5">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h4 class="text-primary">Professores</h4>
-        </div>
+    <div class="col-md-12">
+      
+      <!-- Boas-vindas -->
+      <h1 class="mb-4" style="color: #f4623a; font-weight: bold;">
+        <i class="fas fa-chalkboard-teacher mr-3"></i>
+        Bem-vindo(a), <%= professor ? professor.nome : 'Professor' %>!
+      </h1>
+      
+      <p class="lead mb-5" style="color: #6c757d;">
+        É um prazer tê-lo(a) de volta. Sua dedicação à educação inspira e transforma vidas todos os dias.
+      </p>
+      
+      <!-- Informações do Professor -->
+      <% if (professor) { %>
+      <div class="mb-5">
+        <h3 class="mb-4" style="color: #fd7e14;">Suas Informações</h3>
         
-        <div class="table-responsive">
-          <table class="table table-striped table-hover">
-            <thead class="thead-dark">
-              <tr>
-                <th>CPF</th>
-                <th>Nome</th>
-                <th>Email</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% professores.forEach(professor => { %>
-                <tr>
-                  <td><%= professor.cpf %></td>
-                  <td><%= professor.nome %></td>
-                  <td><%= professor.email %></td>
-                  <td>
-                    <a href="/professor/editar/<%= professor.cpf %>" class="btn btn-sm btn-warning">
-                      <i class="fas fa-edit"></i> Editar
-                    </a>
-                    <form id="deleteForm_<%= professor.cpf %>" 
-                          action="/professor/excluir" 
-                          method="POST" 
-                          enctype="application/x-www-form-urlencoded"
-                          style="display: inline;">
-                      <input type="hidden" name="cpf" value="<%= professor.cpf %>" required>
-                      <button type="submit" 
-                              class="btn btn-sm btn-danger" 
-                              onclick="return confirm('Tem certeza que deseja excluir o professor? <%= professor.cpf %>?')">
-                        <i class="fas fa-trash-alt"></i> Excluir
-                      </button>
-                    </form>
-                  </td>
-                </tr>
-              <% }); %>
-            </tbody>
-          </table>
-        </div>
-      </section>
+        <p class="mb-2"><strong style="color: #495057;">Nome:</strong> <span style="color: #6c757d;"><%= professor.nome %></span></p>
+        <p class="mb-2"><strong style="color: #495057;">E-mail:</strong> <span style="color: #6c757d;"><%= professor.email %></span></p>
+        <p class="mb-2"><strong style="color: #495057;">CPF:</strong> <span style="color: #6c757d;"><%= professor.cpf %></span></p>
+        <p class="mb-2"><strong style="color: #495057;">Telefone:</strong> <span style="color: #6c757d;"><%= professor.telefone || 'Não informado' %></span></p>      </div>
+      <% } %>
+      
+      <!-- Mensagem de encorajamento -->
+      <p class="mt-5" style="color: #6c757d;">
+        Continue fazendo a diferença na vida dos seus alunos. Cada dia é uma nova oportunidade de inspirar e educar.
+      </p>
+      
     </div>
   </div>
 </div>
