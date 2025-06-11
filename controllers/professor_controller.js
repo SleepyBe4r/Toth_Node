@@ -60,9 +60,20 @@ class Professor_Controller {
 
     async cadastrar_Prof(req, resp) {
         try {
-            // Validar dados de entrada
-            const { cpf, nome, dt_nascimento, rua, bairro, email, telefone, senha, titulacao, dt_admissao } = req.body;
-            
+            // Get data from request body (now as JSON)
+            const { 
+                cpf, 
+                nome, 
+                dt_nascimento, 
+                rua, 
+                bairro, 
+                email, 
+                telefone, 
+                senha, 
+                titulacao, 
+                dt_admissao 
+            } = req.body;
+
             // Validar CPF (formato e algoritmo)
             const cpfLimpo = cpf.replace(/\D/g, '');
             if (cpfLimpo.length !== 11) {
@@ -219,7 +230,7 @@ class Professor_Controller {
                 return resp.send({ ok: false, msg: "Erro ao cadastrar login do Professor" });
             }
 
-            // Sucesso
+            // Success response as JSON
             resp.send({ ok: true, msg: "Professor cadastrado com sucesso!" });
         } catch (error) {
             console.error("Erro ao cadastrar professor:", error);
@@ -260,35 +271,43 @@ class Professor_Controller {
             
             // Sucesso
             if (resultadoProfessor && resultadoPessoa) {
-                resp.send(`<script>
-                    alert('Professor excluído com sucesso!');
-                    window.location.href = '/professor';
-                </script>`);
+                resp.send({ ok: true, msg: "Professor excluído com sucesso!" });
             } else {
-                resp.send(`<script>
-                    alert('Erro ao excluir professor');
-                    window.location.href = '/professor';
-                </script>`);
+                resp.send({ ok: false, msg: "Erro ao excluir professor" });
             }
         } catch (error) {
             console.error(error);
-            resp.send(`<script>
-                alert('Erro ao excluir professor: ${error.message}');
-                window.location.href = '/professor';
-            </script>`);
+            resp.send({ ok: false, msg: "Erro ao excluir professor: " + error.message });
         }
     }
 
     async listar_editar(req, resp) {
-        let cpf = req.params.cpf;
-        let professor = new Professor_Model();
-        professor.cpf = cpf;
-
-        let dados = await professor.obter(cpf);
-        resp.render("professor/professor_editar_view.ejs", { 
-            layout: "layout_professor_home.ejs",
-            professor: dados 
-        });
+        try {
+            let cpf = req.params.cpf;
+            let professor = new Professor_Model();
+            let pessoa = new Pessoa_Model();
+            
+            let dadosProfessor = await professor.obter(cpf);
+            let dadosPessoa = await pessoa.obter(cpf);
+            
+            if (!dadosProfessor || !dadosPessoa) {
+                return resp.redirect("/professor");
+            }
+            
+            // Combinar dados do professor e pessoa
+            let dados = {
+                ...dadosProfessor,
+                ...dadosPessoa
+            };
+            
+            resp.render("professor/professor_editar_view.ejs", { 
+                layout: "layout_professor_home.ejs",
+                professor: dados 
+            });
+        } catch (error) {
+            console.error("Erro ao carregar dados para edição:", error);
+            resp.redirect("/professor");
+        }
     }
 
     async listar_editar_admin(req, resp) {

@@ -4,11 +4,10 @@
       <!-- Sidebar -->
       <div class="col-md-3 mb-4">
         <div class="bg-light shadow rounded p-4">
-          <h4 class="text-primary">Menu</h4>
-          <ul class="list-unstyled">
+          <h4 class="text-primary">Menu</h4>          <ul class="list-unstyled">
             <li><a href="/professor" class="text-dark"><i class="fas fa-chalkboard-teacher"></i> Professores</a></li>
-            <li><a href="../CRUD/turma/turma_Index.html" class="text-dark"><i class="fas fa-users"></i> Turmas</a></li>
-            <li><a href="../CRUD/aluno/notas_Faltas_Create.html" class="text-dark"><i class="fas fa-chart-line"></i> Notas</a></li>
+            <li><a href="/turma" class="text-dark"><i class="fas fa-users"></i> Turmas</a></li>
+            <li><a href="/quadro_notas/" class="text-dark"><i class="fas fa-chart-line"></i> Notas</a></li>
           </ul>
         </div>
       </div>
@@ -21,58 +20,183 @@
               <i class="fas fa-arrow-left"></i> Voltar
             </a>
           </div>
-          
-          <div class="card shadow">
+            <div class="card shadow">
             <div class="card-body">
-              <form action="/professor/cadastrar" method="POST">
+              <form id="professorForm" onsubmit="submitForm(event)">
                 <div class="form-group">
                   <label for="cpf"><strong>CPF: *</strong></label>
-                  <input type="text" class="form-control" id="cpf" name="cpf" required>
+                  <input type="text" class="form-control" id="cpf" name="cpf" required maxlength="14" placeholder="000.000.000-00">
+                  <small class="text-danger" id="erro-cpf"></small>
                 </div>
                 <div class="form-group">
                   <label for="nome"><strong>Nome Completo: *</strong></label>
                   <input type="text" class="form-control" id="nome" name="nome" required>
+                  <small class="text-danger" id="erro-nome"></small>
                 </div>
                 <div class="form-group">
                   <label for="email"><strong>Email: *</strong></label>
                   <input type="email" class="form-control" id="email" name="email" required>
-                  <div class="form-group">
-                    <label for="dt_nascimento"><strong>Data de Nascimento: *</strong></label>
-                    <input type="date" class="form-control" id="dt_nascimento" name="dt_nascimento" required>
-                  </div>
-                  <div class="form-group">
-                    <label for="rua"><strong>Rua: *</strong></label>
-                    <input type="text" class="form-control" id="rua" name="rua" required>
-                  </div>
-                  <div class="form-group">
-                    <label for="bairro"><strong>Bairro: *</strong></label>
-                    <input type="text" class="form-control" id="bairro" name="bairro" required>
-                  </div>
+                  <small class="text-danger" id="erro-email"></small>
+                </div>
+                <div class="form-group">
+                  <label for="dt_nascimento"><strong>Data de Nascimento: *</strong></label>
+                  <input type="date" class="form-control" id="dt_nascimento" name="dt_nascimento" required>
+                  <small class="text-danger" id="erro-dt_nascimento"></small>
+                </div>
+                <div class="form-group">
+                  <label for="rua"><strong>Rua: *</strong></label>
+                  <input type="text" class="form-control" id="rua" name="rua" required>
+                  <small class="text-danger" id="erro-rua"></small>
+                </div>
+                <div class="form-group">
+                  <label for="bairro"><strong>Bairro: *</strong></label>
+                  <input type="text" class="form-control" id="bairro" name="bairro" required>
+                  <small class="text-danger" id="erro-bairro"></small>
+                </div>
+                <div class="form-group">
+                  <label for="telefone"><strong>Telefone: *</strong></label>
+                  <input type="text" class="form-control" id="telefone" name="telefone" required maxlength="15" placeholder="(00) 00000-0000">
+                  <small class="text-danger" id="erro-telefone"></small>
                 </div>
                 <div class="form-group">
                   <label for="senha"><strong>Senha: *</strong></label>
                   <input type="password" class="form-control" id="senha" name="senha" required>
+                  <small class="text-danger" id="erro-senha"></small>
                 </div>
                 <div class="form-group">
                   <label for="titulacao"><strong>Titulação: *</strong></label>
-                  <input type="text" class="form-control" id="titulacao" name="titulacao" required>
+                  <select class="form-control" id="titulacao" name="titulacao" required>
+                    <option value="">Selecione...</option>
+                    <option value="graduado">Graduado</option>
+                    <option value="especialista">Especialista</option>
+                    <option value="mestre">Mestre</option>
+                    <option value="doutor">Doutor</option>
+                  </select>
+                  <small class="text-danger" id="erro-titulacao"></small>
                 </div>
                 <div class="form-group">
                   <label for="dt_admissao"><strong>Data de Admissão: *</strong></label>
-                  <input type="date" class="form-control" id="dt_admissao" name="dt_admissao" required>
-                </div>
-                <div class="form-group">
-                  <label for="telefone"><strong>Telefone: *</strong></label>
-                  <input type="text" class="form-control" id="telefone" name="telefone" required>
+                  <input type="date" class="form-control" id="dt_admissao" name="dt_admissao" required max="<%= new Date().toISOString().split('T')[0] %>">
+                  <small class="text-danger" id="erro-dt_admissao"></small>
                 </div>
                 <button type="submit" class="btn btn-primary">
                   <i class="fas fa-save"></i> Cadastrar
                 </button>
               </form>
             </div>
-          </div>
-        </section>
+          </div>        </section>
       </div>
     </div>
   </div>
+
+  <!-- Modal de Feedback -->
+  <div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="feedbackModalLabel">Mensagem</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="feedbackModalBody">
+          <!-- Conteúdo da mensagem será inserido aqui -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="errorMessage" class="alert alert-danger" style="display: none;"></div>
+
+  <script>
+    // Formatação de CPF
+    document.getElementById('cpf').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 11) value = value.slice(0, 11);
+      
+      if (value.length > 9) {
+        value = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})$/, "$1.$2.$3-$4");
+      } else if (value.length > 6) {
+        value = value.replace(/^(\d{3})(\d{3})(\d{0,3})$/, "$1.$2.$3");
+      } else if (value.length > 3) {
+        value = value.replace(/^(\d{3})(\d{0,3})$/, "$1.$2");
+      }
+      
+      e.target.value = value;
+    });
+
+    // Formatação de telefone
+    document.getElementById('telefone').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 11) value = value.slice(0, 11);
+      
+      if (value.length > 10) {
+        value = value.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
+      } else if (value.length > 6) {
+        value = value.replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3");
+      } else if (value.length > 2) {
+        value = value.replace(/^(\d{2})(\d{0,5})$/, "($1) $2");
+      }
+      
+      e.target.value = value;
+    });
+
+    // Validação de nome (apenas letras e espaços)
+    document.getElementById('nome').addEventListener('input', function(e) {
+      let value = e.target.value;
+      if (!/^[A-Za-zÀ-ÖØ-öø-ÿ\s]*$/.test(value)) {
+        e.target.value = value.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ\s]/g, '');
+        document.getElementById('erro-nome').textContent = "Nome deve conter apenas letras e espaços";
+      } else {
+        document.getElementById('erro-nome').textContent = "";
+      }
+    });
+
+    // Definir data máxima para data de nascimento (18 anos atrás)
+    const hoje = new Date();
+    const dataMinima = new Date();
+    dataMinima.setFullYear(hoje.getFullYear() - 18);
+    document.getElementById('dt_nascimento').max = dataMinima.toISOString().split('T')[0];
+
+    function showError(message) {
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      
+      setTimeout(() => {
+          errorDiv.style.display = 'none';
+      }, 5000);
+    }
+
+    async function submitForm(event) {
+      event.preventDefault();
+      
+      const formData = new FormData(event.target);
+      const data = Object.fromEntries(formData);
+      
+      try {
+          const response = await fetch('/professor/cadastrar', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(data)
+          });
+          
+          const result = await response.json();
+          
+          if (result.ok) {
+              alert(result.msg);
+              window.location.href = '/professor';
+          } else {
+              showError(result.msg);
+          }
+      } catch (error) {
+          showError('Erro ao cadastrar professor: ' + error.message);
+      }
+    }
+  </script>
   <!-- Content End -->

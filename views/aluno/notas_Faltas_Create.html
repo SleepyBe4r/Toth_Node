@@ -57,7 +57,7 @@
                 ao Dashboard</a>
             </li>
             <li>
-              <a href="./notas_Faltas_Index.html" class="text-dark"><i class="fas fa-list"></i> Listar Notas e Faltas</a>
+              <a href="/quadro_notas/" class="text-dark"><i class="fas fa-list"></i> Listar Notas e Faltas</a>
             </li>
           </ul>
         </div>
@@ -117,7 +117,7 @@
   <div class="container-fluid bg-secondary text-white mt-5 py-1 px-sm-3 px-md-5" style="position:relative; bottom: 0">
     <div class="row pt-5 d-flex justify-content-center">
       <div class="col-lg-3 col-md-6 mb-5">
-        <a href="./../../../../index.html" class="navbar-brand font-weight-bold text-primary m-0 mb-4 p-0"
+        <a href="/" class="navbar-brand font-weight-bold text-primary m-0 mb-4 p-0"
           style="font-size: 40px; line-height: 40px">
           <i class="flaticon-043-teddy-bear"></i>
           <span class="text-white ">Toth Academy</span>
@@ -256,11 +256,11 @@
       localStorage.setItem("notas", JSON.stringify(notasSalvas));
 
       alert("Notas e faltas salvas com sucesso!");
-      document.location.href = "./../../CRUD/aluno/notas_Faltas_Index.html";
+      document.location.href = "/quadro_notas/";
     }
     function sair() {
         localStorage.removeItem("usuarioAtual");
-        window.location="./../../../../index.html";
+        window.location="/login";
       }
     document.addEventListener("DOMContentLoaded", () => {
       carregarTurmas();

@@ -4,12 +4,11 @@
       <!-- Sidebar -->
       <div class="col-md-3 mb-4">
         <div class="bg-light shadow rounded p-4">
-          <h4 class="text-primary">Menu</h4>
-          <ul class="list-unstyled">
+          <h4 class="text-primary">Menu</h4>          <ul class="list-unstyled">
             <li><a href="/professor" class="text-dark"><i class="fas fa-user-circle"></i> Perfil</a></li>
             <li><a href="/professor" class="text-dark"><i class="fas fa-chalkboard-teacher"></i> Professores</a></li>
-            <li><a href="../CRUD/turma/turma_Index.html" class="text-dark"><i class="fas fa-users"></i> Turmas</a></li>
-            <li><a href="../CRUD/aluno/notas_Faltas_Create.html" class="text-dark"><i class="fas fa-chart-line"></i> Notas</a></li>
+            <li><a href="/turma" class="text-dark"><i class="fas fa-users"></i> Turmas</a></li>
+            <li><a href="/quadro_notas/" class="text-dark"><i class="fas fa-chart-line"></i> Notas</a></li>
           </ul>
         </div>
       </div>
@@ -22,31 +21,139 @@
               <i class="fas fa-arrow-left"></i> Voltar
             </a>
           </div>
-          
-          <div class="card shadow">
+            <div class="card shadow">
             <div class="card-body">
-              <form action="/professor/editar" method="POST">
+              <form id="formEditarProfessor" onsubmit="submitForm(event)">
                 <input type="hidden" name="cpf" value="<%= professor.cpf %>">
                 <div class="form-group">
                   <label for="nome"><strong>Nome Completo: *</strong></label>
                   <input type="text" class="form-control" id="nome" name="nome" value="<%= professor.nome %>" required>
+                  <small class="text-danger" id="erro-nome"></small>
+                </div>
+                <div class="form-group">
+                  <label for="email"><strong>Email: *</strong></label>
+                  <input type="email" class="form-control" id="email" name="email" value="<%= professor.email %>" required>
+                  <small class="text-danger" id="erro-email"></small>
+                </div>
+                <div class="form-group">
+                  <label for="telefone"><strong>Telefone: *</strong></label>
+                  <input type="text" class="form-control" id="telefone" name="telefone" value="<%= professor.fone || '' %>" required maxlength="15" placeholder="(00) 00000-0000">
+                  <small class="text-danger" id="erro-telefone"></small>
                 </div>
                 <div class="form-group">
                   <label for="titulacao"><strong>Titulação: *</strong></label>
-                  <input type="text" class="form-control" id="titulacao" name="titulacao" value="<%= professor.email %>" required>
-                </div>
-                <div class="form-group">
-                  <label for="dt_admissao"><strong>Data de Admissão: *</strong></label>
-                  <input type="date" class="form-control" id="dt_admissao" name="dt_admissao" value="<%= professor.telefone || '' %>" required>
+                  <select class="form-control" id="titulacao" name="titulacao" required>
+                    <option value="">Selecione...</option>
+                    <option value="graduado" <%= professor.titulacao === 'graduado' ? 'selected' : '' %>>Graduado</option>
+                    <option value="especialista" <%= professor.titulacao === 'especialista' ? 'selected' : '' %>>Especialista</option>
+                    <option value="mestre" <%= professor.titulacao === 'mestre' ? 'selected' : '' %>>Mestre</option>
+                    <option value="doutor" <%= professor.titulacao === 'doutor' ? 'selected' : '' %>>Doutor</option>
+                  </select>
+                  <small class="text-danger" id="erro-titulacao"></small>
                 </div>
                 <button type="submit" class="btn btn-primary">
                   <i class="fas fa-save"></i> Salvar Alterações
                 </button>
               </form>
             </div>
-          </div>
-        </section>
+          </div>        </section>
       </div>
     </div>
   </div>
+
+  <!-- Modal de Feedback -->
+  <div class="modal fade" id="feedbackModal" tabindex="-1" role="dialog" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="feedbackModalLabel">Mensagem</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="feedbackModalBody">
+          <!-- Conteúdo da mensagem será inserido aqui -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="errorMessage" class="alert alert-danger" style="display: none;"></div>
+
+  <script>
+    // Formatação de telefone
+    document.getElementById('telefone').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 11) value = value.slice(0, 11);
+      
+      if (value.length > 10) {
+        value = value.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
+      } else if (value.length > 6) {
+        value = value.replace(/^(\d{2})(\d{4})(\d{0,4})$/, "($1) $2-$3");
+      } else if (value.length > 2) {
+        value = value.replace(/^(\d{2})(\d{0,5})$/, "($1) $2");
+      }
+      
+      e.target.value = value;
+    });
+
+    // Validação de nome (apenas letras e espaços)
+    document.getElementById('nome').addEventListener('input', function(e) {
+      let value = e.target.value;
+      if (!/^[A-Za-zÀ-ÖØ-öø-ÿ\s]*$/.test(value)) {
+        e.target.value = value.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ\s]/g, '');
+        document.getElementById('erro-nome').textContent = "Nome deve conter apenas letras e espaços";
+      } else {
+        document.getElementById('erro-nome').textContent = "";
+      }
+    });
+
+    function showError(message) {
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.textContent = message;
+      errorDiv.style.display = 'block';
+      
+      setTimeout(() => {
+          errorDiv.style.display = 'none';
+      }, 5000);
+    }
+
+    async function submitForm(event) {
+      event.preventDefault();
+      
+      const formData = new FormData(event.target);
+      const data = Object.fromEntries(formData);
+      
+      try {
+          const response = await fetch('/professor/editar', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(data)
+          });
+          
+          const result = await response.json();
+          
+          if (result.ok) {
+              // Exibir modal com mensagem de sucesso
+              document.getElementById('feedbackModalLabel').textContent = "Sucesso";
+              document.getElementById('feedbackModalBody').textContent = result.msg;
+              $('#feedbackModal').modal('show');
+              
+              // Redirecionar após fechar o modal
+              $('#feedbackModal').on('hidden.bs.modal', function () {
+                window.location.href = '/professor';
+              });
+          } else {
+              showError(result.msg);
+          }
+      } catch (error) {
+          showError('Erro ao editar professor: ' + error.message);
+      }
+    }
+  </script>
   <!-- Content End -->

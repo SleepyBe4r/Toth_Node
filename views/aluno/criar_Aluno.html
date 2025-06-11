@@ -34,9 +34,8 @@
       <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
-        <div class="navbar-nav font-weight-bold mx-auto">
-          <a href="./../../admin/area_Admin.html" class="nav-item nav-link">Área do Admin</a>
+      <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">        <div class="navbar-nav font-weight-bold mx-auto">
+          <a href="/admin/home" class="nav-item nav-link">Área do Admin</a>
         </div>
         <button class="btn btn-danger px-4" onclick="sair()">Sair</button>
       </div>
@@ -51,12 +50,11 @@
       <div class="col-md-3 mb-4">
         <div class="bg-light shadow rounded p-4">
           <h4 class="text-primary">Menu</h4>
-          <ul class="list-unstyled">
-            <li>
-              <a href="./../../admin/area_Admin.html" class="text-dark"><i class="fas fa-arrow-left"></i> Voltar ao Dashboard</a>
+          <ul class="list-unstyled">            <li>
+              <a href="/admin/home" class="text-dark"><i class="fas fa-arrow-left"></i> Voltar ao Dashboard</a>
             </li>
             <li>
-              <a href="./aluno_index.html" class="text-dark"><i class="fas fa-list"></i> Listar alunos</a>
+              <a href="/aluno" class="text-dark"><i class="fas fa-list"></i> Listar alunos</a>
             </li>
           </ul>
         </div>
@@ -230,7 +228,7 @@
       
       
             <button type="submit" class="btn btn-primary">Finalizar cadastro</button>
-            <button class="btn btn-dark" type="submit" onclick="window.location='./../../admin/area_Admin.html'">Retornar</button>
+            <button class="btn btn-dark" type="submit" onclick="window.location='/admin/home'">Retornar</button>
           </form>
         </section>
       </div>
@@ -241,7 +239,7 @@
   <div class="container-fluid bg-secondary text-white mt-5 py-1 px-sm-3 px-md-5" style="position:relative; bottom: 0">
     <div class="row pt-5 d-flex justify-content-center">
       <div class="col-lg-3 col-md-6 mb-5">
-        <a href="./../../../../index.html" class="navbar-brand font-weight-bold text-primary m-0 mb-4 p-0"
+        <a href="/" class="navbar-brand font-weight-bold text-primary m-0 mb-4 p-0"
           style="font-size: 40px; line-height: 40px">
           <i class="flaticon-043-teddy-bear"></i>
           <span class="text-white ">Toth Academy</span>
@@ -397,7 +395,7 @@
       localStorage.setItem("alunos", JSON.stringify(alunos));
   
       alert("Aluno cadastrada com sucesso!");      
-      document.location.href = "./aluno_index.html";      
+      document.location.href = "/aluno";      
     }
     
     document.addEventListener("DOMContentLoaded", () => {
@@ -405,7 +403,7 @@
     });
     function sair() {
         localStorage.removeItem("usuarioAtual");
-        window.location="./../../../../index.html";
+        window.location="/login";
       }
   </script>
 </body>
