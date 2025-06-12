@@ -7,7 +7,7 @@ class perfil_Controller {
             const cpf = req.cookies.usuario_logado;
 
             const dados = await perfil_M.obterDadosAluno(cpf);
-            const aluno = dados[0]
+            const aluno = dados[0] || {}; // Garante que aluno seja um objeto vazio se dados[0] for undefined
             
             res.render("perfis/perfil_aluno", {
                 layout: "layout_aluno_home.ejs",
@@ -15,6 +15,8 @@ class perfil_Controller {
             });
         } catch (err) {
             console.error("Erro no perfil do aluno:", err);
+            // Opcional: Renderizar uma página de erro ou redirecionar
+            res.status(500).send("Erro ao carregar perfil do aluno.");
         }
     }
 
@@ -23,7 +25,7 @@ class perfil_Controller {
             const cpf = req.cookies.usuario_logado;
 
             const dados = await perfil_M.obterDadosProfessor(cpf);
-            const professor = dados[0]
+            const professor = dados[0] || {};
 
             res.render("perfis/perfil_professor", {
                 layout: "layout_professor_home.ejs",
@@ -31,6 +33,7 @@ class perfil_Controller {
             });
         } catch (err) {
             console.error("Erro no perfil do professor:", err);
+            res.status(500).send("Erro ao carregar perfil do professor.");
         }
     }
 
@@ -39,7 +42,7 @@ class perfil_Controller {
             const cpf = req.cookies.usuario_logado;
 
             const dados = await perfil_M.obterDadosAdmin(cpf);
-            const admin = dados[0]
+            const admin = dados[0] || {};
 
             res.render("perfis/perfil_admin", {
                 layout: "layout_admin_home.ejs",
@@ -47,6 +50,7 @@ class perfil_Controller {
             });
         } catch (err) {
             console.error("Erro no perfil do admin:", err);
+            res.status(500).send("Erro ao carregar perfil do administrador.");
         }
     }
 }

@@ -220,7 +220,9 @@ class Professor_Controller {
 
     listar_cadastroProf_admin(req, resp) {
         resp.render("professores/cadastrar_professor.ejs", { layout: "layout_admin_home.ejs" });
-    }    async cadastrar_Prof(req, resp) {
+    }   
+    
+    async cadastrar_Prof(req, resp) {
         try {
             // Validar dados usando a função centralizada
             const validacao = validarDadosProfessor(req.body, false);

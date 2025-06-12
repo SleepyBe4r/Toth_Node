@@ -1,6 +1,7 @@
 const AlunoModel = require("../models/aluno_model");
 const PessoaModel = require("../models/pessoa_model");
-const loginModel = require("../models/login_model");
+const LoginModel = require("../models/login_model");
+const Database = require("../utils/database");
 
 class Aluno_Controller {
 
@@ -19,61 +20,114 @@ class Aluno_Controller {
     }
 
     async cadastrar_Aluno(req, res) {
-        if (
-            req.body.cpf == "" ||
-            req.body.nome == "" ||
-            req.body.data == "" ||
-            req.body.email == "" ||
-            req.body.fone == "" ||
-            req.body.rua == "" ||
-            req.body.bairro == "" ||
-            req.body.convenio == ""
-        ) {
-            res.send({
-                ok: false,
-                msg: "Campo incompleto"
-            });
-            return;
-        }
+        try {
+            const {
+                cpf,
+                nome,
+                data,
+                email,
+                fone,
+                rua,
+                bairro,
+                convenio,
+                senha
+            } = req.body;
 
-        let pessoa_M = new PessoaModel();
-        pessoa_M.cpf = req.body.cpf;
-        pessoa_M.nome = req.body.nome;
-        pessoa_M.data = req.body.data;
-        pessoa_M.email = req.body.email;
-        pessoa_M.fone = req.body.fone;
-        pessoa_M.rua = req.body.rua;
-        pessoa_M.bairro = req.body.bairro;
-        pessoa_M.convenio = req.body.convenio;
-
-        let pessoa = await pessoa_M.inserir();
-
-
-
-        if (pessoa) {
-            let aluno_M = new AlunoModel();
-            aluno_M.cpf = req.body.cpf;  // Aqui também sem formatação
-            aluno_M.convenio = req.body.convenio;
-            let ok = await aluno_M.inserir();
-
-            if (ok) {
-                res.send({
-                    ok: true,
-                    msg: "Aluno cadastrado com sucesso"
-                });
-            } else {
-                res.send({
+            // Verificar se todos os campos obrigatórios foram preenchidos
+            if (!cpf || !nome || !data || !email || !fone || !rua || !bairro || !convenio || !senha) {
+                return res.send({
                     ok: false,
-                    msg: "Erro ao inserir o Aluno"
+                    msg: "Todos os campos são obrigatórios"
                 });
             }
-        } else {
+
+            const cpfLimpo = cpf.replace(/\D/g, '');
+            const telefoneNumeros = fone.replace(/\D/g, '');
+
+            // Verificar se o CPF já existe
+            const pessoaExistente = new PessoaModel();
+            const dadosExistentes = await pessoaExistente.obter(cpfLimpo);
+            if (dadosExistentes) {
+                return res.send({
+                    ok: false,
+                    msg: "CPF já cadastrado no sistema"
+                });
+            }
+
+            // Verificar se o email já está em uso
+            const db = new Database();
+            const emailExistente = await db.ExecutaComando("SELECT * FROM logins WHERE usuario = ?", [email]);
+            if (emailExistente && emailExistente.length > 0) {
+                return res.send({
+                    ok: false,
+                    msg: "Email já cadastrado como usuário no sistema"
+                });
+            }
+
+            // Criar pessoa
+            let pessoa_M = new PessoaModel();
+            pessoa_M.cpf = cpfLimpo;
+            pessoa_M.nome = nome;
+            pessoa_M.data = data;
+            pessoa_M.email = email;
+            pessoa_M.fone = telefoneNumeros;
+            pessoa_M.rua = rua;
+            pessoa_M.bairro = bairro;
+            pessoa_M.convenio = convenio;
+
+            const resultadoPessoa = await pessoa_M.inserir();
+            if (!resultadoPessoa) {
+                return res.send({
+                    ok: false,
+                    msg: "Erro ao cadastrar Pessoa"
+                });
+            }
+
+            // Criar aluno
+            let aluno_M = new AlunoModel();
+            aluno_M.cpf = cpfLimpo;
+            aluno_M.convenio = convenio;
+
+            const resultadoAluno = await aluno_M.inserir();
+            if (!resultadoAluno) {
+                await pessoa_M.excluir();
+                return res.send({
+                    ok: false,
+                    msg: "Erro ao cadastrar Aluno"
+                });
+            }
+
+            // Criar login
+            let loginNovo = new LoginModel();
+            loginNovo.pessoa_cpf = cpfLimpo;
+            loginNovo.usuario = email;
+            loginNovo.senha = senha;
+            loginNovo.perfil = 1; // perfil 1: Aluno
+
+            const resultadoLogin = await loginNovo.inserir();
+            if (!resultadoLogin) {
+                await aluno_M.excluir();
+                await pessoa_M.excluir();
+                return res.send({
+                    ok: false,
+                    msg: "Erro ao cadastrar login do Aluno"
+                });
+            }
+
             res.send({
-                pessoa: false,
-                msg: "Erro ao cadastrar Pessoa"
+                ok: true,
+                msg: "Aluno cadastrado com sucesso"
+            });
+
+        } catch (erro) {
+            console.error("Erro ao cadastrar aluno:", erro);
+            res.send({
+                ok: false,
+                msg: "Erro interno: " + erro.message
             });
         }
     }
+
 
     async editar_Aluno(req, res) {
         try {
@@ -127,7 +181,7 @@ class Aluno_Controller {
         }
     }
 
-    
+
 
     async listar_editar_admin(req, resp) {
         try {

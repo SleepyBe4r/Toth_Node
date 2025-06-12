@@ -43,7 +43,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Função para limpar o destaque dos campos
     function limpar_validacao() {
-        const campos = ["cpf-aluno", "nome-aluno", "data-aluno", "email-aluno", "telefone-aluno", "rua-aluno", "bairro-aluno", "convenio-aluno"];
+        const campos = ["cpf-aluno", "nome-aluno", "data-aluno", "email-aluno", "telefone-aluno", "rua-aluno", "bairro-aluno", "convenio-aluno", "senha-aluno"];
+
         campos.forEach(id => {
             const el = document.getElementById(id);
             if (el) {
@@ -64,6 +65,8 @@ document.addEventListener("DOMContentLoaded", () => {
         let inputRua = document.getElementById("rua-aluno");
         let inputBairro = document.getElementById("bairro-aluno");
         let inputConvenio = document.getElementById("convenio-aluno");
+        let inputSenha = document.getElementById("senha-aluno");
+
 
         let lista_validacao = [];
 
@@ -75,6 +78,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (inputRua.value.trim() === "") lista_validacao.push("rua-aluno");
         if (inputBairro.value.trim() === "") lista_validacao.push("bairro-aluno");
         if (inputConvenio.value.trim() === "") lista_validacao.push("convenio-aluno");
+        if (inputSenha.value.trim() === "") lista_validacao.push("senha-aluno");
+
 
         if (lista_validacao.length === 0) {
             let obj = {
@@ -85,8 +90,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 fone: inputFone.value,
                 rua: inputRua.value,
                 bairro: inputBairro.value,
-                convenio: inputConvenio.value
+                convenio: inputConvenio.value,
+                senha: inputSenha.value
             };
+
 
             fetch("/aluno/cadastrar", {
                 method: "POST",
