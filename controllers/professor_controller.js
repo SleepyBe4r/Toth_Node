@@ -39,9 +39,7 @@ function validarDadosProfessor(dados, isEdicao = false) {
             if (parseInt(ddd) < 11 || parseInt(ddd) > 99) {
                 erros.telefone = 'DDD inválido';
             }
-            if (telefoneNumeros.length === 11 && telefoneNumeros[2] !== '9') {
-                erros.telefone = 'Celular deve começar com 9';
-            }
+           
         }
     }
 
@@ -322,47 +320,47 @@ class Professor_Controller {
     }
 
     async excluir_Prof(req, resp) {
-        try {
-            let cpf = req.body.cpf;
-            
-            // Verificar se o professor existe
-            let professor = new Professor_Model();
-            professor.cpf = cpf;
-            let dadosProfessor = await professor.obter(cpf);
-            if (!dadosProfessor) {
-                return resp.send({ ok: false, msg: "Professor não encontrado" });
-            }
-            
-            // Excluir login primeiro (para manter integridade referencial)
-            let login = new Login_Model();
-            login.pessoa_cpf = cpf;
-            await login.excluir();
-            
-            // Excluir professor
-            let resultadoProfessor = await professor.excluir();
-            if (!resultadoProfessor) {
-                return resp.send({ ok: false, msg: "Erro ao excluir professor" });
-            }
-            
-            // Excluir pessoa
-            let pessoa = new Pessoa_Model();
-            pessoa.cpf = cpf;
-            let resultadoPessoa = await pessoa.excluir();
-            if (!resultadoPessoa) {
-                return resp.send({ ok: false, msg: "Erro ao excluir dados pessoais do professor" });
-            }
-            
-            // Sucesso
-            if (resultadoProfessor && resultadoPessoa) {
-                resp.send({ ok: true, msg: "Professor excluído com sucesso!" });
-            } else {
-                resp.send({ ok: false, msg: "Erro ao excluir professor" });
-            }
-        } catch (error) {
-            console.error(error);
-            resp.send({ ok: false, msg: "Erro ao excluir professor: " + error.message });
+    try {
+        let cpf = req.body.cpf;
+
+        // Verificar se o professor existe
+        let professor = new Professor_Model();
+        professor.cpf = cpf;
+        let dadosProfessor = await professor.obter(cpf);
+        if (!dadosProfessor) {
+            return resp.send({ ok: false, msg: "Professor não encontrado" });
         }
+
+        // Excluir login
+        let login = new Login_Model();
+        login.pessoa_cpf = cpf;
+        await login.excluir();
+
+        // Excluir professor
+        let resultadoProfessor = await professor.excluir();
+        if (!resultadoProfessor) {
+            return resp.send({ ok: false, msg: "Erro ao excluir professor" });
+        }
+
+        // Excluir pessoa
+        let pessoa = new Pessoa_Model();
+        pessoa.cpf = cpf;
+        let resultadoPessoa = await pessoa.excluir();
+        if (!resultadoPessoa) {
+            return resp.send({ ok: false, msg: "Erro ao excluir dados pessoais do professor" });
+        }
+
+        // Sucesso
+        if (resultadoProfessor && resultadoPessoa) {
+            return resp.send({ ok: true, msg: "Professor excluído com sucesso!" });
+        } else {
+            return resp.send({ ok: false, msg: "Erro ao excluir professor" });
+        }
+    } catch (error) {
+        console.error(error);
+        return resp.send({ ok: false, msg: "Erro ao excluir professor: " + error.message });
     }
+}
 
     async listar_editar(req, resp) {
         try {

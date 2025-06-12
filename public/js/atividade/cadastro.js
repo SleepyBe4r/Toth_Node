@@ -1,7 +1,8 @@
 
 document.addEventListener("DOMContentLoaded", ()=>{
+console.log("Arquivo atividade.js carregado com sucesso.");
 
-    function cadastrar() {
+function cadastrar() {
         let input_nome = document.querySelector("#txtNomeAtividade");
         let input_descricao = document.querySelector("#txtDescricao");
         let input_dt_inicial = document.querySelector("#dtInicial");
@@ -87,9 +88,13 @@ document.addEventListener("DOMContentLoaded", ()=>{
         }
     }
     
-    let input_usuario = document.querySelector("#hidden_atividade").value;
-    if (input_usuario == "") 
-        document.querySelector("#btn_cadastro").addEventListener("click", cadastrar);
-    else
-        document.querySelector("#btn_atualizar").addEventListener("click", atualizar);
+   let input_usuario = document.querySelector("#hidden_atividade").value;
+if (input_usuario == "") {
+    console.log("Modo: cadastro");
+    document.querySelector("#btn_cadastro").addEventListener("click", cadastrar);
+} else {
+    console.log("Modo: atualização");
+    document.querySelector("#btn_atualizar").addEventListener("click", atualizar);
+}
+
 });
