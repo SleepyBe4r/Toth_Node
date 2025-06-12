@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     const disciplinas = document.querySelector(`#slctDisciplina_hidden`).options;
 
     function cadastrar() {
+         event.preventDefault();
         let input_serie = document.querySelector("#txtSerie");
         let lista_validacao = [];
 

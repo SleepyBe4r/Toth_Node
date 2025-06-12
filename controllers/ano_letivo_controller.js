@@ -16,7 +16,6 @@ class Ano_Letivo_Controller {
     async cadastrar_ano_letivo(req, resp) {
         const ano_letivo_input = req.body.ano_letivo?.trim();
 
-        // Verificação de campo vazio
         if (!ano_letivo_input) {
             resp.send({
                 ok: false,
@@ -34,9 +33,10 @@ class Ano_Letivo_Controller {
             return;
         }
 
-        
         let ano_letivo_M = new Ano_Letivo_Model();
         let anos_existentes = await ano_letivo_M.listar();
+
+        // Verifica duplicidade
         const ano_ja_existe = anos_existentes.some(a => a.ano_letivo === ano_letivo_input);
 
         if (ano_ja_existe) {
@@ -67,8 +67,8 @@ class Ano_Letivo_Controller {
         let ano_letivo_M = new Ano_Letivo_Model();
         ano_letivo_M.id = req.body.id;
 
-        let lista_ano_letivo = await ano_letivo_M.excluir();
-        if (lista_ano_letivo) {
+        let resultado = await ano_letivo_M.excluir();
+        if (resultado) {
             resp.send({ ok: true });
         } else {
             resp.send({ ok: false });
@@ -109,6 +109,8 @@ class Ano_Letivo_Controller {
 
         let ano_letivo_M = new Ano_Letivo_Model();
         let anos_existentes = await ano_letivo_M.listar();
+
+        // Verifica duplicidade ignorando o próprio registro que está sendo editado
         const ano_ja_existe = anos_existentes.some(
             a => a.ano_letivo === ano_letivo_input && a.id != req.body.id
         );
