@@ -21,50 +21,59 @@ class Aluno_Controller {
 
     async cadastrar_Aluno(req, res) {
         try {
-            const {
-                cpf,
-                nome,
-                data,
-                email,
-                fone,
-                rua,
-                bairro,
-                convenio,
-                senha
-            } = req.body;
+            const { cpf, nome, data, email, fone, rua, bairro, convenio, senha } = req.body;
 
-            // Verificar se todos os campos obrigatórios foram preenchidos
             if (!cpf || !nome || !data || !email || !fone || !rua || !bairro || !convenio || !senha) {
-                return res.send({
-                    ok: false,
-                    msg: "Todos os campos são obrigatórios"
-                });
+                return res.send({ ok: false, msg: "Todos os campos são obrigatórios" });
             }
 
             const cpfLimpo = cpf.replace(/\D/g, '');
-            const telefoneNumeros = fone.replace(/\D/g, '');
+            if (!/^\d{11}$/.test(cpfLimpo)) {
+                return res.send({ ok: false, msg: "CPF inválido: deve conter exatamente 11 dígitos numéricos" });
+            }
 
-            // Verificar se o CPF já existe
+            if (!/^[A-ZÀ-Ý][a-zà-ÿ]+(\s[A-ZÀ-Ý][a-zà-ÿ]+)+$/.test(nome)) {
+                return res.send({
+                    ok: false,
+                    msg: "Nome inválido: deve conter nome e sobrenome, ambos iniciando com letra maiúscula"
+                });
+            }
+
+            const nascimento = new Date(data);
+            const hoje = new Date();
+            const idade = hoje.getFullYear() - nascimento.getFullYear();
+            const aniversarioJaPassou = hoje.getMonth() > nascimento.getMonth() ||
+                (hoje.getMonth() === nascimento.getMonth() && hoje.getDate() >= nascimento.getDate());
+            const idadeFinal = aniversarioJaPassou ? idade : idade - 1;
+            if (idadeFinal >= 18) {
+                return res.send({ ok: false, msg: "O aluno deve ter menos de 18 anos" });
+            }
+
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                return res.send({ ok: false, msg: "Email inválido" });
+            }
+
+            if (senha.length < 6) {
+                return res.send({ ok: false, msg: "A senha deve conter no mínimo 6 caracteres" });
+            }
+
+            const telefoneNumeros = fone.replace(/\D/g, '');
+            if (!/^\d{11}$/.test(telefoneNumeros)) {
+                return res.send({ ok: false, msg: "Telefone inválido: deve conter exatamente 11 dígitos incluindo o DDD" });
+            }
+
             const pessoaExistente = new PessoaModel();
             const dadosExistentes = await pessoaExistente.obter(cpfLimpo);
             if (dadosExistentes) {
-                return res.send({
-                    ok: false,
-                    msg: "CPF já cadastrado no sistema"
-                });
+                return res.send({ ok: false, msg: "CPF já cadastrado no sistema" });
             }
 
-            // Verificar se o email já está em uso
             const db = new Database();
             const emailExistente = await db.ExecutaComando("SELECT * FROM logins WHERE usuario = ?", [email]);
             if (emailExistente && emailExistente.length > 0) {
-                return res.send({
-                    ok: false,
-                    msg: "Email já cadastrado como usuário no sistema"
-                });
+                return res.send({ ok: false, msg: "Email já cadastrado como usuário no sistema" });
             }
 
-            // Criar pessoa
             let pessoa_M = new PessoaModel();
             pessoa_M.cpf = cpfLimpo;
             pessoa_M.nome = nome;
@@ -77,13 +86,9 @@ class Aluno_Controller {
 
             const resultadoPessoa = await pessoa_M.inserir();
             if (!resultadoPessoa) {
-                return res.send({
-                    ok: false,
-                    msg: "Erro ao cadastrar Pessoa"
-                });
+                return res.send({ ok: false, msg: "Erro ao cadastrar Pessoa" });
             }
 
-            // Criar aluno
             let aluno_M = new AlunoModel();
             aluno_M.cpf = cpfLimpo;
             aluno_M.convenio = convenio;
@@ -91,97 +96,97 @@ class Aluno_Controller {
             const resultadoAluno = await aluno_M.inserir();
             if (!resultadoAluno) {
                 await pessoa_M.excluir();
-                return res.send({
-                    ok: false,
-                    msg: "Erro ao cadastrar Aluno"
-                });
+                return res.send({ ok: false, msg: "Erro ao cadastrar Aluno" });
             }
 
-            // Criar login
             let loginNovo = new LoginModel();
             loginNovo.pessoa_cpf = cpfLimpo;
             loginNovo.usuario = email;
             loginNovo.senha = senha;
-            loginNovo.perfil = 1; // perfil 1: Aluno
+            loginNovo.perfil = 1;
 
             const resultadoLogin = await loginNovo.inserir();
             if (!resultadoLogin) {
                 await aluno_M.excluir();
                 await pessoa_M.excluir();
-                return res.send({
-                    ok: false,
-                    msg: "Erro ao cadastrar login do Aluno"
-                });
+                return res.send({ ok: false, msg: "Erro ao cadastrar login do Aluno" });
             }
 
-            res.send({
-                ok: true,
-                msg: "Aluno cadastrado com sucesso"
-            });
+            res.send({ ok: true, msg: "Aluno cadastrado com sucesso" });
 
         } catch (erro) {
             console.error("Erro ao cadastrar aluno:", erro);
-            res.send({
-                ok: false,
-                msg: "Erro interno: " + erro.message
-            });
+            res.send({ ok: false, msg: "Erro interno: " + erro.message });
         }
     }
-
 
     async editar_Aluno(req, res) {
         try {
+            const { cpf, nome, data, email, fone, rua, bairro, convenio } = req.body;
 
-            console.log("Dados recebidos no backend:", req.body);
+            const cpfLimpo = cpf.replace(/\D/g, '');
+            if (!/^\d{11}$/.test(cpfLimpo)) {
+                return res.send({ ok: false, msg: "CPF inválido: deve conter exatamente 11 dígitos" });
+            }
 
-            let aluno_M = new AlunoModel();
+            if (!/^[A-ZÀ-Ý][a-zà-ÿ]+(\s[A-ZÀ-Ý][a-zà-ÿ]+)+$/.test(nome)) {
+                return res.send({
+                    ok: false,
+                    msg: "Nome inválido: deve conter nome e sobrenome, ambos iniciando com letra maiúscula"
+                });
+            }
+
+            const nascimento = new Date(data);
+            const hoje = new Date();
+            const idade = hoje.getFullYear() - nascimento.getFullYear();
+            const aniversarioJaPassou = hoje.getMonth() > nascimento.getMonth() ||
+                (hoje.getMonth() === nascimento.getMonth() && hoje.getDate() >= nascimento.getDate());
+            const idadeFinal = aniversarioJaPassou ? idade : idade - 1;
+            if (idadeFinal >= 18) {
+                return res.send({ ok: false, msg: "O aluno deve ter menos de 18 anos" });
+            }
+
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                return res.send({ ok: false, msg: "Email inválido" });
+            }
+
+            const telefoneNumeros = fone.replace(/\D/g, '');
+            if (!/^\d{11}$/.test(telefoneNumeros)) {
+                return res.send({ ok: false, msg: "Telefone inválido: deve conter exatamente 11 dígitos com DDD" });
+            }
+
             let pessoa_M = new PessoaModel();
+            pessoa_M.cpf = cpfLimpo;
+            pessoa_M.nome = nome;
+            pessoa_M.data = data;
+            pessoa_M.email = email;
+            pessoa_M.fone = telefoneNumeros;
+            pessoa_M.rua = rua;
+            pessoa_M.bairro = bairro;
+            pessoa_M.convenio = convenio;
 
-            // Atualiza os dados da pessoa
-            pessoa_M.cpf = req.body.cpf;  // Sem formatação
-            pessoa_M.nome = req.body.nome;
-            pessoa_M.data = req.body.data;
-            pessoa_M.email = req.body.email;
-            pessoa_M.fone = req.body.fone;
-            pessoa_M.rua = req.body.rua;
-            pessoa_M.bairro = req.body.bairro;
-            pessoa_M.convenio = req.body.convenio;
             let pessoaAtualizada = await pessoa_M.atualizar();
 
             if (pessoaAtualizada) {
-                // Atualiza os dados do aluno
-                aluno_M.cpf = req.body.cpf;  // Sem formatação
-                aluno_M.convenio = req.body.convenio;
+                let aluno_M = new AlunoModel();
+                aluno_M.cpf = cpfLimpo;
+                aluno_M.convenio = convenio;
                 let alunoAtualizado = await aluno_M.atualizar();
 
                 if (alunoAtualizado) {
-                    res.send({
-                        ok: true,
-                        msg: "Aluno atualizado com sucesso"
-                    });
-
+                    res.send({ ok: true, msg: "Aluno atualizado com sucesso" });
                 } else {
-                    res.send({
-                        ok: false,
-                        msg: "Erro ao atualizar dados do aluno"
-                    });
+                    res.send({ ok: false, msg: "Erro ao atualizar dados do aluno" });
                 }
             } else {
-                res.send({
-                    ok: false,
-                    msg: "Erro ao atualizar dados pessoais"
-                });
+                res.send({ ok: false, msg: "Erro ao atualizar dados pessoais" });
             }
+
         } catch (error) {
             console.error("Erro ao editar aluno:", error);
-            res.send({
-                ok: false,
-                msg: "Erro interno do servidor"
-            });
+            res.send({ ok: false, msg: "Erro interno do servidor" });
         }
     }
-
-
 
     async listar_editar_admin(req, resp) {
         try {
@@ -196,7 +201,6 @@ class Aluno_Controller {
                 return resp.redirect("/admin/alunos");
             }
 
-            // Combinar dados do aluno e pessoa
             let dados = {
                 ...dadosAluno,
                 ...dadosPessoa
@@ -229,10 +233,7 @@ class Aluno_Controller {
         } else {
             msg = "Não foi possível excluir ";
         }
-        res.json({
-            ok: resultado,
-            msg: msg
-        });
+        res.json({ ok: resultado, msg: msg });
     }
 
 }
