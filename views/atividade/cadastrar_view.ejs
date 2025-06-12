@@ -1,8 +1,8 @@
-
 <script src="/js/validacao.js"></script>
 <script src="/js/atividade/cadastro.js"></script>
 
-    <input type="hidden" value="<%= atividade_para_alterar%>" id="hidden_atividade"> 
+    <!-- Ajusta valor do hidden para indicar modo cadastro ou edição corretamente -->
+    <input type="hidden" value="<%= typeof atividade_para_alterar === 'undefined' ? '' : atividade_para_alterar.id_atividades %>" id="hidden_atividade"> 
     <%if (typeof atividade_para_alterar == "undefined") {%>
         <!-- Main Section -->
         <div class="col-md-9">
@@ -33,8 +33,9 @@
                     </div>
                     <label id="erro_dt" class="form-label text-danger"></label>
                 </div>
-                <button type="submit" class=" btn btn-primary" id="btn_cadastro">Finalizar cadastro</button>
-                <a href="/atividade//P_listar" class="btn btn-dark">Retornar</a>
+                <!-- Botão de cadastro deve ser button para não submeter form -->
+                <button type="button" class=" btn btn-primary" id="btn_cadastro">Finalizar cadastro</button>
+                <a href="/atividade/P_listar" class="btn btn-dark">Retornar</a>
             
             </section>
         </div> 
@@ -73,7 +74,8 @@
                     </div>
                     <label id="erro_dt" class="form-label text-danger"></label>
                 </div>
-                <button type="submit" class=" btn btn-primary" id="btn_atualizar">Finalizar edição</button>
+                <!-- Botão de edição deve ser button para não submeter form -->
+                <button type="button" class=" btn btn-primary" id="btn_atualizar">Finalizar edição</button>
                 <a href="/atividade/P_listar" class="btn btn-dark">Retornar</a>
             
             </section>
