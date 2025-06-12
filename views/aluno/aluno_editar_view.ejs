@@ -1,0 +1,56 @@
+<!-- Main Section -->
+<div class="col-md-9">
+    <section class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="text-primary">Editar Aluno</h4>
+            <a href="/admin/alunos" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Voltar
+            </a>
+        </div>
+
+        <div class="card shadow">
+            <div class="card-body">">
+                    <input type="hidden" id="cpf" name="cpf" value="<%= aluno.cpf %>">
+
+                    <div class="form-group">
+                        <label for="nome"><strong>Nome Completo: *</strong></label>
+                        <input type="text" class="form-control" id="nome" name="nome" value="<%= aluno.nome %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="data"><strong>Data de Nascimento: *</strong></label>
+                        <input type="date" class="form-control" id="data" name="data" value="<%= aluno.data %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="rua"><strong>Rua: *</strong></label>
+                        <input type="text" class="form-control" id="rua" name="rua" value="<%= aluno.rua %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bairro"><strong>Bairro: *</strong></label>
+                        <input type="text" class="form-control" id="bairro" name="bairro" value="<%= aluno.bairro %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email"><strong>Email: *</strong></label>
+                        <input type="email" class="form-control" id="email" name="email" value="<%= aluno.email %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fone"><strong>Telefone: *</strong></label>
+                        <input type="text" class="form-control" id="fone" name="fone" value="<%= aluno.fone %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="convenio"><strong>Convênio:</strong></label>
+                        <input type="text" class="form-control" id="convenio" name="convenio" value="<%= aluno.convenio %>">
+                    </div>
+                    <button  class="btn btn-primary" id="btn_editar">
+                        <i class="fas fa-save"></i> Salvar Alterações
+                    </button>
+
+            </div>
+        </div>
+    </section>
+</div>
+</div>
+</div>
+
+<script src="/js/alunos/editar.js"></script>
+<script src="/js/validacao.js"></script>
+<!-- Content End -->
