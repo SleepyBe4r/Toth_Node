@@ -45,6 +45,33 @@ class AlunoModel{
         return resultado;
     }
 
+        async obter(cpf) {
+        let sql = "SELECT * FROM alunos WHERE cpf_aluno = ?";
+        let valores = [cpf];
+        let db = new Database();
+        let rows = await db.ExecutaComando(sql, valores);
+
+        if (rows.length > 0) {
+            return {
+                cpf: rows[0]["cpf_aluno"],
+                convenio: rows[0]["convenio"]
+            };
+        }
+
+        return null;
+    }
+
+        async atualizar() {
+        let sql = `UPDATE alunos
+                   SET convenio = ?
+                   WHERE cpf_aluno = ?`;
+
+        let db = new Database();
+        let valores = [this.#convenio, this.#cpf];
+        let resultado = await db.ExecutaComandoNonQuery(sql, valores);
+        return resultado;
+    }
+
     async excluir(){
         let sql = "DELETE FROM alunos WHERE cpf_aluno = ?";
         let db = new Database();
