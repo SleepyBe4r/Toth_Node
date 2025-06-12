@@ -1,5 +1,3 @@
-
-
 const express = require("express");
 const Autenticacao = require("../middlewares/autenticacao");
 const Quadro_Notas_Controller = require("../controllers/quadro_notas_controller");
@@ -15,5 +13,6 @@ router.post("/excluir", autentic.validar_Professor, quadro_notas_C.excluir_quadr
 router.get("/editar/:id", autentic.validar_Professor, quadro_notas_C.listar_editar);
 router.post("/editar", autentic.validar_Professor, quadro_notas_C.editar_quadro_notas);
 router.get("/filtrar", autentic.validar_Professor, quadro_notas_C.filtrar);
+router.get("/ver_mais/:id", autentic.validar_Professor, quadro_notas_C.listar_ver_mais);
 
 module.exports = router;

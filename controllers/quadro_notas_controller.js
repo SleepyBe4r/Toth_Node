@@ -476,6 +476,72 @@ class Quadro_Notas_Controller{
         }
         res.send({lista: lista_quadro});
     }
+
+    /**
+     * Exibe detalhes de um quadro de notas: alunos, atividades e suas notas
+     */
+    async listar_ver_mais(req, resp) {
+        const id_quadro = parseInt(req.params.id);
+        // Obter registro do quadro
+        let quadro_notas_M = new Quadro_Notas_Model();
+        let quadroArr = await quadro_notas_M.obter(id_quadro);
+        const quadro = quadroArr[0];
+        // Obter info de turma
+        let turma_M = new Turma_Model();
+        let turmaArr = await turma_M.obter(quadro.id_turma);
+        const turmaObj = turmaArr[0];
+        // Obter nome do professor (obter retorna objeto único)
+        const PessoaModel = require("../models/pessoa_model");
+        let pessoa_M = new PessoaModel();
+        const profObj = await pessoa_M.obter(quadro.cpf_professor) || {};
+
+        const turma = { nome: turmaObj.turma, professor: profObj.nome || 'Desconhecido' };
+        // Obter atividades do quadro
+        // Obter atividades vinculadas ao quadro, incluindo peso de cada nota
+        let atividade_M = new Atividade_Model();
+        let atividadesArr = await atividade_M.listar("", id_quadro);
+        let notas_M2 = new Notas_Model();
+        const atividades = [];
+        for (const a of atividadesArr) {
+            notas_M2.id_atividade = a.id_atividades;
+            let listaNotasAtv = await notas_M2.listar_por_atividade();
+            const peso = listaNotasAtv[0]?.peso || 0;
+            atividades.push({ id: a.id_atividades, nome: a.nome, peso });
+        }
+        // Obter alunos matriculados
+        let matricula_M = new Matricula_Model();
+        matricula_M.id_turma = quadro.id_turma;
+        matricula_M.id_series = quadro.id_series;
+        matricula_M.id_ano_letivo = quadro.id_ano_letivo;
+        let matriculas = await matricula_M.listar_por_turma();
+        // Montar lista de alunos e suas notas
+        const alunos = [];
+        for (const mat of matriculas) {
+            // Nome do aluno (obter retorna objeto ou null)
+            const pessoaAluno = await pessoa_M.obter(mat.cpf_aluno) || {};
+            const nomeAluno = pessoaAluno.nome || 'Sem nome';
+             
+            // Notas do aluno
+            let notas_M = new Notas_Model();
+            notas_M.id_matricula = mat.id_matricula;
+            let notasArr = await notas_M.listar_por_matricula();
+            // Filtrar apenas notas deste quadro
+            let notasMap = {};
+            for (const n of notasArr) {
+                if (n.id_quadro === id_quadro) {
+                    notasMap[n.id_atividade] = n.nota;
+                }
+            }
+            alunos.push({ nome: nomeAluno, notas: notasMap });
+        }
+        // Renderizar view
+        resp.render("quadro_notas/ver_mais.ejs", {
+            layout: "layout_professor_home.ejs",
+            turma,
+            atividades,
+            alunos
+        });
+    }
 }
 
 module.exports = Quadro_Notas_Controller;
